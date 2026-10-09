@@ -646,184 +646,227 @@
             <p class="flowchart-intro">این فلوچارت تعاملی معماری، چرخه اعتماد میان مرورگر کلاینت (محیط غیرقابل‌اعتماد)، گیت‌وی صادرکننده چالش (امضای بدون دیتابیس) و سرور مقصد برنامه شما را نشان می‌دهد. محاسبات در پس‌زمینه کلاینت اجرا شده و اعتبارسنجی سرور در کمتر از ۰.۰۵ میلی‌ثانیه بدون بار دیتابیس انجام می‌گیرد.</p>
           </div>
 
-          <!-- Flowchart Visual SVG Sequence Diagram -->
-          <div class="flowchart-svg-wrap">
-            <svg class="flowchart-svg" viewBox="0 0 960 530" aria-label="Mehr PoW Cryptographic Protocol Flowchart" dir="ltr">
-              <defs>
-                <!-- Forward arrow: orange (accent) -->
-                <marker id="fca" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
-                  <path d="M0 0 L9 3.5 L0 7Z" fill="var(--accent)"/>
-                </marker>
-                <!-- Return arrow: blue (info) -->
-                <marker id="fci" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
-                  <path d="M0 0 L9 3.5 L0 7Z" fill="var(--info)"/>
-                </marker>
-                <!-- Final response arrow: green (success) -->
-                <marker id="fcs" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
-                  <path d="M0 0 L9 3.5 L0 7Z" fill="var(--success)"/>
-                </marker>
-              </defs>
-
-              <!-- ══ SWIMLANE COLUMN BACKGROUNDS ══ -->
-              <!-- Client column -->
-              <rect x="22" y="10" width="264" height="510" rx="10" class="fc-col-client"/>
-              <rect x="22" y="10" width="264" height="510" rx="10" class="fc-col-border-client"/>
-              <!-- Gateway column -->
-              <rect x="348" y="10" width="264" height="510" rx="10" class="fc-col-gateway"/>
-              <rect x="348" y="10" width="264" height="510" rx="10" class="fc-col-border-gateway"/>
-              <!-- Backend column -->
-              <rect x="674" y="10" width="264" height="510" rx="10" class="fc-col-backend"/>
-              <rect x="674" y="10" width="264" height="510" rx="10" class="fc-col-border-backend"/>
-
-              <!-- ══ ACTOR BOXES ══ -->
-              <rect x="30" y="18" width="248" height="58" class="fc-actor-box fc-actor-client"/>
-              <text x="154" y="41" text-anchor="middle" class="fc-actor-title">Client Browser / App</text>
-              <text x="154" y="57" text-anchor="middle" class="fc-actor-sub">Untrusted · Web Worker</text>
-
-              <rect x="356" y="18" width="248" height="58" class="fc-actor-box fc-actor-gateway"/>
-              <text x="480" y="41" text-anchor="middle" class="fc-actor-title">Challenge Gateway</text>
-              <text x="480" y="57" text-anchor="middle" class="fc-actor-sub">POST /pow/challenge · HMAC</text>
-
-              <rect x="682" y="18" width="248" height="58" class="fc-actor-box fc-actor-backend"/>
-              <text x="806" y="41" text-anchor="middle" class="fc-actor-title">Destination Backend API</text>
-              <text x="806" y="57" text-anchor="middle" class="fc-actor-sub">Protected Service · O(1) Gate</text>
-
-              <!-- ══ LIFELINES ══ -->
-              <line x1="154" y1="76" x2="154" y2="516" class="fc-lifeline"/>
-              <line x1="480" y1="76" x2="480" y2="516" class="fc-lifeline"/>
-              <line x1="806" y1="76" x2="806" y2="516" class="fc-lifeline"/>
-
-              <!-- ══════════════════════════════════════════════
-                   STEP 1 · Client → Challenge Gateway
-                   Message: POST /pow/challenge
-                   ══════════════════════════════════════════════ -->
-              <!-- Activation bar on Client (sender) -->
-              <rect x="150" y="98" width="8" height="34" rx="2" class="fc-act-info"/>
-              <!-- Arrow label above line -->
-              <text x="317" y="103" class="fc-msg-text">POST /pow/challenge · { action, context }</text>
-              <!-- Arrow -->
-              <line x1="158" y1="116" x2="472" y2="116" class="fc-arrow" marker-end="url(#fca)"/>
-              <!-- Step number circle at midpoint -->
-              <circle cx="262" cy="116" r="11" class="fc-circle-accent"/>
-              <text x="262" y="116" class="fc-circle-num">1</text>
-
-              <!-- ══════════════════════════════════════════════
-                   STEP 2 · Challenge Gateway → Client
-                   Response: 200 OK + HMAC token + salt + diff
-                   ══════════════════════════════════════════════ -->
-              <rect x="476" y="144" width="8" height="34" rx="2" class="fc-act-accent"/>
-              <text x="317" y="150" class="fc-msg-text">200 OK · { token: HMAC, salt, diff: 18, exp }</text>
-              <line x1="476" y1="164" x2="162" y2="164" class="fc-arrow-return" marker-end="url(#fci)"/>
-              <circle cx="364" cy="164" r="11" class="fc-circle-info"/>
-              <text x="364" y="164" class="fc-circle-num">2</text>
-
-              <!-- ══════════════════════════════════════════════
-                   STEP 3 · Web Worker (client self-loop)
-                   SHA-256 search — UI stays at 60 FPS
-                   ══════════════════════════════════════════════ -->
-              <!-- Activation bar (tall — solver running) -->
-              <rect x="150" y="196" width="8" height="100" rx="2" class="fc-act-info"/>
-              <!-- Self-loop arc -->
-              <path d="M 158 212 C 248 212, 248 288, 158 288" class="fc-self-loop" marker-end="url(#fci)"/>
-              <!-- Detail box -->
-              <rect x="170" y="208" width="244" height="72" rx="6" class="fc-detail-box-info"/>
-              <circle cx="190" cy="226" r="11" class="fc-circle-info"/>
-              <text x="190" y="226" class="fc-circle-num">3</text>
-              <text x="210" y="226" class="fc-detail-title">Web Worker (Off-Thread)</text>
-              <text x="210" y="248" class="fc-detail-line">SHA-256( salt : nonce : ctx ) ≥ 18 bits</text>
-              <text x="210" y="267" class="fc-detail-line">UI stays at 60 FPS while solving</text>
-
-              <!-- ══════════════════════════════════════════════
-                   STEP 4 · Client → Destination Backend
-                   Submits solved proof via HTTP headers
-                   ══════════════════════════════════════════════ -->
-              <rect x="150" y="318" width="8" height="34" rx="2" class="fc-act-accent"/>
-              <text x="480" y="325" class="fc-msg-text">POST /api/register + X-Mehr-PoW-Token + X-Mehr-PoW-Nonce</text>
-              <line x1="158" y1="338" x2="798" y2="338" class="fc-arrow" marker-end="url(#fca)"/>
-              <circle cx="422" cy="338" r="11" class="fc-circle-accent"/>
-              <text x="422" y="338" class="fc-circle-num">4</text>
-
-              <!-- ══════════════════════════════════════════════
-                   STEP 5 · Backend O(1) Stateless Verification
-                   6 crypto gates, < 0.05 ms, no DB needed
-                   ══════════════════════════════════════════════ -->
-              <rect x="802" y="362" width="8" height="90" rx="2" class="fc-act-success"/>
-              <rect x="682" y="368" width="240" height="82" rx="6" class="fc-detail-box-success"/>
-              <circle cx="702" cy="386" r="11" class="fc-circle-success"/>
-              <text x="702" y="386" class="fc-circle-num">5</text>
-              <text x="722" y="386" class="fc-detail-title">Stateless O(1) Verification</text>
-              <text x="722" y="408" class="fc-detail-line">① HMAC sig  ② exp window  ③ action</text>
-              <text x="722" y="426" class="fc-detail-line">④ minDifficulty  ⑤ ctx hash  ⑥ nonce</text>
-              <text x="722" y="444" class="fc-detail-ok">All 6 gates verified · &lt; 0.05 ms</text>
-
-              <!-- ══════════════════════════════════════════════
-                   STEP 6 · Backend → Client
-                   200 Accepted or 403 Forbidden
-                   ══════════════════════════════════════════════ -->
-              <text x="480" y="470" class="fc-msg-text">200 OK — Request Accepted  ·  or  ·  403 Forbidden</text>
-              <line x1="798" y1="482" x2="162" y2="482" class="fc-arrow-success" marker-end="url(#fcs)"/>
-              <circle cx="538" cy="482" r="11" class="fc-circle-success"/>
-              <text x="538" y="482" class="fc-circle-num">6</text>
-            </svg>
+          <!-- Modern Protocol Flowchart -->
+          <div class="flow-legend-bar">
+            <span class="flow-legend-title">Trust Boundary:</span>
+            <div class="flow-actor-pill">
+              <span class="actor-dot dot-client"></span>
+              <span>Client Browser (Untrusted)</span>
+            </div>
+            <div class="flow-actor-pill">
+              <span class="actor-dot dot-gateway"></span>
+              <span>Challenge Gateway (HMAC Issuer)</span>
+            </div>
+            <div class="flow-actor-pill">
+              <span class="actor-dot dot-backend"></span>
+              <span>Destination Backend API (O(1) Gate)</span>
+            </div>
           </div>
 
-          <!-- Step Breakdown Cards -->
-          <div class="flow-steps-grid">
-            <div class="flow-step-card">
-              <div class="flow-step-num">1</div>
-              <div class="flow-step-body">
-                <div class="flow-step-title">Challenge Handshake</div>
-                <div data-lang="en">
-                  <div class="flow-step-desc">Client requests a challenge via <code>POST /pow/challenge</code> on page load (background) or on form submit. Backend evaluates caller IP velocity and action risk tier.</div>
+          <div class="flow-pipeline">
+            <!-- Node 1: Challenge Request -->
+            <div class="flow-node client-node">
+              <div class="flow-node-header">
+                <div class="flow-node-title-wrap">
+                  <span class="flow-step-num-badge badge-client">01</span>
+                  <span class="flow-node-title">Challenge Request</span>
                 </div>
-                <div data-lang="fa">
-                  <div class="flow-step-desc">کلاینت درخواست چالش را در پس‌زمینه یا هنگام ثبت فرم به <code>POST /pow/challenge</code> ارسال می‌کند. سرور بر اساس IP و حساسیت عملیات سختی را تنظیم می‌نماید.</div>
+                <div class="flow-node-title-wrap">
+                  <span class="flow-env-tag env-client">Client</span>
+                  <span class="flow-tech-pill">POST /pow/challenge</span>
                 </div>
-                <span class="flow-step-tag">Stateless HMAC-SHA256</span>
+              </div>
+              <div data-lang="en">
+                <p class="flow-node-desc">Client requests a proof-of-work challenge on initial form load (background mode) or when primary submission is initiated. Sends action name and request context fingerprint.</p>
+              </div>
+              <div data-lang="fa">
+                <p class="flow-node-desc">مرورگر کاربر در پس‌زمینه بارگذاری صفحه یا هنگام آغاز ثبت فرم، درخواست دریافت چالش را ارسال می‌کند. نام عملیات و فینگرپرینت زمینه ارسال می‌گردد.</p>
+              </div>
+              <div class="flow-node-footer">
+                <span>Trigger: Background worker init or CTA click</span>
+                <span class="flow-metric">Non-Blocking Init</span>
               </div>
             </div>
 
-            <div class="flow-step-card">
-              <div class="flow-step-num">2</div>
-              <div class="flow-step-body">
-                <div class="flow-step-title">Signed Challenge Token</div>
-                <div data-lang="en">
-                  <div class="flow-step-desc">Server returns salt, difficulty, and an HMAC token signed with <code>SERVER_SECRET_KEY</code>. No database record or Redis cache is allocated.</div>
-                </div>
-                <div data-lang="fa">
-                  <div class="flow-step-desc">سرور سالت، سختی و توکن امضاشده با <code>SERVER_SECRET_KEY</code> را بازمی‌گرداند. هیچ رکوردی در دیتابیس یا ردیس مصرف نمی‌شود.</div>
-                </div>
-                <span class="flow-step-tag">Zero Database State</span>
+            <!-- Connector 1 -> 2 -->
+            <div class="flow-connector">
+              <div class="flow-connector-line"></div>
+              <div class="flow-connector-arrow">
+                <svg class="icon icon-sm"><use href="#chevron-down"></use></svg>
               </div>
             </div>
 
-            <div class="flow-step-card">
-              <div class="flow-step-num">3</div>
-              <div class="flow-step-body">
-                <div class="flow-step-title">Off-Thread Web Worker</div>
-                <div data-lang="en">
-                  <div class="flow-step-desc">A non-blocking Web Worker runs the SHA-256 loop to find a valid nonce. Main UI thread stays silky-smooth (60 FPS) with responsive inputs.</div>
+            <!-- Node 2: Stateless Token -->
+            <div class="flow-node gateway-node">
+              <div class="flow-node-header">
+                <div class="flow-node-title-wrap">
+                  <span class="flow-step-num-badge badge-gateway">02</span>
+                  <span class="flow-node-title">Stateless Challenge Token</span>
                 </div>
-                <div data-lang="fa">
-                  <div class="flow-step-desc">یک وب‌ورکر مستقل حلقه هش SHA-256 را جهت یافتن نانس معتبر اجرا می‌کند؛ رابط کاربری بدون کوچک‌ترین لگ (۶۰ فریم) روان باقی می‌ماند.</div>
+                <div class="flow-node-title-wrap">
+                  <span class="flow-env-tag env-gateway">Gateway</span>
+                  <span class="flow-tech-pill">HMAC-SHA256</span>
                 </div>
-                <span class="flow-step-tag">Web Worker (Blob / Script)</span>
+              </div>
+              <div data-lang="en">
+                <p class="flow-node-desc">Gateway evaluates IP reputation, rate velocity, and endpoint tier, then returns salt, expiration, and assigned difficulty (14–24 bits) sealed with <code>SERVER_SECRET_KEY</code>.</p>
+              </div>
+              <div data-lang="fa">
+                <p class="flow-node-desc">سرور چالش بر اساس رتبه آدرس IP و حساسیت عملیات، سالت، زمان انقضا و درجه سختی را مشخص کرده و با کلید محرمانه سرور بدون ذخیره در دیتابیس امضا می‌کند.</p>
+              </div>
+              <div class="flow-node-footer">
+                <span>Payload: <code>{ token, salt, difficulty, exp, ctx }</code></span>
+                <span class="flow-metric">0ms Database State</span>
               </div>
             </div>
 
-            <div class="flow-step-card">
-              <div class="flow-step-num">4</div>
-              <div class="flow-step-body">
-                <div class="flow-step-title">O(1) Verification Gate</div>
-                <div data-lang="en">
-                  <div class="flow-step-desc">Destination API receives <code>X-Mehr-PoW-Token</code> and <code>X-Mehr-PoW-Nonce</code>. <code>verifySolution()</code> confirms proof in &lt; 0.05ms through 6 strict cryptographic gates.</div>
-                </div>
-                <div data-lang="fa">
-                  <div class="flow-step-desc">سرور مقصد هدرهای توکن و نانس را دریافت کرده و تابع <code>verifySolution()</code> با اجرای ۶ دروازه امنیتی در کمتر از ۰.۰۵ میلی‌ثانیه صحت آن را می‌سنجد.</div>
-                </div>
-                <span class="flow-step-tag">&lt; 0.05ms Verification</span>
+            <!-- Connector 2 -> 3 -->
+            <div class="flow-connector">
+              <div class="flow-connector-line"></div>
+              <div class="flow-connector-arrow">
+                <svg class="icon icon-sm"><use href="#chevron-down"></use></svg>
               </div>
             </div>
+
+            <!-- Node 3: Web Worker Solving -->
+            <div class="flow-node client-node">
+              <div class="flow-node-header">
+                <div class="flow-node-title-wrap">
+                  <span class="flow-step-num-badge badge-client">03</span>
+                  <span class="flow-node-title">Background Web Worker Hash Loop</span>
+                </div>
+                <div class="flow-node-title-wrap">
+                  <span class="flow-env-tag env-client">Web Worker</span>
+                  <span class="flow-tech-pill">SHA-256(salt:nonce:ctx)</span>
+                </div>
+              </div>
+              <div data-lang="en">
+                <p class="flow-node-desc">An off-thread Web Worker iterates nonces until target zero bits are found. The browser UI thread remains 100% fluid with zero input latency or stutter for legitimate human visitors.</p>
+              </div>
+              <div data-lang="fa">
+                <p class="flow-node-desc">یک وب‌ورکر مستقل خارج از ترد اصلی رابط کاربری، نانس‌های متوالی را بررسی می‌کند تا تعداد بیت‌های صفر معین تولید شود؛ رابط کاربری با ۶۰ فریم بر ثانیه کاملاً روان می‌ماند.</p>
+              </div>
+              <div class="flow-node-footer">
+                <span>Computation: Local client CPU cores</span>
+                <span class="flow-metric highlight">60 FPS Fluid UI</span>
+              </div>
+            </div>
+
+            <!-- Connector 3 -> 4 -->
+            <div class="flow-connector">
+              <div class="flow-connector-line"></div>
+              <div class="flow-connector-arrow">
+                <svg class="icon icon-sm"><use href="#chevron-down"></use></svg>
+              </div>
+            </div>
+
+            <!-- Node 4: Action Submission -->
+            <div class="flow-node client-node">
+              <div class="flow-node-header">
+                <div class="flow-node-title-wrap">
+                  <span class="flow-step-num-badge badge-client">04</span>
+                  <span class="flow-node-title">Protected Action Dispatch</span>
+                </div>
+                <div class="flow-node-title-wrap">
+                  <span class="flow-env-tag env-client">Client</span>
+                  <span class="flow-tech-pill">X-Mehr-PoW-Headers</span>
+                </div>
+              </div>
+              <div data-lang="en">
+                <p class="flow-node-desc">The user submits the form or API request. MehrPoW transparently attaches <code>X-Mehr-PoW-Token</code> and <code>X-Mehr-PoW-Nonce</code> headers alongside the form payload.</p>
+              </div>
+              <div data-lang="fa">
+                <p class="flow-node-desc">کاربر فرم یا درخواست نهایی را ارسال می‌کند. کتابخانه مهر به صورت خودکار هدرهای توکن امضاشده و نانس محاسبه‌شده را همراه با اطلاعات فرم ارسال می‌نماید.</p>
+              </div>
+              <div class="flow-node-footer">
+                <span>Binding: Form fields deterministically hashed into <code>ctx</code></span>
+                <span class="flow-metric">Context Fingerprinted</span>
+              </div>
+            </div>
+
+            <!-- Connector 4 -> 5 -->
+            <div class="flow-connector">
+              <div class="flow-connector-line"></div>
+              <div class="flow-connector-arrow">
+                <svg class="icon icon-sm"><use href="#chevron-down"></use></svg>
+              </div>
+            </div>
+
+            <!-- Node 5: Verification Gate -->
+            <div class="flow-node backend-node">
+              <div class="flow-node-header">
+                <div class="flow-node-title-wrap">
+                  <span class="flow-step-num-badge badge-backend">05</span>
+                  <span class="flow-node-title">Stateless O(1) Verification Gate</span>
+                </div>
+                <div class="flow-node-title-wrap">
+                  <span class="flow-env-tag env-backend">Backend Gate</span>
+                  <span class="flow-tech-pill">verifySolution()</span>
+                </div>
+              </div>
+              <div data-lang="en">
+                <p class="flow-node-desc">Destination backend verifies HMAC signature with its private secret, checks expiration, and re-computes a single SHA-256 hash to confirm proof in under 0.05ms.</p>
+              </div>
+              <div data-lang="fa">
+                <p class="flow-node-desc">سرور مقصد امضای HMAC را با کلید محرمانه بررسی کرده، انقضا و سیاست سختی را می‌سنجد و با یک بار هش SHA-256 در کمتر از ۰.۰۵ میلی‌ثانیه اعتبار اثبات کار را تأیید می‌کند.</p>
+              </div>
+              <div class="flow-gate-checklist">
+                <div class="flow-gate-item"><svg class="icon icon-sm icon-success"><use href="#check"></use></svg> <span>1. HMAC Signature Valid</span></div>
+                <div class="flow-gate-item"><svg class="icon icon-sm icon-success"><use href="#check"></use></svg> <span>2. Not Expired (&lt; 180s)</span></div>
+                <div class="flow-gate-item"><svg class="icon icon-sm icon-success"><use href="#check"></use></svg> <span>3. Action Scope Matches</span></div>
+                <div class="flow-gate-item"><svg class="icon icon-sm icon-success"><use href="#check"></use></svg> <span>4. Meets minDifficulty</span></div>
+                <div class="flow-gate-item"><svg class="icon icon-sm icon-success"><use href="#check"></use></svg> <span>5. Context Hash Binds Form</span></div>
+                <div class="flow-gate-item"><svg class="icon icon-sm icon-success"><use href="#check"></use></svg> <span>6. Nonce Leading Zero Bits</span></div>
+              </div>
+              <div class="flow-node-footer">
+                <span>Single SHA-256 calculation · Zero external API calls</span>
+                <span class="flow-metric">&lt; 0.05ms Verification</span>
+              </div>
+            </div>
+
+            <!-- Decision Fork -->
+            <div class="flow-decision-fork">
+              <div class="flow-fork-stem"></div>
+              <div class="flow-fork-label">Cryptographic Gate Outcome</div>
+              <div class="flow-fork-cards">
+                <!-- 200 OK Pass -->
+                <div class="flow-outcome-card pass">
+                  <div class="outcome-badge-wrap">
+                    <span class="flow-env-tag env-backend">Pass Gate</span>
+                    <span class="badge success">HTTP 200 OK</span>
+                  </div>
+                  <div class="outcome-title">
+                    <svg class="icon icon-success"><use href="#check"></use></svg>
+                    <span>Request Approved &amp; Processed</span>
+                  </div>
+                  <div data-lang="en">
+                    <p class="outcome-desc">Business transaction executes: user account registered, payment invoice generated, or comment published immediately.</p>
+                  </div>
+                  <div data-lang="fa">
+                    <p class="outcome-desc">تراکنش بدون معطلی پردازش می‌شود: حساب کاربری ایجاد شده، فاکتور صادر می‌گردد یا یادداشت با موفقیت ثبت می‌شود.</p>
+                  </div>
+                </div>
+
+                <!-- 403 Forbidden Fail -->
+                <div class="flow-outcome-card fail">
+                  <div class="outcome-badge-wrap">
+                    <span class="flow-env-tag env-fail">Fail Gate</span>
+                    <span class="badge error">HTTP 403 Forbidden</span>
+                  </div>
+                  <div class="outcome-title">
+                    <svg class="icon icon-error"><use href="#close"></use></svg>
+                    <span>Tampered / Bot Request Dropped</span>
+                  </div>
+                  <div data-lang="en">
+                    <p class="outcome-desc">Forged difficulty, rogue server token, replayed nonce, or expired challenge immediately rejected in O(1) time without DB impact.</p>
+                  </div>
+                  <div data-lang="fa">
+                    <p class="outcome-desc">سختی دستکاری‌شده، توکن جعلی سرور ناشناس، نانس بازپخش‌شده یا چالش منقضی‌شده در زمان O(1) بلافاصله دفع می‌گردد.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 

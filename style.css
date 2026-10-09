@@ -1033,6 +1033,12 @@ main {
   border: 0.0625rem solid rgba(34, 197, 94, 0.3);
 }
 
+.badge.error {
+  background: var(--error-subtle);
+  color: var(--error);
+  border: 0.0625rem solid rgba(239, 68, 68, 0.3);
+}
+
 .spec-list {
   margin: var(--space-2) 0;
   padding-left: 1.25rem;
@@ -1222,226 +1228,376 @@ main {
   margin-bottom: var(--space-6);
 }
 
-.flowchart-svg-wrap {
-  width: 100%;
-  overflow-x: auto;
-  border: 0.0625rem solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg-secondary);
-  padding: var(--space-4);
-  margin-bottom: var(--space-6);
-  -webkit-overflow-scrolling: touch;
-}
-
-.flowchart-svg {
-  display: block;
-  width: 100%;
-  min-width: 48rem;
-  height: auto;
-}
-
-/* Flowchart SVG components */
-.fc-actor-box {
-  rx: var(--radius-sm);
-  ry: var(--radius-sm);
-  stroke-width: 0.0625rem;
-}
-.fc-actor-client  { fill: var(--card-bg); stroke: var(--info); }
-.fc-actor-gateway { fill: var(--card-bg); stroke: var(--accent); }
-.fc-actor-backend { fill: var(--card-bg); stroke: var(--success); }
-.fc-actor-title {
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 700;
-  fill: var(--text-primary);
-}
-.fc-actor-sub {
-  font-family: var(--font-mono);
-  font-size: 0.67rem;
-  fill: var(--text-dim);
-}
-.fc-lifeline {
-  stroke: var(--border-strong);
-  stroke-width: 0.05rem;
-  stroke-dasharray: 0.3rem 0.3rem;
-}
-.fc-arrow {
-  stroke: var(--accent);
-  stroke-width: 0.12rem;
-  fill: none;
-}
-.fc-arrow-return {
-  stroke: var(--info);
-  stroke-width: 0.12rem;
-  stroke-dasharray: 0.4rem 0.25rem;
-  fill: none;
-}
-.fc-arrow-success {
-  stroke: var(--success);
-  stroke-width: 0.12rem;
-  stroke-dasharray: 0.4rem 0.25rem;
-  fill: none;
-}
-.fc-self-loop {
-  stroke: var(--info);
-  stroke-width: 0.12rem;
-  stroke-dasharray: 0.4rem 0.25rem;
-  fill: none;
-}
-.fc-step-badge {
-  rx: var(--radius-sm);
-  ry: var(--radius-sm);
-  fill: var(--bg-primary);
-  stroke: var(--border);
-  stroke-width: 0.0625rem;
-}
-.fc-step-num {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  fill: var(--accent);
-}
-.fc-step-label {
-  font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 600;
-  fill: var(--text-primary);
-}
-.fc-step-code {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  fill: var(--text-secondary);
-}
-.fc-step-status {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  fill: var(--success);
-}
-
-/* Swimlane column backgrounds */
-.fc-col-client  { fill: var(--info-subtle);    opacity: 0.5; }
-.fc-col-gateway { fill: var(--accent-subtle);  opacity: 0.5; }
-.fc-col-backend { fill: var(--success-subtle); opacity: 0.5; }
-.fc-col-border-client  { stroke: var(--info);    stroke-width: 0.04rem; fill: none; }
-.fc-col-border-gateway { stroke: var(--accent);  stroke-width: 0.04rem; fill: none; }
-.fc-col-border-backend { stroke: var(--success); stroke-width: 0.04rem; fill: none; }
-
-/* UML-style activation bars */
-.fc-act-info    { fill: var(--info);    opacity: 0.6; }
-.fc-act-accent  { fill: var(--accent);  opacity: 0.6; }
-.fc-act-success { fill: var(--success); opacity: 0.7; }
-
-/* Step number circles */
-.fc-circle-accent  { fill: var(--accent); }
-.fc-circle-info    { fill: var(--info); }
-.fc-circle-success { fill: var(--success); }
-.fc-circle-num {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  font-weight: 800;
-  fill: var(--bg-primary);
-  dominant-baseline: central;
-  text-anchor: middle;
-}
-
-/* Message annotation text (above arrow lines) */
-.fc-msg-text {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  fill: var(--text-dim);
-  dominant-baseline: central;
-  text-anchor: middle;
-}
-
-/* Detail boxes (Worker self-loop, Backend verification) */
-.fc-detail-box-info    { fill: var(--card-bg); stroke: var(--info);    stroke-width: 0.06rem; }
-.fc-detail-box-success { fill: var(--card-bg); stroke: var(--success); stroke-width: 0.06rem; }
-.fc-detail-title {
-  font-family: var(--font-sans);
-  font-size: 0.73rem;
-  font-weight: 700;
-  fill: var(--text-primary);
-  dominant-baseline: central;
-}
-.fc-detail-line {
-  font-family: var(--font-mono);
-  font-size: 0.63rem;
-  fill: var(--text-secondary);
-  dominant-baseline: central;
-}
-.fc-detail-ok {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  fill: var(--success);
-  dominant-baseline: central;
-}
-
-
-/* Steps Breakdown Cards Grid */
-.flow-steps-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-  gap: var(--space-4);
-}
-
-.flow-step-card {
-  background: var(--bg-tertiary);
-  border: 0.0625rem solid var(--border);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  display: flex;
-  gap: var(--space-3);
-  transition: border-color var(--duration-fast);
-}
-
-.flow-step-card:hover {
-  border-color: var(--border-strong);
-}
-
-.flow-step-num {
-  width: 1.85rem;
-  height: 1.85rem;
-  border-radius: var(--radius-full);
-  background: var(--accent-subtle);
-  color: var(--accent);
-  border: 0.0625rem solid var(--accent);
+/* Actor Boundary Legend */
+.flow-legend-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 700;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-secondary);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+}
+
+.flow-legend-title {
   font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  margin-right: 0.25rem;
+}
+[dir="rtl"] .flow-legend-title {
+  margin-right: 0;
+  margin-left: 0.25rem;
+}
+
+.flow-actor-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  background: var(--bg-tertiary);
+  border: 0.0625rem solid var(--border);
+  color: var(--text-secondary);
+}
+
+.actor-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--radius-full);
   flex-shrink: 0;
 }
+.actor-dot.dot-client { background: var(--info); box-shadow: 0 0 0.4rem var(--info-subtle); }
+.actor-dot.dot-gateway { background: var(--accent); box-shadow: 0 0 0.4rem var(--accent-subtle); }
+.actor-dot.dot-backend { background: var(--success); box-shadow: 0 0 0.4rem var(--success-subtle); }
 
-.flow-step-body {
-  flex: 1;
+/* The Flow Pipeline */
+.flow-pipeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 52rem;
+  margin: 0 auto;
 }
 
-.flow-step-title {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-1);
+/* Flow Node Card */
+.flow-node {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  position: relative;
+  transition: all var(--duration-fast);
 }
 
-.flow-step-desc {
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-  line-height: 1.5;
+.flow-node:hover {
+  border-color: var(--border-strong);
+  background: var(--card-hover);
+}
+
+.flow-node.client-node {
+  border-left: 0.25rem solid var(--info);
+}
+[dir="rtl"] .flow-node.client-node {
+  border-left: 0.0625rem solid var(--border);
+  border-right: 0.25rem solid var(--info);
+}
+
+.flow-node.gateway-node {
+  border-left: 0.25rem solid var(--accent);
+}
+[dir="rtl"] .flow-node.gateway-node {
+  border-left: 0.0625rem solid var(--border);
+  border-right: 0.25rem solid var(--accent);
+}
+
+.flow-node.backend-node {
+  border-left: 0.25rem solid var(--success);
+}
+[dir="rtl"] .flow-node.backend-node {
+  border-left: 0.0625rem solid var(--border);
+  border-right: 0.25rem solid var(--success);
+}
+
+/* Node Header */
+.flow-node-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
   margin-bottom: var(--space-2);
 }
 
-.flow-step-tag {
-  display: inline-block;
+.flow-step-num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: var(--radius-full);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  margin-right: 0.5rem;
+}
+[dir="rtl"] .flow-step-num-badge {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+.badge-client {
+  background: var(--info-subtle);
+  color: var(--info);
+  border: 0.0625rem solid var(--info);
+}
+.badge-gateway {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border: 0.0625rem solid var(--accent);
+}
+.badge-backend {
+  background: var(--success-subtle);
+  color: var(--success);
+  border: 0.0625rem solid var(--success);
+}
+
+.flow-node-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.flow-node-title {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.flow-env-tag {
+  display: inline-flex;
+  align-items: center;
   padding: 0.15rem 0.45rem;
   border-radius: var(--radius-sm);
-  background: var(--badge-bg);
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  border: 0.0625rem solid transparent;
+}
+.flow-env-tag.env-client {
+  background: var(--info-subtle);
+  color: var(--info);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+.flow-env-tag.env-gateway {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border-color: rgba(255, 138, 42, 0.25);
+}
+.flow-env-tag.env-backend {
+  background: var(--success-subtle);
+  color: var(--success);
+  border-color: rgba(34, 197, 94, 0.25);
+}
+.flow-env-tag.env-fail {
+  background: var(--error-subtle);
+  color: var(--error);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.flow-tech-pill {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 0.2rem 0.5rem;
+  background: var(--code-bg);
+  border: 0.0625rem solid var(--code-border);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+}
+
+/* Node Body & Description */
+.flow-node-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 var(--space-3) 0;
+}
+
+.flow-node-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 0.0625rem solid var(--border);
+  font-size: var(--text-xs);
   color: var(--text-dim);
+}
+
+.flow-metric {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
   border: 0.0625rem solid var(--border);
+  color: var(--text-secondary);
+}
+.flow-metric.highlight {
+  color: var(--info);
+  border-color: rgba(56, 189, 248, 0.3);
+  background: var(--info-subtle);
+}
+
+/* Directional Connector */
+.flow-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 2.2rem;
+  position: relative;
+  width: 100%;
+}
+
+.flow-connector-line {
+  width: 0.125rem;
+  height: 100%;
+  background: var(--border-strong);
+  position: relative;
+}
+
+.flow-connector-arrow {
+  position: absolute;
+  bottom: 0;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(35%);
+  background: var(--card-bg);
+  border-radius: var(--radius-full);
+}
+
+/* Gate Checklist inside Node 5 */
+.flow-gate-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.4rem 0.8rem;
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  background: var(--code-bg);
+  border: 0.0625rem solid var(--code-border);
+  border-radius: var(--radius-md);
+}
+
+.flow-gate-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+/* Decision Fork Branch */
+.flow-decision-fork {
+  width: 100%;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flow-fork-stem {
+  width: 0.125rem;
+  height: 1.5rem;
+  background: var(--border-strong);
+}
+
+.flow-fork-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-tertiary);
+  border: 0.0625rem solid var(--border);
+  margin-bottom: var(--space-3);
+}
+
+.flow-fork-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+@media (max-width: 48rem) {
+  .flow-fork-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.flow-outcome-card {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 0.0625rem solid var(--border);
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.flow-outcome-card.pass {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.04);
+}
+.flow-outcome-card.pass:hover {
+  border-color: var(--success);
+}
+
+.flow-outcome-card.fail {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.04);
+}
+.flow-outcome-card.fail:hover {
+  border-color: var(--error);
+}
+
+.outcome-badge-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.outcome-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--text-base);
+  font-weight: 700;
+}
+.pass .outcome-title { color: var(--success); }
+.fail .outcome-title { color: var(--error); }
+
+.outcome-desc {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* Implementation Code Section */
