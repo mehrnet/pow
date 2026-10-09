@@ -266,6 +266,39 @@
     var mode = options.mode || form.getAttribute('data-pow-mode') || 'background';
 
     var gateEl = form.querySelector('[data-pow-gate]') || form.querySelector('.pow-gate');
+    if (!gateEl && options.gate !== false && typeof document !== 'undefined') {
+      gateEl = document.createElement('div');
+      gateEl.className = 'pow-gate state-idle';
+      gateEl.setAttribute('data-pow-gate', '');
+      gateEl.innerHTML = [
+        '<div class="pow-gate-head">',
+        '  <span class="pow-gate-status">',
+        '    <svg class="icon icon-base icon-accent" viewBox="0 0 54 54" fill="none" aria-hidden="true">',
+        '      <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="currentColor"/>',
+        '      <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="currentColor"/>',
+        '    </svg>',
+        '    <span data-pow-status>Ready to verify...</span>',
+        '  </span>',
+        '  <div class="pow-gate-head-actions">',
+        '    <span class="pow-gate-pill" data-pow-percent>0%</span>',
+        '  </div>',
+        '</div>',
+        '<div class="pow-bar-track">',
+        '  <svg class="pow-bar-svg" aria-hidden="true">',
+        '    <rect class="pow-bar-bg" x="0" y="0" width="100%" height="100%" rx="2" ry="2" />',
+        '    <rect class="pow-bar-fill" data-pow-bar x="0" y="0" width="0%" height="100%" rx="2" ry="2" />',
+        '  </svg>',
+        '</div>'
+      ].join('');
+
+      var submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+      if (submitBtn && submitBtn.parentNode) {
+        submitBtn.parentNode.insertBefore(gateEl, submitBtn);
+      } else {
+        form.appendChild(gateEl);
+      }
+    }
+
     var statusEl = gateEl ? (gateEl.querySelector('[data-pow-status]') || gateEl.querySelector('#gate-status-text') || gateEl.querySelector('.pow-gate-status span:last-child')) : null;
     var percentEl = gateEl ? (gateEl.querySelector('[data-pow-percent]') || gateEl.querySelector('.pow-gate-pill')) : null;
     var barFillEl = gateEl ? (gateEl.querySelector('[data-pow-bar]') || gateEl.querySelector('.pow-bar-fill')) : null;

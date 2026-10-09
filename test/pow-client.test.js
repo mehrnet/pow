@@ -66,3 +66,48 @@ test('MehrPoW.solve invokes custom callApi handler with request parameters', asy
   assert.strictEqual(calledWith.endpoint, '/pow/challenge');
   assert.strictEqual(calledWith.url, 'https://api.example.com/pow/challenge');
 });
+
+test('MehrPoW.protect auto-injects pow-gate into form if absent', () => {
+  const children = [];
+  const submitBtn = {
+    tagName: 'BUTTON',
+    type: 'submit',
+    parentNode: {
+      insertBefore: (newChild, refChild) => {
+        const idx = children.indexOf(refChild);
+        if (idx !== -1) children.splice(idx, 0, newChild);
+        else children.push(newChild);
+      }
+    }
+  };
+  children.push(submitBtn);
+
+  const mockForm = {
+    tagName: 'FORM',
+    querySelector: (sel) => {
+      if (sel.includes('pow-gate')) return null;
+      if (sel.includes('submit')) return submitBtn;
+      return null;
+    },
+    appendChild: (el) => children.push(el),
+    getAttribute: () => null,
+    addEventListener: () => {}
+  };
+
+  globalThis.document = {
+    createElement: (tag) => {
+      return {
+        tagName: tag.toUpperCase(),
+        className: '',
+        setAttribute: () => {},
+        querySelector: () => null
+      };
+    }
+  };
+
+  const handle = MehrPoW.protect(mockForm, { mode: 'manual' });
+  assert.ok(handle, 'protect should return handle');
+  assert.ok(children.some(c => c.className && c.className.includes('pow-gate')), 'pow-gate should be injected');
+
+  delete globalThis.document;
+});

@@ -264,16 +264,24 @@ button {
 
 .brand-text {
   display: flex;
-  align-items: baseline;
-  gap: 0.35rem;
+  flex-direction: column;
+  line-height: 1.15;
+  text-align: start;
+}
+
+.brand-mark {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: var(--text-base);
+  color: var(--text-primary);
 }
 
 .brand-sub {
-  font-size: var(--text-xs);
-  color: var(--accent);
-  font-weight: 700;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  color: var(--text-secondary);
 }
 
 .nav-center {

@@ -27,7 +27,7 @@ const TRANSLATIONS = {
     "pref.theme": "Theme",
     "pref.language": "Language",
     "hero.badge": "PoW Protocol",
-    "hero.title": "Mehr Proof-of-Work (PoW)",
+    "hero.title": "Proof of Work",
     "hero.subtitle": "Stateless HMAC-SHA256 proof-of-work protocol, client Web Worker solver, and O(1) server verification.",
     "play.title": "Interactive PoW Engine & Benchmark",
     "play.subtitle": "Explore stateless HMAC challenges across 14 to 24 bits of difficulty and observe live Web Worker solving performance.",
@@ -66,7 +66,7 @@ const TRANSLATIONS = {
     "pref.theme": "پوسته",
     "pref.language": "زبان",
     "hero.badge": "پروتکل اثبات کار",
-    "hero.title": "اثبات کار مهر (PoW)",
+    "hero.title": "اثبات کار",
     "hero.subtitle": "پروتکل اثبات کار مبتنی بر HMAC-SHA256، حل‌کننده وب‌ورکر کلاینت و تأیید سمت سرور در زمان O(1).",
     "play.title": "موتور تعاملی و بنچمارک اثبات کار",
     "play.subtitle": "آزمایش چالش‌های بدون دیتابیس اثبات کار از سختی ۱۴ تا ۲۴ بیت و مشاهده کارایی زنده پردازشگر وب.",
@@ -657,11 +657,11 @@ function initRouter() {
     });
 
     const titles = {
-      '/': 'Mehr Proof-of-Work (PoW) — Anti-Bot Standard',
-      '/widgets': 'Visual Design Language & Components — Mehr PoW',
-      '/spec': 'Technical Specification & Architecture — Mehr PoW',
-      '/implementation': 'Implementation Guide & Flowchart — Mehr PoW',
-      '/examples': 'Implementation Guide & Flowchart — Mehr PoW'
+      '/': 'Proof of Work | by Mehrnet',
+      '/widgets': 'Visual Design Language & Components — Proof of Work | by Mehrnet',
+      '/spec': 'Technical Specification & Architecture — Proof of Work | by Mehrnet',
+      '/implementation': 'Implementation Guide & Flowchart — Proof of Work | by Mehrnet',
+      '/examples': 'Implementation Guide & Flowchart — Proof of Work | by Mehrnet'
     };
     if (titles[normalized]) {
       document.title = titles[normalized];
