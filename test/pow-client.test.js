@@ -36,3 +36,33 @@ test('MehrPoW.getHeaders converts solution to HTTP headers', () => {
 
   assert.deepStrictEqual(MehrPoW.getHeaders(null), {});
 });
+
+test('MehrPoW.solve invokes custom callApi handler with request parameters', async () => {
+  let calledWith = null;
+  const mockApi = async (req) => {
+    calledWith = req;
+    return {
+      token: 'fake.jwt.token',
+      salt: 'salt123',
+      difficulty: 8,
+      context: req.context
+    };
+  };
+
+  try {
+    await MehrPoW.solve({
+      callApi: mockApi,
+      action: 'invoice.create',
+      domain: 'https://api.example.com',
+      endpoint: '/pow/challenge'
+    });
+  } catch (e) {
+    // In Node.js without DOM Worker, worker creation throws after callApi returns
+  }
+
+  assert.ok(calledWith !== null, 'callApi should be invoked');
+  assert.strictEqual(calledWith.action, 'invoice.create');
+  assert.strictEqual(calledWith.domain, 'https://api.example.com');
+  assert.strictEqual(calledWith.endpoint, '/pow/challenge');
+  assert.strictEqual(calledWith.url, 'https://api.example.com/pow/challenge');
+});

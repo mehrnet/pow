@@ -182,8 +182,8 @@ function initPlaygroundController() {
     }
     if (tokenInspectBox) {
       tokenInspectBox.textContent = isFa
-        ? 'در انتظار تولید چالش...'
-        : 'Waiting for challenge generation...';
+        ? 'در انتظار فراخوانی API تولید چالش...'
+        : 'Waiting for callApi() challenge generation...';
     }
     if (statHashrate) statHashrate.textContent = '--';
     if (statIterations) statIterations.textContent = '--';
@@ -265,6 +265,70 @@ function initPlaygroundController() {
     });
   }
 
+  let activeChallengeData = null;
+
+  /**
+   * In-Memory Compliant Server API Simulator.
+   * Demonstrates how the backend challenge endpoint (/api/pow/challenge) operates.
+   */
+  async function fakeServerApi(req) {
+    const reqStart = performance.now();
+    // Simulate realistic network roundtrip + risk assessment (~15ms)
+    await new Promise(resolve => setTimeout(resolve, 15));
+
+    const diff = req.difficulty || (diffSlider ? parseInt(diffSlider.value, 10) : 18);
+    const act = req.action || (diff === 14 ? 'form.submit'
+      : (diff === 16 ? 'comment.create'
+      : (diff === 18 ? 'invoice.create'
+      : (diff === 21 ? 'account.register'
+      : 'security.barrier'))));
+
+    const ctxStr = req.context || `action=${act}&diff=${diff}&session=${Math.random().toString(36).slice(2, 10)}`;
+
+    const token = await createChallenge({
+      secretKey: DEMO_SECRET_KEY,
+      action: act,
+      context: ctxStr,
+      difficulty: diff,
+      ttlSeconds: 180
+    });
+
+    const { payload } = parseChallenge(token);
+    const latencyMs = Math.round(performance.now() - reqStart);
+
+    return {
+      status: 200,
+      endpoint: '/api/pow/challenge',
+      token,
+      salt: payload.salt,
+      difficulty: payload.diff,
+      context: ctxStr,
+      action: act,
+      exp: payload.exp,
+      latencyMs
+    };
+  }
+
+  /**
+   * In-Memory Compliant Server Verification API Simulator.
+   * Simulates server-side O(1) instant verification upon form submit.
+   */
+  async function fakeServerVerifyApi(req) {
+    const startTime = performance.now();
+    const result = await verifySolution({
+      token: req.token,
+      nonce: req.nonce,
+      context: req.context,
+      secretKey: DEMO_SECRET_KEY,
+      expectedAction: req.action
+    });
+    const serverLatencyMs = (performance.now() - startTime).toFixed(3);
+    return {
+      ...result,
+      serverLatencyMs
+    };
+  }
+
   async function startChallengePreparation(catchup) {
     if (currentWorker) {
       currentWorker.terminate();
@@ -280,20 +344,6 @@ function initPlaygroundController() {
       : (difficulty === 18 ? 'invoice.create'
       : (difficulty === 21 ? 'account.register'
       : 'security.barrier')));
-    const contextStr = `action=${actionName}&diff=${difficulty}&session=${Math.random().toString(36).slice(2, 10)}`;
-
-    // Create stateless challenge
-    currentChallenge = await createChallenge({
-      secretKey: DEMO_SECRET_KEY,
-      action: actionName,
-      context: contextStr,
-      difficulty,
-      ttlSeconds: 180
-    });
-
-    if (tokenInspectBox) {
-      tokenInspectBox.textContent = `Token: ${currentChallenge}\nAction: ${actionName} | Target: ${difficulty} bits\nContext: ${contextStr}`;
-    }
 
     if (gateEl) {
       gateEl.className = catchup ? 'pow-gate state-catchup' : 'pow-gate state-solving';
@@ -317,15 +367,30 @@ function initPlaygroundController() {
       }
     }
 
-    // Launch worker
-    currentWorker = new Worker('worker.js');
-    const { payload } = parseChallenge(currentChallenge);
+    if (tokenInspectBox) {
+      tokenInspectBox.textContent = `[API CALL] POST /api/pow/challenge\nPayload: { action: "${actionName}", difficulty: ${difficulty} }\nServer evaluating IP reputation & TLS fingerprint...`;
+    }
 
+    // Call fake in-memory server API
+    const challengeRes = await fakeServerApi({
+      action: actionName,
+      difficulty
+    });
+
+    activeChallengeData = challengeRes;
+    currentChallenge = challengeRes.token;
+
+    if (tokenInspectBox) {
+      tokenInspectBox.textContent = `[API 200 OK] Challenge Received (${challengeRes.latencyMs}ms)\nToken: ${currentChallenge}\nAction: ${challengeRes.action} | Target: ${challengeRes.difficulty} bits\nContext: ${challengeRes.context}`;
+    }
+
+    // Launch worker with challenge parameters from API response
+    currentWorker = new Worker('worker.js');
     currentWorker.postMessage({
       type: 'solve',
-      salt: payload.salt,
-      context: payload.ctx,
-      difficulty: payload.diff,
+      salt: challengeRes.salt,
+      context: challengeRes.context,
+      difficulty: challengeRes.difficulty,
       startNonce: 0
     });
 
@@ -366,17 +431,16 @@ function initPlaygroundController() {
             : `Browser Verified - took ${durationSec}s (${hps} H/s)`;
         }
 
-        // Server-side instant verification check
-        const serverVerify = await verifySolution({
+        // Server-side instant verification check via fake local verify API
+        const serverVerify = await fakeServerVerifyApi({
           token: currentChallenge,
           nonce: msg.nonce,
-          context: contextStr,
-          secretKey: DEMO_SECRET_KEY,
-          expectedAction: actionName
+          context: activeChallengeData ? activeChallengeData.context : '',
+          action: activeChallengeData ? activeChallengeData.action : actionName
         });
 
         if (tokenInspectBox) {
-          tokenInspectBox.textContent = `Token: ${currentChallenge}\nNonce: 0x${msg.nonce.toString(16)} (${msg.nonce})\nServer Verify: ${serverVerify.valid ? 'VALID (O(1) verified)' : 'FAILED'}\nHash: ${msg.hash}\nElapsed: ${durationSec}s (${Math.round(msg.elapsedMs)}ms)`;
+          tokenInspectBox.textContent = `[API 200 OK] Challenge Received\nToken: ${currentChallenge}\nNonce: 0x${msg.nonce.toString(16)} (${msg.nonce})\n[SERVER VERIFY] ${serverVerify.valid ? `VALID (${serverVerify.serverLatencyMs}ms) · 0 DB Reads` : 'FAILED'}\nHash: ${msg.hash}\nElapsed: ${durationSec}s (${Math.round(msg.elapsedMs)}ms)`;
         }
 
         if (btnSubmit) {
@@ -403,14 +467,23 @@ function initPlaygroundController() {
   }
 
   if (btnSubmit) {
-    btnSubmit.addEventListener('click', () => {
+    btnSubmit.addEventListener('click', async () => {
       if (currentSolution) {
         const isFa = document.documentElement.getAttribute('lang') === 'fa';
-        if (executionMode === 'background') {
-          showToast(isFa
-            ? 'مرورگر قبلاً تأیید شده است! درخواست با ۰ ثانیه معطلی ارسال گردید.'
-            : 'Browser already verified! Request submitted with 0 delay.');
-        } else {
+        // Execute server verification check via fake local API
+        const serverVerify = await fakeServerVerifyApi({
+          token: currentChallenge,
+          nonce: currentSolution.nonce,
+          context: activeChallengeData ? activeChallengeData.context : '',
+          action: activeChallengeData ? activeChallengeData.action : ''
+        });
+
+        showToast(isFa
+          ? `پاسخ سرور: ۲۰۰ OK (${serverVerify.serverLatencyMs} میلی‌ثانیه)! نانس تأیید شد.`
+          : `Server Response: 200 OK (${serverVerify.serverLatencyMs}ms)! Nonce validated.`
+        );
+
+        if (executionMode !== 'background') {
           startChallengePreparation(false);
         }
       } else if (isSolving) {

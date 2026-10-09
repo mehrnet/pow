@@ -154,24 +154,35 @@
     var context = opts.context || '';
     var onProgress = typeof opts.onProgress === 'function' ? opts.onProgress : null;
 
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
+    var challengePromise;
+    if (typeof opts.callApi === 'function') {
+      challengePromise = Promise.resolve(opts.callApi({
         action: action,
-        context: context
-      })
-    })
-      .then(function (res) {
+        context: context,
+        endpoint: opts.endpoint || '/pow/challenge',
+        domain: opts.domain || '',
+        url: url
+      }));
+    } else {
+      challengePromise = fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          action: action,
+          context: context
+        })
+      }).then(function (res) {
         if (!res.ok) {
           throw new Error('PoW challenge request failed: HTTP ' + res.status);
         }
         return res.json();
-      })
-      .then(function (challenge) {
+      });
+    }
+
+    return challengePromise.then(function (challenge) {
         return new Promise(function (resolve, reject) {
           var worker = createInlineWorker();
           if (!worker) {
@@ -306,18 +317,29 @@
 
       var challengeUrl = resolveUrl(endpoint, domain);
 
-      fetch(challengeUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({ action: action })
-      })
-        .then(function (res) {
+      var challengePromise;
+      if (typeof options.callApi === 'function') {
+        challengePromise = Promise.resolve(options.callApi({
+          action: action,
+          endpoint: endpoint,
+          domain: domain,
+          url: challengeUrl
+        }));
+      } else {
+        challengePromise = fetch(challengeUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ action: action })
+        }).then(function (res) {
           if (!res.ok) throw new Error('HTTP ' + res.status);
           return res.json();
-        })
+        });
+      }
+
+      challengePromise
         .then(function (challenge) {
           activeWorker = createInlineWorker();
           if (!activeWorker) throw new Error('Web Worker unavailable');
@@ -338,7 +360,8 @@
                 token: challenge.token,
                 nonce: msg.nonce,
                 elapsedMs: msg.elapsedMs,
-                hashesPerSec: msg.hashesPerSec
+                hashesPerSec: msg.hashesPerSec,
+                difficulty: challenge.difficulty
               };
 
               var durationSec = (msg.elapsedMs / 1000).toFixed(2);
@@ -351,6 +374,12 @@
 
               if (options.onReady) {
                 options.onReady(currentSolution);
+              }
+
+              if (typeof options.verifyApi === 'function') {
+                Promise.resolve(options.verifyApi(currentSolution)).catch(function (e) {
+                  console.warn('[MehrPoW] verifyApi error:', e);
+                });
               }
 
               if (isSubmitting) {
