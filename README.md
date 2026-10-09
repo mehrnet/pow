@@ -64,6 +64,27 @@ The Mehr PoW visual gate provides honest, transparent telemetry across 4 states:
 
 ---
 
+## Drop-in Client Library (`pow-client.js`)
+
+Add zero-delay anti-bot protection to any HTML form or SPA:
+
+```html
+<script src="https://pow.mehrnet.com/pow-client.js"></script>
+<script>
+  MehrPoW.protect('#signup-form', {
+    // Optional: for separate backend API domains (CORS)
+    domain: 'https://api.example.com',
+    endpoint: '/api/pow/challenge',
+    action: 'account.register',
+    mode: 'background' // Solves non-blockingly while user enters credentials
+  });
+</script>
+```
+
+Supports cross-origin APIs via the optional `domain` parameter, automatic Web Worker spawning via inline blobs (zero external worker files), hidden input injection (`pow_token`, `pow_nonce`), and programmatic solving (`MehrPoW.solve(...)`).
+
+---
+
 ## Multi-Language Implementations
 
 Self-contained solvers and middleware are included in the repository and showcased on [pow.mehrnet.com/examples](https://pow.mehrnet.com/examples):

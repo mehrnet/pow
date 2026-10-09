@@ -574,6 +574,21 @@ function initRouter() {
       link.classList.toggle('active', active);
     });
 
+    const titles = {
+      '/': 'Mehr Proof-of-Work (PoW) — Anti-Bot Standard',
+      '/widgets': 'Visual Design Language & Components — Mehr PoW',
+      '/spec': 'Technical Specification & Architecture — Mehr PoW',
+      '/examples': 'Production Implementation Examples — Mehr PoW'
+    };
+    if (titles[normalized]) {
+      document.title = titles[normalized];
+    }
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', 'https://pow.mehrnet.com' + (normalized === '/' ? '/' : normalized));
+    }
+
     if (push) {
       if (window.location.pathname !== normalized) {
         window.history.pushState(null, '', normalized);

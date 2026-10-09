@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pow.mehrnet.com/sitemap.xml

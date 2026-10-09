@@ -538,6 +538,80 @@
               <p>کاربران عادی سختی پایه (۰.۸ ثانیه) دریافت می‌کنند؛ در حالی که دیتاسنترها و بات‌های مشکوک با سختی‌های تصاعدی مواجه شده و توان سرورشان مسدود می‌شود.</p>
             </div>
           </div>
+
+          <!-- Card 4: Compliant Server Trust Model & Anti-Spoofing -->
+          <div class="spec-card full-width">
+            <div class="spec-card-head">
+              <h3>
+                <svg class="icon icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
+                <span>4. Compliant Server Trust Model &amp; Anti-Spoofing Architecture</span>
+              </h3>
+              <span class="badge">Root of Trust</span>
+            </div>
+            <div data-lang="en">
+              <p>Unlike third-party CAPTCHAs where trust is delegated to Google or Cloudflare, in Mehr PoW <strong>your backend server is the Root of Trust</strong>. The client never chooses difficulty or validates its own tokens:</p>
+              <ul class="spec-list">
+                <li><strong>Cryptographic Tamper-Proofing:</strong> The target difficulty (e.g. 18 or 21 bits), timestamp, and context are signed into the HMAC token with <code>SERVER_SECRET_KEY</code>. If a client tampers with difficulty in DevTools, the HMAC fails upon form submission.</li>
+                <li><strong>Rogue Server Immunity:</strong> If an attacker redirects the PoW library to a fake server issuing trivial 4-bit challenges, the final application server rejects the submission in O(1) time because the signature was not signed with the real <code>SERVER_SECRET_KEY</code>.</li>
+                <li><strong>Dynamic Server Policy:</strong> The backend challenge endpoint (<code>POST /pow/challenge</code>) inspects the client's IP, TLS/JA4 fingerprint, request velocity, and risk tier to dynamically assign difficulty before signing.</li>
+              </ul>
+            </div>
+            <div data-lang="fa">
+              <p>برخلاف کپچاهای شخص‌ثالث که به گوگل یا کلودفلر وابسته هستند، در اثبات کار مهر <strong>سرور اصلی برنامه شما مرجع نهایی امنیت است</strong>. کلاینت هرگز درجه سختی را مشخص نمی‌کند:</p>
+              <ul class="spec-list">
+                <li><strong>غیرقابل دستکاری:</strong> درجه سختی (مثلاً ۱۸ یا ۲۱ بیت)، زمان صدور و زمینه فرم درون توکن با کلید محرمانه سرور امضا می‌شوند. هرگونه تغییر در مرورگر باعث خطای فوری HMAC می‌گردد.</li>
+                <li><strong>مصونیت از جعل سرور:</strong> اگر مهاجم کلاینت را به یک سرور جعلی هدایت کند تا سختی ناچیز بگیرد، سرور مقصد فرم نهایی را بلافاصله رد می‌کند زیرا امضای آن با کلید سرور اصلی همخوانی ندارد.</li>
+                <li><strong>سیاست‌گذاری پویا:</strong> سرور بر اساس آدرس IP، فینگرپرینت TLS و نرخ درخواست، سختی متغیر تعیین کرده و سپس آن را امضا می‌کند.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Card 5: Standard HTTP API & Cross-Origin Contract -->
+          <div class="spec-card full-width">
+            <div class="spec-card-head">
+              <h3>
+                <svg class="icon icon-accent" aria-hidden="true"><use href="#zap"></use></svg>
+                <span>5. Standard HTTP API &amp; Cross-Origin (domain) Contract</span>
+              </h3>
+              <span class="badge">REST / JSON</span>
+            </div>
+            <div data-lang="en">
+              <p>For decoupled frontends (e.g. static website on <code>example.com</code> and API on <code>api.example.com</code>), the client accepts an optional <code>domain</code> option. The backend enables standard CORS headers (<code>Access-Control-Allow-Origin</code>):</p>
+            </div>
+            <div data-lang="fa">
+              <p>برای سامانه‌هایی که فرانت‌اند (مثلاً روی <code>example.com</code>) و سرور بک‌اند (روی <code>api.example.com</code>) دامنه‌های مجزا دارند، کلاینت فیلد اختیاری <code>domain</code> را می‌پذیرد:</p>
+            </div>
+            <div class="spec-api-grid">
+              <div class="spec-api-box">
+                <div class="spec-api-title"><code>POST /pow/challenge</code></div>
+                <div class="spec-api-desc">Issues signed HMAC challenge based on caller IP &amp; action.</div>
+                <pre class="spec-json-pre"><code>// Request
+{ &quot;action&quot;: &quot;account.register&quot;, &quot;context&quot;: &quot;usr_4f81&quot; }
+
+// Response (200 OK)
+{
+  &quot;token&quot;: &quot;eyJ2IjoxLCJz...8f9b2c&quot;,
+  &quot;salt&quot;: &quot;a1f9d287c4b03e1a&quot;,
+  &quot;difficulty&quot;: 18,
+  &quot;context&quot;: &quot;usr_4f81&quot;,
+  &quot;exp&quot;: 1729000180
+}</code></pre>
+              </div>
+              <div class="spec-api-box">
+                <div class="spec-api-title"><code>POST /pow/verify</code> (or Form Submit)</div>
+                <div class="spec-api-desc">Verifies nonce against HMAC token in &lt; 0.05ms without database state.</div>
+                <pre class="spec-json-pre"><code>// Form fields / JSON Payload
+{
+  &quot;pow_token&quot;: &quot;eyJ2IjoxLCJz...8f9b2c&quot;,
+  &quot;pow_nonce&quot;: 268412,
+  ...formData
+}
+
+// Result (O(1) Verification)
+{ &quot;valid&quot;: true, &quot;action&quot;: &quot;account.register&quot; }</code></pre>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -551,13 +625,17 @@
         </div>
 
         <div class="lang-bar-compact" role="tablist">
-          <button type="button" class="lang-btn-sm active" data-lang-panel="code-go">
+          <button type="button" class="lang-btn-sm active" data-lang-panel="code-client">
+            <svg class="icon lang-icon" aria-hidden="true"><use href="#zap"></use></svg>
+            <span>Drop-in Client (JS)</span>
+          </button>
+          <button type="button" class="lang-btn-sm" data-lang-panel="code-go">
             <svg class="icon lang-icon" aria-hidden="true"><use href="#lang-go"></use></svg>
             <span>Go</span>
           </button>
           <button type="button" class="lang-btn-sm" data-lang-panel="code-js">
             <svg class="icon lang-icon" aria-hidden="true"><use href="#lang-js"></use></svg>
-            <span>JavaScript</span>
+            <span>Node / CF Worker</span>
           </button>
           <button type="button" class="lang-btn-sm" data-lang-panel="code-py">
             <svg class="icon lang-icon" aria-hidden="true"><use href="#lang-py"></use></svg>
@@ -573,8 +651,40 @@
           </button>
         </div>
 
+        <!-- Drop-in Client -->
+        <div class="code-panel-sm active" id="code-client">
+          <div class="code-head-sm">
+            <span>index.html (Drop-in Client)</span>
+            <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-client'), this)">
+              <svg class="icon icon-copy"><use href="#copy"></use></svg>
+              <svg class="icon icon-check"><use href="#check"></use></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="code-pre-sm"><code id="src-client"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">&lt;!-- 1. Include the drop-in library --&gt;</span></span></span>
+<span class="code-line"><span class="line-num">2</span><span class="line-content">&lt;<span class="tok-keyword">script</span> <span class="tok-type">src</span>=<span class="tok-string">&quot;https://pow.mehrnet.com/pow-client.js&quot;</span>&gt;&lt;/<span class="tok-keyword">script</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">3</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">4</span><span class="line-content"><span class="tok-comment">&lt;!-- 2. Your standard HTML form --&gt;</span></span></span>
+<span class="code-line"><span class="line-num">5</span><span class="line-content">&lt;<span class="tok-keyword">form</span> <span class="tok-type">id</span>=<span class="tok-string">&quot;signup-form&quot;</span> <span class="tok-type">action</span>=<span class="tok-string">&quot;https://api.example.com/register&quot;</span> <span class="tok-type">method</span>=<span class="tok-string">&quot;POST&quot;</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content">  &lt;<span class="tok-keyword">input</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;email&quot;</span> <span class="tok-type">name</span>=<span class="tok-string">&quot;email&quot;</span> <span class="tok-type">required</span> /&gt;</span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content">  &lt;<span class="tok-keyword">input</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;password&quot;</span> <span class="tok-type">name</span>=<span class="tok-string">&quot;password&quot;</span> <span class="tok-type">required</span> /&gt;</span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content">  &lt;<span class="tok-keyword">button</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;submit&quot;</span>&gt;Register&lt;/<span class="tok-keyword">button</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content">&lt;/<span class="tok-keyword">form</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">10</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">11</span><span class="line-content"><span class="tok-comment">&lt;!-- 3. Auto-protect with optional cross-origin domain --&gt;</span></span></span>
+<span class="code-line"><span class="line-num">12</span><span class="line-content">&lt;<span class="tok-keyword">script</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">13</span><span class="line-content">  <span class="tok-type">MehrPoW</span>.protect(<span class="tok-string">&#39;#signup-form&#39;</span>, {</span></span>
+<span class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="tok-comment">// Optional: for cross-domain API setups (e.g. api.example.com)</span></span></span>
+<span class="code-line"><span class="line-num">15</span><span class="line-content">    domain: <span class="tok-string">&#39;https://api.example.com&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content">    endpoint: <span class="tok-string">&#39;/api/pow/challenge&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">17</span><span class="line-content">    action: <span class="tok-string">&#39;account.register&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">18</span><span class="line-content">    mode: <span class="tok-string">&#39;background&#39;</span> <span class="tok-comment">// Solves non-blockingly while user fills form</span></span></span>
+<span class="code-line"><span class="line-num">19</span><span class="line-content">  });</span></span>
+<span class="code-line"><span class="line-num">20</span><span class="line-content">&lt;/<span class="tok-keyword">script</span>&gt;</span></span></code></pre>
+        </div>
+
         <!-- Go -->
-        <div class="code-panel-sm active" id="code-go">
+        <div class="code-panel-sm" id="code-go">
           <div class="code-head-sm">
             <span>pow.go</span>
             <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-go'), this)">
