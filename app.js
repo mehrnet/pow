@@ -736,6 +736,10 @@ if (typeof window !== 'undefined') {
       content = textOrElement;
     } else if (textOrElement && textOrElement.dataset && textOrElement.dataset.raw) {
       content = textOrElement.dataset.raw;
+    } else if (textOrElement && textOrElement.querySelectorAll && textOrElement.querySelectorAll('.line-content').length > 0) {
+      content = Array.from(textOrElement.querySelectorAll('.line-content'))
+        .map(el => el.textContent)
+        .join('\n');
     } else if (textOrElement && textOrElement.textContent) {
       content = textOrElement.textContent;
     }
