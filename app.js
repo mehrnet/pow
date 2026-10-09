@@ -29,21 +29,25 @@ const TRANSLATIONS = {
     "hero.title": "Mehr Proof-of-Work (PoW)",
     "hero.subtitle": "Transparent, long-lasting anti-bot architecture: Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX.",
     "play.title": "Interactive PoW Engine & Benchmark",
-    "play.subtitle": "Explore stateless HMAC challenges across 10 to 30 bits of difficulty and observe live Web Worker solving performance.",
+    "play.subtitle": "Explore stateless HMAC challenges across 14 to 24 bits of difficulty and observe live Web Worker solving performance.",
     "widgets.title": "Visual Design Language & Components",
     "widgets.subtitle": "Reusable, production-ready UI gates and progress state components for project-wide account generation.",
     "spec.title": "Technical Specification & Architecture",
     "spec.subtitle": "Cryptographic HMAC tokens, context fingerprinting, replay resistance, and multi-tenant sharding.",
     "examples.title": "Production Implementation Examples",
     "examples.subtitle": "Self-contained solvers and middleware for Go, JavaScript/TypeScript, Python, PHP, and POSIX Shell.",
-    "preset.form": "Light Public Form",
-    "preset.message": "Anonymous Message Dispatch",
-    "preset.register": "Account Registration",
+    "mode.label": "Execution Strategy:",
+    "mode.background": "Start in Background",
+    "mode.onclick": "Start on Submit Click",
+    "preset.form": "Public Form Submission",
+    "preset.comment": "User Comment & Post",
     "preset.invoice": "Public Invoice Generation",
-    "preset.sybil": "High-Security Barrier",
+    "preset.register": "Account Registration",
+    "preset.security": "High Security Barrier",
     "btn.start": "Start Verification",
     "btn.verifying": "Verifying Browser...",
     "btn.verified": "Browser Verified",
+    "btn.cancel": "Cancel",
     "btn.sim_rapid": "Simulate Rapid Click",
     "btn.reset": "Reset Benchmark",
     "btn.submit": "Start Verification",
@@ -61,21 +65,25 @@ const TRANSLATIONS = {
     "hero.title": "اثبات کار مهر (PoW)",
     "hero.subtitle": "معماری پایدار و شفاف مقابله با اسپم: چالش‌های بدون دیتابیس HMAC، پردازش پس‌زمینه بدون افت سرعت و تجربه کاربری بدون معطلی.",
     "play.title": "موتور تعاملی و بنچمارک اثبات کار",
-    "play.subtitle": "آزمایش چالش‌های بدون دیتابیس اثبات کار از سختی ۱۰ تا ۳۰ بیت و مشاهده کارایی زنده پردازشگر وب.",
+    "play.subtitle": "آزمایش چالش‌های بدون دیتابیس اثبات کار از سختی ۱۴ تا ۲۴ بیت و مشاهده کارایی زنده پردازشگر وب.",
     "widgets.title": "زبان بصری و کامپوننت‌های رابط کاربری",
     "widgets.subtitle": "طراحی کامپوننت‌های پیشرفت و وضعیت برای تولید حساب‌ها و صدور فاکتور در سراسر سامانه‌های مهر.",
     "spec.title": "مشخصات فنی و معماری امنیتی",
     "spec.subtitle": "توکن‌های امضاشده بدون دیتابیس، اتصال به زمینه درخواست، جلوگیری از بازپخش و درجه سختی متغیر.",
     "examples.title": "نمونه‌کدهای آماده پیاده‌سازی",
     "examples.subtitle": "کتابخانه‌های مستقل و میدل‌ور برای زبان‌های Go، جاوااسکریپت، پایتون، PHP و POSIX Shell.",
-    "preset.form": "فرم عمومی سبک",
-    "preset.message": "ارسال پیام ناشناس",
-    "preset.register": "ثبت‌نام حساب کاربری",
+    "mode.label": "شیوه اجرا:",
+    "mode.background": "اجرا در پس‌زمینه",
+    "mode.onclick": "اجرا با کلیک کاربر",
+    "preset.form": "ارسال فرم عمومی",
+    "preset.comment": "دیدگاه و یادداشت کاربر",
     "preset.invoice": "صدور فاکتور عمومی",
-    "preset.sybil": "سد امنیتی تراکنش‌های حساس",
+    "preset.register": "ثبت‌نام حساب کاربری",
+    "preset.security": "سد امنیتی بالا",
     "btn.start": "شروع تأیید",
     "btn.verifying": "در حال تأیید مرورگر...",
     "btn.verified": "مرورگر تأیید شد",
+    "btn.cancel": "انصراف",
     "btn.sim_rapid": "شبیه‌سازی کلیک سریع",
     "btn.reset": "بازنشانی بنچمارک",
     "btn.submit": "شروع تأیید",
@@ -93,6 +101,7 @@ let currentChallenge = null;
 let currentSolution = null;
 let isSolving = false;
 let isCatchupMode = false;
+let executionMode = 'background'; // 'background' | 'onclick'
 let updateDifficultyDisplayGlobal = null;
 const DEMO_SECRET_KEY = 'mehr-pow-master-secret-demo-key';
 
@@ -107,6 +116,7 @@ function getTimeEstimate(bits, isFa) {
 }
 
 function initPlaygroundController() {
+  const modeTabs = document.querySelectorAll('.mode-tab[data-mode]');
   const diffSlider = document.getElementById('diff-slider');
   const diffVal = document.getElementById('diff-val');
   const diffTimeEst = document.getElementById('diff-time-est');
@@ -115,6 +125,7 @@ function initPlaygroundController() {
   const barFill = document.getElementById('pow-bar-fill');
   const statusLabel = document.getElementById('gate-status-text');
   const percentLabel = document.getElementById('gate-percent');
+  const btnCancel = document.getElementById('btn-cancel-pow');
   const btnSubmit = document.getElementById('demo-submit-btn');
   const btnSimFast = document.getElementById('btn-sim-fast');
   const btnReset = document.getElementById('btn-reset');
@@ -155,7 +166,7 @@ function initPlaygroundController() {
     currentSolution = null;
     currentChallenge = null;
 
-    const val = diffSlider ? parseInt(diffSlider.value, 10) : 18;
+    const val = diffSlider ? parseInt(diffSlider.value, 10) : 19;
     const isFa = document.documentElement.getAttribute('lang') === 'fa';
     if (percentLabel) percentLabel.textContent = '0%';
     if (barFill) barFill.setAttribute('width', '0%');
@@ -180,10 +191,34 @@ function initPlaygroundController() {
     if (statNonce) statNonce.textContent = '--';
   }
 
+  // Mode Switcher handlers
+  modeTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetMode = tab.getAttribute('data-mode');
+      if (targetMode === executionMode) return;
+      executionMode = targetMode;
+      modeTabs.forEach(t => {
+        const isActive = t.getAttribute('data-mode') === executionMode;
+        t.classList.toggle('active', isActive);
+        t.setAttribute('aria-checked', String(isActive));
+      });
+
+      if (executionMode === 'background') {
+        startChallengePreparation(false);
+      } else {
+        resetStateOnly();
+      }
+    });
+  });
+
   if (diffSlider) {
     diffSlider.addEventListener('input', () => {
       updateDifficultyDisplay();
-      resetStateOnly();
+      if (executionMode === 'background') {
+        startChallengePreparation(false);
+      } else {
+        resetStateOnly();
+      }
     });
   }
 
@@ -193,10 +228,42 @@ function initPlaygroundController() {
       if (diffSlider) {
         diffSlider.value = String(val);
         updateDifficultyDisplay();
-        resetStateOnly();
+        if (executionMode === 'background') {
+          startChallengePreparation(false);
+        } else {
+          resetStateOnly();
+        }
       }
     });
   });
+
+  // Cancel Button inside solving gate
+  if (btnCancel) {
+    btnCancel.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentWorker) {
+        currentWorker.terminate();
+        currentWorker = null;
+      }
+      isSolving = false;
+      isCatchupMode = false;
+      currentSolution = null;
+
+      const isFa = document.documentElement.getAttribute('lang') === 'fa';
+      if (gateEl) gateEl.className = 'pow-gate state-idle';
+      if (barFill) barFill.setAttribute('width', '0%');
+      if (percentLabel) percentLabel.textContent = '0%';
+      if (statusLabel) {
+        statusLabel.textContent = isFa ? 'تأیید لغو شد' : 'Verification cancelled';
+      }
+      if (btnSubmit) {
+        btnSubmit.className = 'pow-submit-btn';
+        btnSubmit.textContent = isFa ? 'شروع تأیید' : 'Start Verification';
+      }
+      if (statHashrate) statHashrate.textContent = '--';
+      if (statElapsed) statElapsed.textContent = '--';
+    });
+  }
 
   async function startChallengePreparation(catchup) {
     if (currentWorker) {
@@ -207,10 +274,12 @@ function initPlaygroundController() {
     isCatchupMode = catchup;
     currentSolution = null;
 
-    const difficulty = diffSlider ? parseInt(diffSlider.value, 10) : 18;
-    const actionName = difficulty === 18 ? 'message.dispatch'
+    const difficulty = diffSlider ? parseInt(diffSlider.value, 10) : 19;
+    const actionName = difficulty === 14 ? 'form.submit'
+      : (difficulty === 16 ? 'comment.create'
+      : (difficulty === 19 ? 'invoice.create'
       : (difficulty === 21 ? 'account.register'
-      : (difficulty === 24 ? 'invoice.create' : 'pow.benchmark'));
+      : 'security.barrier')));
     const contextStr = `action=${actionName}&diff=${difficulty}&session=${Math.random().toString(36).slice(2, 10)}`;
 
     // Create stateless challenge
@@ -312,9 +381,15 @@ function initPlaygroundController() {
 
         if (btnSubmit) {
           btnSubmit.className = 'pow-submit-btn ready';
-          btnSubmit.textContent = isCurrentFa
-            ? `مرورگر تأیید شد (${durationSec} ثانیه) · اجرای مجدد`
-            : `Browser Verified (${durationSec}s) · Run Again`;
+          if (executionMode === 'background') {
+            btnSubmit.textContent = isCurrentFa
+              ? `مرورگر تأیید شد (${durationSec} ثانیه) · ارسال فرم`
+              : `Browser Verified (${durationSec}s) · Submit Now`;
+          } else {
+            btnSubmit.textContent = isCurrentFa
+              ? `مرورگر تأیید شد (${durationSec} ثانیه) · اجرای مجدد`
+              : `Browser Verified (${durationSec}s) · Run Again`;
+          }
         }
 
         if (isCatchupMode) {
@@ -329,7 +404,20 @@ function initPlaygroundController() {
 
   if (btnSubmit) {
     btnSubmit.addEventListener('click', () => {
-      startChallengePreparation(false);
+      if (currentSolution) {
+        const isFa = document.documentElement.getAttribute('lang') === 'fa';
+        if (executionMode === 'background') {
+          showToast(isFa
+            ? 'مرورگر قبلاً تأیید شده است! درخواست با ۰ ثانیه معطلی ارسال گردید.'
+            : 'Browser already verified! Request submitted with 0 delay.');
+        } else {
+          startChallengePreparation(false);
+        }
+      } else if (isSolving) {
+        startChallengePreparation(true);
+      } else {
+        startChallengePreparation(false);
+      }
     });
   }
 
@@ -346,6 +434,11 @@ function initPlaygroundController() {
   }
 
   updateDifficultyDisplay();
+
+  // If initial mode is background, start solver warm-up
+  if (executionMode === 'background') {
+    startChallengePreparation(false);
+  }
 }
 
 /* =============================================
@@ -421,7 +514,7 @@ function setLocale(lang, save = true) {
   const statusLabel = document.getElementById('gate-status-text');
   const btnSubmit = document.getElementById('demo-submit-btn');
   const diffSlider = document.getElementById('diff-slider');
-  const val = diffSlider ? parseInt(diffSlider.value, 10) : 18;
+  const val = diffSlider ? parseInt(diffSlider.value, 10) : 19;
 
   if (updateDifficultyDisplayGlobal) {
     updateDifficultyDisplayGlobal();
@@ -434,9 +527,15 @@ function setLocale(lang, save = true) {
       ? `مرورگر تأیید شد — در ${durationSec} ثانیه (${hps} هش/ثانیه)`
       : `Browser Verified - took ${durationSec}s (${hps} H/s)`;
     if (btnSubmit && btnSubmit.classList.contains('ready')) {
-      btnSubmit.textContent = lang === 'fa'
-        ? `مرورگر تأیید شد (${durationSec} ثانیه) · اجرای مجدد`
-        : `Browser Verified (${durationSec}s) · Run Again`;
+      if (executionMode === 'background') {
+        btnSubmit.textContent = lang === 'fa'
+          ? `مرورگر تأیید شد (${durationSec} ثانیه) · ارسال فرم`
+          : `Browser Verified (${durationSec}s) · Submit Now`;
+      } else {
+        btnSubmit.textContent = lang === 'fa'
+          ? `مرورگر تأیید شد (${durationSec} ثانیه) · اجرای مجدد`
+          : `Browser Verified (${durationSec}s) · Run Again`;
+      }
     }
   } else if (!isSolving && statusLabel) {
     statusLabel.textContent = lang === 'fa'

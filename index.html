@@ -86,6 +86,9 @@
     <symbol id="refresh" viewBox="0 0 24 24">
       <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
+    <symbol id="close" viewBox="0 0 24 24">
+      <path d="M18 6 6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
     <symbol id="shield" viewBox="0 0 24 24">
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
@@ -262,16 +265,31 @@
 
             <!-- Interactive PoW Benchmark Controller -->
             <div class="pow-controller-panel">
+              <!-- Mode Selection (Background Auto vs On-Click) -->
+              <div class="pow-mode-switch-box">
+                <span class="mode-switch-label" data-i18n="mode.label">Execution Strategy:</span>
+                <div class="mode-switch-tabs" role="tablist">
+                  <button type="button" class="mode-tab active" data-mode="background" id="mode-tab-bg">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#zap"></use></svg>
+                    <span data-i18n="mode.background">Start in Background</span>
+                  </button>
+                  <button type="button" class="mode-tab" data-mode="onclick" id="mode-tab-click">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#shield"></use></svg>
+                    <span data-i18n="mode.onclick">Start on Submit Click</span>
+                  </button>
+                </div>
+              </div>
+
               <div class="diff-slider-container">
                 <div class="diff-slider-head">
                   <div class="diff-title-row">
-                    <label class="form-label" for="diff-slider">Difficulty Level: <strong id="diff-val">18 bits (~262,144 hashes)</strong></label>
-                    <span class="diff-time-est" id="diff-time-est">Est. ~0.8s on standard browser</span>
+                    <label class="form-label" for="diff-slider">Difficulty Target: <strong id="diff-val">19 bits (~524,288 hashes)</strong></label>
+                    <span class="diff-time-est" id="diff-time-est">Est. ~1.6s on standard browser</span>
                   </div>
                 </div>
 
                 <div class="diff-slider-range-box">
-                  <input type="range" id="diff-slider" min="10" max="30" value="18" step="1" class="diff-slider-input" aria-label="Difficulty target in bits">
+                  <input type="range" id="diff-slider" min="14" max="24" value="19" step="1" class="diff-slider-input" aria-label="Difficulty target in bits">
                 </div>
 
                 <!-- Titled Bars under the slider -->
@@ -279,12 +297,17 @@
                   <button type="button" class="diff-bar-segment" data-diff="14">
                     <span class="diff-bar-tick"></span>
                     <span class="diff-bar-bits">14 bits</span>
-                    <span class="diff-bar-title" data-i18n="preset.form">Light Public Form</span>
+                    <span class="diff-bar-title" data-i18n="preset.form">Public Form Submission</span>
                   </button>
-                  <button type="button" class="diff-bar-segment active" data-diff="18">
+                  <button type="button" class="diff-bar-segment" data-diff="16">
                     <span class="diff-bar-tick"></span>
-                    <span class="diff-bar-bits">18 bits</span>
-                    <span class="diff-bar-title" data-i18n="preset.message">Anonymous Message Dispatch</span>
+                    <span class="diff-bar-bits">16 bits</span>
+                    <span class="diff-bar-title" data-i18n="preset.comment">User Comment &amp; Post</span>
+                  </button>
+                  <button type="button" class="diff-bar-segment active" data-diff="19">
+                    <span class="diff-bar-tick"></span>
+                    <span class="diff-bar-bits">19 bits</span>
+                    <span class="diff-bar-title" data-i18n="preset.invoice">Public Invoice Generation</span>
                   </button>
                   <button type="button" class="diff-bar-segment" data-diff="21">
                     <span class="diff-bar-tick"></span>
@@ -294,12 +317,7 @@
                   <button type="button" class="diff-bar-segment" data-diff="24">
                     <span class="diff-bar-tick"></span>
                     <span class="diff-bar-bits">24 bits</span>
-                    <span class="diff-bar-title" data-i18n="preset.invoice">Public Invoice Generation</span>
-                  </button>
-                  <button type="button" class="diff-bar-segment" data-diff="28">
-                    <span class="diff-bar-tick"></span>
-                    <span class="diff-bar-bits">28 bits</span>
-                    <span class="diff-bar-title" data-i18n="preset.sybil">High-Security Barrier</span>
+                    <span class="diff-bar-title" data-i18n="preset.security">High Security Barrier</span>
                   </button>
                 </div>
               </div>
@@ -309,9 +327,15 @@
                 <div class="pow-gate-head">
                   <span class="pow-gate-status">
                     <svg class="icon icon-base icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
-                    <span id="gate-status-text">Ready to verify (18 bits)...</span>
+                    <span id="gate-status-text">Ready to verify (19 bits)...</span>
                   </span>
-                  <span class="pow-gate-pill" id="gate-percent">0%</span>
+                  <div class="pow-gate-head-actions">
+                    <button type="button" class="pow-cancel-btn" id="btn-cancel-pow" title="Cancel verification">
+                      <svg class="icon icon-sm" aria-hidden="true"><use href="#close"></use></svg>
+                      <span data-i18n="btn.cancel">Cancel</span>
+                    </button>
+                    <span class="pow-gate-pill" id="gate-percent">0%</span>
+                  </div>
                 </div>
 
                 <!-- Precision Soft Rounded Progress Bar -->
