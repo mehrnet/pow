@@ -1,7 +1,7 @@
 {
   "name": "pow",
   "version": "1.0.0",
-  "description": "Mehr Proof of Work (PoW) specification, transparent anti-bot design system, and multi-language implementations",
+  "description": "Mehr Proof of Work (PoW) specification, drop-in client library, and backend verification middleware",
   "private": true,
   "type": "module",
   "scripts": {

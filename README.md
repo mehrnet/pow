@@ -1,11 +1,11 @@
-# Mehr Proof-of-Work (`pow`)
+# <img src="favicon.svg" width="32" height="32" alt="Mehr PoW logo" align="absmiddle"> Mehr Proof-of-Work (`pow`)
 
-> **Transparent, Long-Lasting Anti-Bot Architecture & Visual Design System**  
-> 100% Self-Hosted · Stateless HMAC Tokens · Non-Blocking Web Workers · Zero-Wait Human UX
+> **Stateless HMAC-SHA256 Proof-of-Work Protocol & Client Library**  
+> HMAC-SHA256 Tokens · Non-Blocking Web Workers · O(1) Server Verification
 
 [![Website](https://img.shields.io/badge/Live%20Site-pow.mehrnet.com-ff8a2a.svg)](https://pow.mehrnet.com)
 [![GitHub License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Zero External CDNs](https://img.shields.io/badge/External%20Dependencies-0-success.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-Passing-success.svg)]()
 
 ---
 
@@ -85,7 +85,7 @@ Supports cross-origin APIs via the optional `domain` parameter, automatic Web Wo
 
 ---
 
-## Multi-Language Implementations
+## Implementations
 
 Self-contained solvers and middleware are included in the repository and showcased on [pow.mehrnet.com/implementation](https://pow.mehrnet.com/implementation):
 * **Go:** `http.Handler` middleware with native bit counting (`math/bits.LeadingZeros8`).

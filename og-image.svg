@@ -47,18 +47,17 @@
 
   <!-- Brand Header -->
   <g transform="translate(80, 75)">
-    <g transform="scale(1.2)">
-      <polygon points="27.6,6 47.2,17.3 27.6,28.6 8,17.3" fill="url(#cubeTop)" />
-      <polygon points="8,19.1 27.6,30.4 27.6,54 8,42.7" fill="url(#cubeLeft)" />
-      <polygon points="27.6,30.4 47.2,19.1 47.2,42.7 27.6,54" fill="url(#cubeRight)" />
+    <g transform="translate(0, 10) scale(1.2)">
+      <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="url(#cubeTop)"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="url(#cubeTop)"/>
     </g>
-    <text x="96" y="32" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" fill="#ff8a2a" letter-spacing="1">MEHRNET SPECIFICATION</text>
-    <text x="96" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="900" fill="#f8fafc" letter-spacing="-0.5">Mehr Proof-of-Work (PoW)</text>
+    <text x="88" y="32" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" fill="#ff8a2a" letter-spacing="1">MEHRNET SPECIFICATION</text>
+    <text x="88" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="900" fill="#f8fafc" letter-spacing="-0.5">Mehr Proof-of-Work (PoW)</text>
   </g>
 
   <!-- Subtitle -->
   <text x="80" y="210" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="400" fill="#94a3b8">
-    Transparent, long-lasting anti-bot architecture: Stateless HMAC tokens, invisible Web Workers &amp; zero-wait UX.
+    Stateless HMAC-SHA256 challenge tokens, client Web Worker solver, and O(1) server verification.
   </text>
 
   <!-- Card Mockup -->

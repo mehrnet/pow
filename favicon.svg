@@ -1,11 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54" fill="none">
   <defs>
-    <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="favGrad" x1="6" y1="6" x2="48" y2="48" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#ff9a3d" />
       <stop offset="100%" stop-color="#ff8a2a" />
     </linearGradient>
   </defs>
-  <rect width="32" height="32" rx="7" fill="#0c0f12" />
-  <path d="M16 4L6 8v9c0 6.6 4.3 12.8 10 14 5.7-1.2 10-7.4 10-14V8L16 4z" fill="none" stroke="url(#shieldGrad)" stroke-width="2" stroke-linejoin="round" />
-  <path d="M17 10l-6 7h5l-1 6 6-7h-5l1-6z" fill="url(#shieldGrad)" />
+  <rect width="54" height="54" rx="12" fill="#0c0f12" />
+  <g transform="translate(3, 3) scale(0.888)">
+    <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="url(#favGrad)"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="url(#favGrad)"/>
+  </g>
 </svg>

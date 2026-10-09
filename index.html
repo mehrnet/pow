@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mehr Proof-of-Work (PoW) | Anti-Bot Architecture &amp; UI System</title>
-  <meta name="description" content="Transparent, long-lasting anti-bot architecture and visual design system: Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX.">
+  <meta name="description" content="Mehr Proof-of-Work (PoW) specification, drop-in client library, and backend verification middleware.">
   <meta name="author" content="Mehrnet">
   <meta name="theme-color" content="#0c0f12">
 
@@ -15,7 +15,7 @@
   <meta property="og:url" content="https://pow.mehrnet.com/">
   <meta property="og:site_name" content="Mehrnet">
   <meta property="og:title" content="Mehr Proof-of-Work (PoW) | Anti-Bot Architecture &amp; UI System">
-  <meta property="og:description" content="Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX for registrations, invoice creation, and public forms.">
+  <meta property="og:description" content="Mehr Proof-of-Work (PoW) specification, drop-in client library, and backend verification middleware.">
   <meta property="og:image" content="https://pow.mehrnet.com/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@mehrnet">
   <meta name="twitter:title" content="Mehr Proof-of-Work (PoW) | Anti-Bot Architecture &amp; UI System">
-  <meta name="twitter:description" content="Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX for registrations, invoice creation, and public forms.">
+  <meta name="twitter:description" content="Mehr Proof-of-Work (PoW) specification, drop-in client library, and backend verification middleware.">
   <meta name="twitter:image" content="https://pow.mehrnet.com/og-image.png">
 
   <script>
@@ -160,24 +160,15 @@
   <header class="nav">
     <div class="nav-container">
       <a href="/" class="nav-brand" data-route="/" aria-label="Mehr PoW">
-        <svg class="brand-cube" viewBox="0 0 60 60" fill="none" shape-rendering="geometricPrecision" aria-hidden="true">
+        <svg class="brand-logo" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
-            <linearGradient id="navTop" gradientUnits="userSpaceOnUse" x1="8" y1="6" x2="47.2" y2="27.8">
-              <stop offset="0" stop-color="#ffd1a1" />
-              <stop offset="1" stop-color="#ff8a2a" />
-            </linearGradient>
-            <linearGradient id="navLeft" gradientUnits="userSpaceOnUse" x1="8" y1="19.1" x2="27.6" y2="54">
-              <stop offset="0" stop-color="#ff9a3d" />
-              <stop offset="1" stop-color="#c45300" />
-            </linearGradient>
-            <linearGradient id="navRight" gradientUnits="userSpaceOnUse" x1="27.6" y1="19.1" x2="47.2" y2="54">
-              <stop offset="0" stop-color="#ffb870" />
-              <stop offset="1" stop-color="#e06500" />
+            <linearGradient id="brandGrad" x1="6" y1="6" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ff9a3d" />
+              <stop offset="100%" stop-color="#ff8a2a" />
             </linearGradient>
           </defs>
-          <polygon points="27.6,6 47.2,17.3 27.6,28.6 8,17.3" fill="url(#navTop)" />
-          <polygon points="8,19.1 27.6,30.4 27.6,54 8,42.7" fill="url(#navLeft)" />
-          <polygon points="27.6,30.4 47.2,19.1 47.2,42.7 27.6,54" fill="url(#navRight)" />
+          <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="url(#brandGrad)"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="url(#brandGrad)"/>
         </svg>
         <span class="brand-text">
           <span>Mehr</span>
@@ -254,14 +245,7 @@
       <div class="container">
         <div class="hero-header">
           <h1 class="hero-title-compact" data-i18n="hero.title">Mehr Proof-of-Work (PoW)</h1>
-          <p class="hero-subtitle" data-i18n="hero.subtitle">Transparent, long-lasting anti-bot architecture: Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX.</p>
-          <div class="spec-badges-wrap">
-            <span class="spec-badge-pill accent">100% Self-Hosted</span>
-            <span class="spec-badge-pill">Zero External CDNs</span>
-            <span class="spec-badge-pill">Stateless HMAC Tokens</span>
-            <span class="spec-badge-pill">Zero UI Thread Freeze</span>
-            <span class="spec-badge-pill">Context-Bound Security</span>
-          </div>
+          <p class="hero-subtitle" data-i18n="hero.subtitle">Stateless HMAC-SHA256 proof-of-work protocol, client Web Worker solver, and O(1) server verification.</p>
         </div>
 
         <div class="pow-demo-card">
@@ -418,7 +402,7 @@
       <div class="container">
         <div class="hero-header">
           <h1 class="hero-title-compact" data-i18n="widgets.title">Visual Design Language &amp; Components</h1>
-          <p class="hero-subtitle" data-i18n="widgets.subtitle">Reusable, production-ready UI gates and progress state components for project-wide account generation.</p>
+          <p class="hero-subtitle" data-i18n="widgets.subtitle">UI components and visual states for client-side proof-of-work verification.</p>
         </div>
 
         <div class="widget-showcase-grid">
@@ -498,7 +482,7 @@
                 <svg class="icon icon-accent" aria-hidden="true"><use href="#hash"></use></svg>
                 <span>1. The Stateless HMAC Challenge Token</span>
               </h3>
-              <span class="badge">Zero Database State</span>
+              <span class="badge">HMAC-SHA256</span>
             </div>
             <div data-lang="en">
               <p>Servers do not store active challenges in Redis or databases. Puzzles are distributed as cryptographically signed stateless tokens verified in O(1) time:</p>
@@ -506,13 +490,16 @@
             <div data-lang="fa">
               <p>سرورها چالش‌های فعال را در دیتابیس یا ردیس ذخیره نمی‌کنند. معماها به عنوان توکن‌های بدون حالت و امضاشده صادر می‌شوند که در زمان O(1) تأیید می‌گردند:</p>
             </div>
-            <div class="code-box-mini">
-              <span>Token = Base64Url(Payload) + "." + HMAC_SHA256(SecretKey, Base64Url(Payload))</span>
-              <button type="button" class="copy-btn" onclick="copySnippet('Base64Url(Payload) + "." + HMAC_SHA256(SecretKey, Base64Url(Payload))', this)">
-                <svg class="icon icon-copy"><use href="#copy"></use></svg>
-                <svg class="icon icon-check"><use href="#check"></use></svg>
-                <span>Copy</span>
-              </button>
+            <div class="code-panel-sm active mt-sm">
+              <div class="code-head-sm">
+                <span>token-format.txt</span>
+                <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-spec-token'), this)">
+                  <svg class="icon icon-copy"><use href="#copy"></use></svg>
+                  <svg class="icon icon-check"><use href="#check"></use></svg>
+                  <span>Copy</span>
+                </button>
+              </div>
+              <pre class="code-pre-sm"><code id="src-spec-token"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-type">Token</span> = <span class="tok-keyword">Base64Url</span>(Payload) + <span class="tok-string">&quot;.&quot;</span> + <span class="tok-keyword">HMAC_SHA256</span>(SecretKey, <span class="tok-keyword">Base64Url</span>(Payload))</span></span></code></pre>
             </div>
           </div>
 
@@ -551,7 +538,7 @@
                 <svg class="icon icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
                 <span>4. Compliant Server Trust Model &amp; Anti-Spoofing Architecture</span>
               </h3>
-              <span class="badge">Root of Trust</span>
+              <span class="badge">Server Secret</span>
             </div>
             <div data-lang="en">
               <p>Unlike third-party CAPTCHAs where trust is delegated to Google or Cloudflare, in Mehr PoW <strong>your backend server is the Root of Trust</strong>. The client never chooses difficulty or validates its own tokens:</p>
@@ -587,34 +574,48 @@
               <p>برای سامانه‌هایی که فرانت‌اند (مثلاً روی <code>example.com</code>) و سرور بک‌اند (روی <code>api.example.com</code>) دامنه‌های مجزا دارند، کلاینت فیلد اختیاری <code>domain</code> را می‌پذیرد:</p>
             </div>
             <div class="spec-api-grid">
-              <div class="spec-api-box">
-                <div class="spec-api-title"><code>POST /pow/challenge</code></div>
-                <div class="spec-api-desc">Issues signed HMAC challenge based on caller IP &amp; action.</div>
-                <pre class="spec-json-pre"><code>// Request
-{ &quot;action&quot;: &quot;account.register&quot;, &quot;context&quot;: &quot;usr_4f81&quot; }
-
-// Response (200 OK)
-{
-  &quot;token&quot;: &quot;eyJ2IjoxLCJz...8f9b2c&quot;,
-  &quot;salt&quot;: &quot;a1f9d287c4b03e1a&quot;,
-  &quot;difficulty&quot;: 18,
-  &quot;context&quot;: &quot;usr_4f81&quot;,
-  &quot;exp&quot;: 1729000180
-}</code></pre>
+              <div class="code-panel-sm active">
+                <div class="code-head-sm">
+                  <span>POST /pow/challenge</span>
+                  <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-spec-challenge'), this)">
+                    <svg class="icon icon-copy"><use href="#copy"></use></svg>
+                    <svg class="icon icon-check"><use href="#check"></use></svg>
+                    <span>Copy</span>
+                  </button>
+                </div>
+                <pre class="code-pre-sm"><code id="src-spec-challenge"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">// Request Payload</span></span></span>
+<span class="code-line"><span class="line-num">2</span><span class="line-content">{ <span class="tok-type">&quot;action&quot;</span>: <span class="tok-string">&quot;account.register&quot;</span>, <span class="tok-type">&quot;context&quot;</span>: <span class="tok-string">&quot;usr_4f81&quot;</span> }</span></span>
+<span class="code-line"><span class="line-num">3</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">4</span><span class="line-content"><span class="tok-comment">// Response (HTTP 200 OK)</span></span></span>
+<span class="code-line"><span class="line-num">5</span><span class="line-content">{</span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content">  <span class="tok-type">&quot;token&quot;</span>: <span class="tok-string">&quot;eyJ2IjoxLCJz...8f9b2c&quot;</span>,</span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content">  <span class="tok-type">&quot;salt&quot;</span>: <span class="tok-string">&quot;a1f9d287c4b03e1a&quot;</span>,</span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content">  <span class="tok-type">&quot;difficulty&quot;</span>: <span class="tok-number">18</span>,</span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content">  <span class="tok-type">&quot;context&quot;</span>: <span class="tok-string">&quot;usr_4f81&quot;</span>,</span></span>
+<span class="code-line"><span class="line-num">10</span><span class="line-content">  <span class="tok-type">&quot;exp&quot;</span>: <span class="tok-number">1729000180</span></span></span>
+<span class="code-line"><span class="line-num">11</span><span class="line-content">}</span></span></code></pre>
               </div>
-              <div class="spec-api-box">
-                <div class="spec-api-title"><code>POST /pow/verify</code> (or Form Submit)</div>
-                <div class="spec-api-desc">Verifies nonce against HMAC token in &lt; 0.05ms without database state.</div>
-                <pre class="spec-json-pre"><code>// Form fields / JSON Payload
-{
-  &quot;pow_token&quot;: &quot;eyJ2IjoxLCJz...8f9b2c&quot;,
-  &quot;pow_nonce&quot;: 268412,
-  ...formData
-}
 
-// Result (O(1) Verification)
-{ &quot;valid&quot;: true, &quot;action&quot;: &quot;account.register&quot; }</code></pre>
+              <div class="code-panel-sm active">
+                <div class="code-head-sm">
+                  <span>POST /pow/verify (or Form Submit)</span>
+                  <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-spec-verify'), this)">
+                    <svg class="icon icon-copy"><use href="#copy"></use></svg>
+                    <svg class="icon icon-check"><use href="#check"></use></svg>
+                    <span>Copy</span>
+                  </button>
+                </div>
+                <pre class="code-pre-sm"><code id="src-spec-verify"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">// Form Submission / JSON Payload</span></span></span>
+<span class="code-line"><span class="line-num">2</span><span class="line-content">{</span></span>
+<span class="code-line"><span class="line-num">3</span><span class="line-content">  <span class="tok-type">&quot;pow_token&quot;</span>: <span class="tok-string">&quot;eyJ2IjoxLCJz...8f9b2c&quot;</span>,</span></span>
+<span class="code-line"><span class="line-num">4</span><span class="line-content">  <span class="tok-type">&quot;pow_nonce&quot;</span>: <span class="tok-number">268412</span>,</span></span>
+<span class="code-line"><span class="line-num">5</span><span class="line-content">  ...formData</span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content">}</span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content"><span class="tok-comment">// Result (O(1) Verification)</span></span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content">{ <span class="tok-type">&quot;valid&quot;</span>: <span class="tok-keyword">true</span>, <span class="tok-type">&quot;action&quot;</span>: <span class="tok-string">&quot;account.register&quot;</span> }</span></span></code></pre>
               </div>
+
             </div>
           </div>
         </div>
@@ -626,7 +627,7 @@
       <div class="container">
         <div class="hero-header">
           <h1 class="hero-title-compact" data-i18n="implementation.title">Implementation Guide &amp; Architecture Flow</h1>
-          <p class="hero-subtitle" data-i18n="implementation.subtitle">End-to-end cryptographic sequence flow, browser drop-in client, and production-ready backend verification middleware.</p>
+          <p class="hero-subtitle" data-i18n="implementation.subtitle">Cryptographic sequence flow, browser drop-in client, and backend verification middleware.</p>
         </div>
 
         <!-- Architectural Protocol Flowchart -->
@@ -636,7 +637,6 @@
               <svg class="icon icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
               <h2>End-to-End Protocol Flowchart</h2>
             </div>
-            <span class="badge success">Stateless HMAC · O(1) Verification</span>
           </div>
 
           <div data-lang="en">
@@ -741,7 +741,7 @@
                 </div>
               </div>
               <div data-lang="en">
-                <p class="flow-node-desc">An off-thread Web Worker iterates nonces until target zero bits are found. The browser UI thread remains 100% fluid with zero input latency or stutter for legitimate human visitors.</p>
+                <p class="flow-node-desc">An off-thread Web Worker computes nonces without blocking the browser UI thread.</p>
               </div>
               <div data-lang="fa">
                 <p class="flow-node-desc">یک وب‌ورکر مستقل خارج از ترد اصلی رابط کاربری، نانس‌های متوالی را بررسی می‌کند تا تعداد بیت‌های صفر معین تولید شود؛ رابط کاربری با ۶۰ فریم بر ثانیه کاملاً روان می‌ماند.</p>
@@ -876,9 +876,8 @@
             <div class="spec-card-head">
               <h3>
                 <svg class="icon icon-accent" aria-hidden="true"><use href="#nav-implementation"></use></svg>
-                <span>Production Solvers &amp; Verification Middleware</span>
+                <span>Client &amp; Backend Implementations</span>
               </h3>
-              <span class="badge">Multi-Language</span>
             </div>
             <div data-lang="en">
               <p>Self-contained solvers, drop-in browser client, and verification middleware for Go, JavaScript/TypeScript, Python, PHP, and POSIX Shell.</p>
@@ -1026,7 +1025,7 @@
 <span class="code-line"><span class="line-num">11</span><span class="line-content">    </span></span>
 <span class="code-line"><span class="line-num">12</span><span class="line-content">    <span class="tok-comment">// Count leading zero bits</span></span></span>
 <span class="code-line"><span class="line-num">13</span><span class="line-content">    <span class="tok-keyword">let</span> zeroBits = <span class="tok-number">0</span>;</span></span>
-<span class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="tok-keyword">for</span> (<span class="tok-keyword">let</span> i = <span class="tok-number">0</span>; i < bytes.length; i++) {</span></span>
+<span class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="tok-keyword">for</span> (<span class="tok-keyword">let</span> i = <span class="tok-number">0</span>; i &lt; bytes.length; i++) {</span></span>
 <span class="code-line"><span class="line-num">15</span><span class="line-content">      <span class="tok-keyword">if</span> (bytes[i] === <span class="tok-number">0</span>) zeroBits += <span class="tok-number">8</span>;</span></span>
 <span class="code-line"><span class="line-num">16</span><span class="line-content">      <span class="tok-keyword">else</span> { zeroBits += Math.clz32(bytes[i]) - <span class="tok-number">24</span>; break; }</span></span>
 <span class="code-line"><span class="line-num">17</span><span class="line-content">    }</span></span>
@@ -1088,7 +1087,7 @@
               <span>Copy</span>
             </button>
           </div>
-          <pre class="code-pre-sm"><code id="src-php"><span class="code-line"><span class="line-num">1</span><span class="line-content"><?php</span></span>
+          <pre class="code-pre-sm"><code id="src-php"><span class="code-line"><span class="line-num">1</span><span class="line-content">&lt;?php</span></span>
 <span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-keyword">function</span> verify_pow($secret_key, $token, $nonce, $context) {</span></span>
 <span class="code-line"><span class="line-num">3</span><span class="line-content">    $parts = explode(<span class="tok-string">&quot;.&quot;</span>, $token);</span></span>
 <span class="code-line"><span class="line-num">4</span><span class="line-content">    <span class="tok-keyword">if</span> (count($parts) !== <span class="tok-number">2</span>) <span class="tok-keyword">return</span> <span class="tok-type">false</span>;</span></span>
@@ -1103,7 +1102,7 @@
 <span class="code-line"><span class="line-num">13</span><span class="line-content">    $raw_hash = hash(<span class="tok-string">&quot;sha256&quot;</span>, $candidate, <span class="tok-type">true</span>);</span></span>
 <span class="code-line"><span class="line-num">14</span><span class="line-content"> </span></span>
 <span class="code-line"><span class="line-num">15</span><span class="line-content">    $zero_bits = <span class="tok-number">0</span>;</span></span>
-<span class="code-line"><span class="line-num">16</span><span class="line-content">    <span class="tok-keyword">for</span> ($i = <span class="tok-number">0</span>; $i < strlen($raw_hash); $i++) {</span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content">    <span class="tok-keyword">for</span> ($i = <span class="tok-number">0</span>; $i &lt; strlen($raw_hash); $i++) {</span></span>
 <span class="code-line"><span class="line-num">17</span><span class="line-content">        $<span class="tok-type">byte</span> = ord($raw_hash[$i]);</span></span>
 <span class="code-line"><span class="line-num">18</span><span class="line-content">        <span class="tok-keyword">if</span> ($<span class="tok-type">byte</span> === <span class="tok-number">0</span>) {</span></span>
 <span class="code-line"><span class="line-num">19</span><span class="line-content">            $zero_bits += <span class="tok-number">8</span>;</span></span>
