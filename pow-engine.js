@@ -253,7 +253,8 @@ export async function verifySolution({
   nonce,
   context = '',
   secretKey,
-  expectedAction = null
+  expectedAction = null,
+  minDifficulty = null
 }) {
   const sigCheck = await verifyChallengeSignature(token, secretKey);
   if (!sigCheck.valid) {
@@ -263,6 +264,13 @@ export async function verifySolution({
 
   if (expectedAction && payload.act !== expectedAction) {
     return { valid: false, error: `Action mismatch: expected ${expectedAction}, got ${payload.act}` };
+  }
+
+  if (minDifficulty !== null && payload.diff < minDifficulty) {
+    return {
+      valid: false,
+      error: `Insufficient token difficulty: endpoint requires ${minDifficulty} bits, token has ${payload.diff}`
+    };
   }
 
   const expectedCtx = context.length === 64 && /^[0-9a-f]{64}$/i.test(context)

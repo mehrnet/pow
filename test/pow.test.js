@@ -152,4 +152,32 @@ test('PoW solver and O(1) server verification', async () => {
     expectedAction: 'invoice.create' // token was issued for account.register!
   });
   assert.strictEqual(badAct.valid, false);
+
+  // Rogue server spoofing (signed by attacker secret key) fails
+  const spoofedToken = await createChallenge({
+    secretKey: 'attacker-controlled-rogue-key',
+    action,
+    context,
+    difficulty: 4, // trivial difficulty
+    ttlSeconds: 60
+  });
+  const rogueCheck = await verifySolution({
+    token: spoofedToken,
+    nonce: 1,
+    context,
+    secretKey // real server secret key
+  });
+  assert.strictEqual(rogueCheck.valid, false);
+  assert.strictEqual(rogueCheck.error, 'Signature mismatch');
+
+  // Insufficient token difficulty fails against minDifficulty threshold
+  const lowDiffCheck = await verifySolution({
+    token, // token was issued with diff: 14
+    nonce: solution.nonce,
+    context,
+    secretKey,
+    minDifficulty: 18 // endpoint requires 18 bits!
+  });
+  assert.strictEqual(lowDiffCheck.valid, false);
+  assert.ok(lowDiffCheck.error.includes('Insufficient token difficulty'));
 });
