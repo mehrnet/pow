@@ -26,7 +26,7 @@ Real users should **never wait** for a proof to solve:
 * **Background Warm-up:** The moment a user focuses or interacts with a form input, a non-blocking `Web Worker` begins solving the cryptographic challenge on a secondary thread.
 * **The Human Speed Margin:** Humans require 4 to 8 seconds to enter form data. A standard baseline PoW challenge finishes in **0.8 to 1.4 seconds**.
 * **Zero Delay:** By the time the user clicks "Submit", the challenge is already 100% computed and verified.
-* **Catch-Up Grace:** If an autofill extension (e.g. 1Password) submits the form in 100ms, the button smoothly displays an active progress bar with honest cryptographic messaging (*"Securing account... 75%"*) and automatically dispatches upon completion without a second click.
+* **Catch-Up Grace:** If an autofill extension (e.g. 1Password) submits the form in 100ms, the button smoothly displays an active progress bar with honest cryptographic messaging (*"Verifying browser... 75%"*) and automatically dispatches upon completion without a second click.
 
 ### 2. Stateless HMAC Challenge Token ($O(1)$ Verification)
 Servers do not need Redis or database state to track challenges:
@@ -57,10 +57,10 @@ The Mehr PoW visual gate provides honest, transparent telemetry across 4 states:
 
 | Lifecycle State | Visual Experience | Status Text |
 | :--- | :--- | :--- |
-| **Idle** | Muted outline, inactive track | *"Waiting for input..."* |
-| **Solving** | Smooth pulse shimmer with telemetry | *"Securing in background... (45%)"* |
+| **Idle** | Muted outline, inactive track | *"Ready to verify (18 bits)..."* |
+| **Solving** | Smooth pulse shimmer with telemetry | *"Verifying browser... (45%)"* |
 | **Ready** | Emerald green fill & verified timing | *"Browser Verified — took 14.01s (27,767 H/s)"* |
-| **Catch-up** | High-precision fill for fast autofill | *"Securing proof (80%)..."* & auto-submits |
+| **Catch-up** | High-precision fill for fast autofill | *"Solving challenge (80%)..."* & auto-submits |
 
 ---
 

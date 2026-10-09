@@ -260,74 +260,91 @@
         <div class="pow-demo-card">
           <div class="pow-demo-grid">
 
-            <!-- Interactive Form Simulation -->
-            <div>
-              <form id="demo-form" class="demo-form" autocomplete="off">
-                <div class="form-group">
-                  <label class="form-label" for="job-select">Target Task Context</label>
-                  <select id="job-select" class="form-select">
-                    <option value="account.register">Account Registration (Baseline · 16b)</option>
-                    <option value="invoice.create">Public Invoice Generation (Medium · 17b)</option>
-                    <option value="message.dispatch">Anonymous Message Dispatch (High · 18b)</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label" for="diff-slider">Difficulty Level: <strong id="diff-val">16 bits</strong></label>
-                  <input type="range" id="diff-slider" min="10" max="20" value="16" class="form-input">
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label" for="inp-user">Username / Entity</label>
-                  <input type="text" id="inp-user" name="username" class="form-input" value="mehr_admin" placeholder="Type to trigger background solve...">
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label" for="inp-email">Email / Payload Data</label>
-                  <input type="email" id="inp-email" name="email" class="form-input" value="admin@mehrnet.com" placeholder="Notice verification ready before done typing...">
-                </div>
-
-                <!-- Docked PoW Gate Micro-Widget -->
-                <div class="pow-gate state-idle" id="pow-gate">
-                  <div class="pow-gate-head">
-                    <span class="pow-gate-status">
-                      <svg class="icon icon-base icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
-                      <span id="gate-status-text">Waiting for input...</span>
-                    </span>
-                    <span class="pow-gate-pill" id="gate-percent">0%</span>
-                  </div>
-
-                  <!-- Precision Progress Bar -->
-                  <div class="pow-bar-track">
-                    <svg class="pow-bar-svg" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
-                      <defs>
-                        <linearGradient id="powGrad" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stop-color="#ff9a3d" />
-                          <stop offset="100%" stop-color="#ff8a2a" />
-                        </linearGradient>
-                      </defs>
-                      <rect class="pow-bar-bg" x="0" y="0" width="100" height="8" rx="4" />
-                      <rect id="pow-bar-fill" class="pow-bar-fill" x="0" y="0" width="0" height="8" rx="4" />
-                    </svg>
+            <!-- Interactive PoW Benchmark Controller -->
+            <div class="pow-controller-panel">
+              <div class="diff-slider-container">
+                <div class="diff-slider-head">
+                  <div class="diff-title-row">
+                    <label class="form-label" for="diff-slider">Difficulty Level: <strong id="diff-val">18 bits (~262,144 hashes)</strong></label>
+                    <span class="diff-time-est" id="diff-time-est">Est. ~0.8s on standard browser</span>
                   </div>
                 </div>
 
-                <!-- Submit Action Buttons -->
-                <button type="submit" id="demo-submit-btn" class="pow-submit-btn" data-i18n="btn.submit">
-                  Create Account
+                <div class="diff-slider-range-box">
+                  <input type="range" id="diff-slider" min="10" max="30" value="18" step="1" class="diff-slider-input" aria-label="Difficulty target in bits">
+                </div>
+
+                <!-- Titled Bars under the slider -->
+                <div class="diff-titled-bars" id="diff-titled-bars">
+                  <button type="button" class="diff-bar-segment" data-diff="14">
+                    <span class="diff-bar-tick"></span>
+                    <span class="diff-bar-bits">14 bits</span>
+                    <span class="diff-bar-title" data-i18n="preset.form">Light Public Form</span>
+                  </button>
+                  <button type="button" class="diff-bar-segment active" data-diff="18">
+                    <span class="diff-bar-tick"></span>
+                    <span class="diff-bar-bits">18 bits</span>
+                    <span class="diff-bar-title" data-i18n="preset.message">Anonymous Message Dispatch</span>
+                  </button>
+                  <button type="button" class="diff-bar-segment" data-diff="21">
+                    <span class="diff-bar-tick"></span>
+                    <span class="diff-bar-bits">21 bits</span>
+                    <span class="diff-bar-title" data-i18n="preset.register">Account Registration</span>
+                  </button>
+                  <button type="button" class="diff-bar-segment" data-diff="24">
+                    <span class="diff-bar-tick"></span>
+                    <span class="diff-bar-bits">24 bits</span>
+                    <span class="diff-bar-title" data-i18n="preset.invoice">Public Invoice Generation</span>
+                  </button>
+                  <button type="button" class="diff-bar-segment" data-diff="28">
+                    <span class="diff-bar-tick"></span>
+                    <span class="diff-bar-bits">28 bits</span>
+                    <span class="diff-bar-title" data-i18n="preset.sybil">High-Security Barrier</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Docked PoW Gate Micro-Widget with Rounded Soft Bar -->
+              <div class="pow-gate state-idle" id="pow-gate">
+                <div class="pow-gate-head">
+                  <span class="pow-gate-status">
+                    <svg class="icon icon-base icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
+                    <span id="gate-status-text">Ready to verify (18 bits)...</span>
+                  </span>
+                  <span class="pow-gate-pill" id="gate-percent">0%</span>
+                </div>
+
+                <!-- Precision Soft Rounded Progress Bar -->
+                <div class="pow-bar-track">
+                  <svg class="pow-bar-svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="powGrad" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#ff9a3d" />
+                        <stop offset="100%" stop-color="#ff8a2a" />
+                      </linearGradient>
+                    </defs>
+                    <rect class="pow-bar-bg" x="0" y="0" width="100%" height="100%" rx="999" ry="999" />
+                    <rect id="pow-bar-fill" class="pow-bar-fill" x="0" y="0" width="0%" height="100%" rx="999" ry="999" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Primary Action Controls -->
+              <div class="pow-action-row">
+                <button type="button" id="demo-submit-btn" class="pow-submit-btn" data-i18n="btn.start">
+                  Start Verification
                 </button>
-
                 <div class="lang-bar-compact">
-                  <button type="button" id="btn-sim-fast" class="lang-btn-sm" title="Test how catch-up mode smoothly handles 100ms rapid clicks">
+                  <button type="button" id="btn-sim-fast" class="lang-btn-sm" title="Test how catch-up solver handles instantaneous submit">
                     <svg class="icon icon-sm" aria-hidden="true"><use href="#zap"></use></svg>
-                    <span>Simulate Rapid Autofill / Fast Click</span>
+                    <span data-i18n="btn.sim_rapid">Simulate Rapid Click</span>
                   </button>
                   <button type="button" id="btn-reset" class="lang-btn-sm">
                     <svg class="icon icon-sm" aria-hidden="true"><use href="#refresh"></use></svg>
-                    <span>Reset Simulation</span>
+                    <span data-i18n="btn.reset">Reset Benchmark</span>
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
 
             <!-- Live Telemetry & Inspector -->
@@ -413,20 +430,20 @@
                 <div class="pow-gate-head">
                   <span class="pow-gate-status">
                     <svg class="icon icon-base icon-accent"><use href="#shield"></use></svg>
-                    <span>Securing invoice.create...</span>
+                    <span>Verifying invoice.create...</span>
                   </span>
                   <span class="pow-gate-pill">75%</span>
                 </div>
                 <div class="pow-bar-track">
-                  <svg class="pow-bar-svg" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
+                  <svg class="pow-bar-svg" aria-hidden="true">
                     <defs>
                       <linearGradient id="powGradWidgets" x1="0" y1="0" x2="1" y2="0">
                         <stop offset="0%" stop-color="#ff9a3d" />
                         <stop offset="100%" stop-color="#ff8a2a" />
                       </linearGradient>
                     </defs>
-                    <rect class="pow-bar-bg" x="0" y="0" width="100" height="8" rx="4" />
-                    <rect class="pow-bar-fill" x="0" y="0" width="75" height="8" rx="4" fill="url(#powGradWidgets)" />
+                    <rect class="pow-bar-bg" x="0" y="0" width="100%" height="100%" rx="999" ry="999" />
+                    <rect class="pow-bar-fill" x="0" y="0" width="75%" height="100%" rx="999" ry="999" fill="url(#powGradWidgets)" />
                   </svg>
                 </div>
               </div>
