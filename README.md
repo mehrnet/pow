@@ -87,7 +87,7 @@ Supports cross-origin APIs via the optional `domain` parameter, automatic Web Wo
 
 ## Multi-Language Implementations
 
-Self-contained solvers and middleware are included in the repository and showcased on [pow.mehrnet.com/examples](https://pow.mehrnet.com/examples):
+Self-contained solvers and middleware are included in the repository and showcased on [pow.mehrnet.com/implementation](https://pow.mehrnet.com/implementation):
 * **Go:** `http.Handler` middleware with native bit counting (`math/bits.LeadingZeros8`).
 * **JavaScript / TypeScript:** Non-blocking Web Worker client + Cloudflare Worker/Node verifier.
 * **Python:** FastAPI / Flask verification decorator.

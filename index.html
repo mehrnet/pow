@@ -122,6 +122,10 @@
       <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       <line x1="8" y1="17" x2="14" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </symbol>
+    <symbol id="nav-implementation" viewBox="0 0 24 24">
+      <polyline points="4 17 10 11 4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="12" y1="19" x2="20" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
     <symbol id="nav-examples" viewBox="0 0 24 24">
       <polyline points="4 17 10 11 4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <line x1="12" y1="19" x2="20" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -195,9 +199,9 @@
           <svg class="icon nav-item-icon" aria-hidden="true"><use href="#nav-spec"></use></svg>
           <span data-i18n="nav.spec">Specification</span>
         </a>
-        <a href="/examples" class="nav-link" data-route="/examples">
-          <svg class="icon nav-item-icon" aria-hidden="true"><use href="#nav-examples"></use></svg>
-          <span data-i18n="nav.code">Examples</span>
+        <a href="/implementation" class="nav-link" data-route="/implementation">
+          <svg class="icon nav-item-icon" aria-hidden="true"><use href="#nav-implementation"></use></svg>
+          <span data-i18n="nav.implementation">Implementation</span>
         </a>
       </nav>
 
@@ -617,13 +621,183 @@
       </div>
     </div>
 
-    <!-- View 4: Implementation Examples (/examples) -->
-    <div class="page-view" id="view-examples">
+    <!-- View 4: Implementation Guide, Flowchart & Code (/implementation) -->
+    <div class="page-view" id="view-implementation">
       <div class="container">
         <div class="hero-header">
-          <h1 class="hero-title-compact" data-i18n="examples.title">Production Implementation Examples</h1>
-          <p class="hero-subtitle" data-i18n="examples.subtitle">Self-contained solvers and middleware for Go, JavaScript/TypeScript, Python, PHP, and POSIX Shell.</p>
+          <h1 class="hero-title-compact" data-i18n="implementation.title">Implementation Guide &amp; Architecture Flow</h1>
+          <p class="hero-subtitle" data-i18n="implementation.subtitle">End-to-end cryptographic sequence flow, browser drop-in client, and production-ready backend verification middleware.</p>
         </div>
+
+        <!-- Architectural Protocol Flowchart -->
+        <div class="flowchart-section-card">
+          <div class="flowchart-header">
+            <div class="flowchart-title-wrap">
+              <svg class="icon icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
+              <h2>End-to-End Protocol Flowchart</h2>
+            </div>
+            <span class="badge success">Stateless HMAC · O(1) Verification</span>
+          </div>
+
+          <div data-lang="en">
+            <p class="flowchart-intro">This interactive architecture sequence illustrates the trust lifecycle between the client browser (untrusted environment), the challenge gateway (stateless HMAC issuer), and your protected backend API. Solving runs non-blockingly inside background Web Workers, while the server verifies solutions in &lt; 0.05ms without database state.</p>
+          </div>
+          <div data-lang="fa">
+            <p class="flowchart-intro">این فلوچارت تعاملی معماری، چرخه اعتماد میان مرورگر کلاینت (محیط غیرقابل‌اعتماد)، گیت‌وی صادرکننده چالش (امضای بدون دیتابیس) و سرور مقصد برنامه شما را نشان می‌دهد. محاسبات در پس‌زمینه کلاینت اجرا شده و اعتبارسنجی سرور در کمتر از ۰.۰۵ میلی‌ثانیه بدون بار دیتابیس انجام می‌گیرد.</p>
+          </div>
+
+          <!-- Flowchart Visual SVG Sequence Diagram -->
+          <div class="flowchart-svg-wrap">
+            <svg class="flowchart-svg" viewBox="0 0 940 430" width="100%" height="100%" aria-label="Mehr PoW Cryptographic Protocol Flowchart" dir="ltr">
+              <defs>
+                <marker id="fc-arrow-accent" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--accent)" />
+                </marker>
+                <marker id="fc-arrow-info" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--info)" />
+                </marker>
+                <marker id="fc-arrow-success" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--success)" />
+                </marker>
+              </defs>
+
+              <!-- Lifelines -->
+              <line x1="155" y1="68" x2="155" y2="415" class="fc-lifeline" />
+              <line x1="470" y1="68" x2="470" y2="415" class="fc-lifeline" />
+              <line x1="785" y1="68" x2="785" y2="415" class="fc-lifeline" />
+
+              <!-- Actor Nodes (Headers) -->
+              <!-- Actor 1: Client Browser -->
+              <rect x="40" y="16" width="230" height="52" class="fc-actor-box fc-actor-client" />
+              <text x="155" y="38" text-anchor="middle" class="fc-actor-title">Client Browser / App</text>
+              <text x="155" y="55" text-anchor="middle" class="fc-actor-sub">Untrusted Client · Web Worker</text>
+
+              <!-- Actor 2: Stateless Challenge Gateway -->
+              <rect x="355" y="16" width="230" height="52" class="fc-actor-box fc-actor-gateway" />
+              <text x="470" y="38" text-anchor="middle" class="fc-actor-title">Challenge Gateway</text>
+              <text x="470" y="55" text-anchor="middle" class="fc-actor-sub">POST /pow/challenge · HMAC Issuer</text>
+
+              <!-- Actor 3: Destination Backend API -->
+              <rect x="670" y="16" width="230" height="52" class="fc-actor-box fc-actor-backend" />
+              <text x="785" y="38" text-anchor="middle" class="fc-actor-title">Destination Backend API</text>
+              <text x="785" y="55" text-anchor="middle" class="fc-actor-sub">Protected Service · O(1) Gate</text>
+
+              <!-- Message 1: Client -> Challenge Gateway -->
+              <line x1="155" y1="108" x2="460" y2="108" class="fc-arrow" marker-end="url(#fc-arrow-accent)" />
+              <rect x="180" y="94" width="265" height="26" class="fc-step-badge" />
+              <text x="192" y="112" class="fc-step-num">1.</text>
+              <text x="210" y="112" class="fc-step-code">POST /pow/challenge { action, context }</text>
+
+              <!-- Message 2: Challenge Gateway -> Client -->
+              <line x1="470" y1="165" x2="165" y2="165" class="fc-arrow-return" marker-end="url(#fc-arrow-info)" />
+              <rect x="185" y="151" width="255" height="26" class="fc-step-badge" />
+              <text x="197" y="169" class="fc-step-num">2.</text>
+              <text x="215" y="169" class="fc-step-code">200 OK { token: HMAC, salt, diff: 18 }</text>
+
+              <!-- Message 3: Client Web Worker Loop -->
+              <path d="M 155 210 C 225 210, 225 258, 155 258" class="fc-self-loop" marker-end="url(#fc-arrow-info)" />
+              <rect x="180" y="215" width="260" height="38" class="fc-step-badge" />
+              <text x="192" y="231" class="fc-step-num">3.</text>
+              <text x="210" y="231" class="fc-step-label">Web Worker Non-Blocking Search</text>
+              <text x="210" y="246" class="fc-step-code">SHA-256(salt:nonce:ctx) -> zeroBits >= 18</text>
+
+              <!-- Message 4: Client -> Destination Backend -->
+              <line x1="155" y1="305" x2="775" y2="305" class="fc-arrow" marker-end="url(#fc-arrow-accent)" />
+              <rect x="310" y="291" width="320" height="26" class="fc-step-badge" />
+              <text x="322" y="309" class="fc-step-num">4.</text>
+              <text x="340" y="309" class="fc-step-code">POST /api/register + Headers: [Token, Nonce]</text>
+
+              <!-- Message 5: Backend Self Verification -->
+              <rect x="670" y="335" width="230" height="38" class="fc-step-badge" />
+              <text x="682" y="351" class="fc-step-num">5.</text>
+              <text x="700" y="351" class="fc-step-label">Stateless O(1) Verification</text>
+              <text x="700" y="365" class="fc-step-code">6 Crypto Gates (HMAC, exp, minDiff)</text>
+
+              <!-- Message 6: Destination Backend -> Client -->
+              <line x1="785" y1="405" x2="165" y2="405" class="fc-arrow-success" marker-end="url(#fc-arrow-success)" />
+              <rect x="340" y="391" width="260" height="26" class="fc-step-badge" />
+              <text x="352" y="409" class="fc-step-num">6.</text>
+              <text x="370" y="409" class="fc-step-status">200 OK (Accepted) / 403 Forbidden</text>
+            </svg>
+          </div>
+
+          <!-- Step Breakdown Cards -->
+          <div class="flow-steps-grid">
+            <div class="flow-step-card">
+              <div class="flow-step-num">1</div>
+              <div class="flow-step-body">
+                <div class="flow-step-title">Challenge Handshake</div>
+                <div data-lang="en">
+                  <div class="flow-step-desc">Client requests a challenge via <code>POST /pow/challenge</code> on page load (background) or on form submit. Backend evaluates caller IP velocity and action risk tier.</div>
+                </div>
+                <div data-lang="fa">
+                  <div class="flow-step-desc">کلاینت درخواست چالش را در پس‌زمینه یا هنگام ثبت فرم به <code>POST /pow/challenge</code> ارسال می‌کند. سرور بر اساس IP و حساسیت عملیات سختی را تنظیم می‌نماید.</div>
+                </div>
+                <span class="flow-step-tag">Stateless HMAC-SHA256</span>
+              </div>
+            </div>
+
+            <div class="flow-step-card">
+              <div class="flow-step-num">2</div>
+              <div class="flow-step-body">
+                <div class="flow-step-title">Signed Challenge Token</div>
+                <div data-lang="en">
+                  <div class="flow-step-desc">Server returns salt, difficulty, and an HMAC token signed with <code>SERVER_SECRET_KEY</code>. No database record or Redis cache is allocated.</div>
+                </div>
+                <div data-lang="fa">
+                  <div class="flow-step-desc">سرور سالت، سختی و توکن امضاشده با <code>SERVER_SECRET_KEY</code> را بازمی‌گرداند. هیچ رکوردی در دیتابیس یا ردیس مصرف نمی‌شود.</div>
+                </div>
+                <span class="flow-step-tag">Zero Database State</span>
+              </div>
+            </div>
+
+            <div class="flow-step-card">
+              <div class="flow-step-num">3</div>
+              <div class="flow-step-body">
+                <div class="flow-step-title">Off-Thread Web Worker</div>
+                <div data-lang="en">
+                  <div class="flow-step-desc">A non-blocking Web Worker runs the SHA-256 loop to find a valid nonce. Main UI thread stays silky-smooth (60 FPS) with responsive inputs.</div>
+                </div>
+                <div data-lang="fa">
+                  <div class="flow-step-desc">یک وب‌ورکر مستقل حلقه هش SHA-256 را جهت یافتن نانس معتبر اجرا می‌کند؛ رابط کاربری بدون کوچک‌ترین لگ (۶۰ فریم) روان باقی می‌ماند.</div>
+                </div>
+                <span class="flow-step-tag">Web Worker (Blob / Script)</span>
+              </div>
+            </div>
+
+            <div class="flow-step-card">
+              <div class="flow-step-num">4</div>
+              <div class="flow-step-body">
+                <div class="flow-step-title">O(1) Verification Gate</div>
+                <div data-lang="en">
+                  <div class="flow-step-desc">Destination API receives <code>X-Mehr-PoW-Token</code> and <code>X-Mehr-PoW-Nonce</code>. <code>verifySolution()</code> confirms proof in &lt; 0.05ms through 6 strict cryptographic gates.</div>
+                </div>
+                <div data-lang="fa">
+                  <div class="flow-step-desc">سرور مقصد هدرهای توکن و نانس را دریافت کرده و تابع <code>verifySolution()</code> با اجرای ۶ دروازه امنیتی در کمتر از ۰.۰۵ میلی‌ثانیه صحت آن را می‌سنجد.</div>
+                </div>
+                <span class="flow-step-tag">&lt; 0.05ms Verification</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Implementation Code Examples Section -->
+        <div class="implementation-code-section">
+          <div class="implementation-code-head">
+            <div class="spec-card-head">
+              <h3>
+                <svg class="icon icon-accent" aria-hidden="true"><use href="#nav-implementation"></use></svg>
+                <span>Production Solvers &amp; Verification Middleware</span>
+              </h3>
+              <span class="badge">Multi-Language</span>
+            </div>
+            <div data-lang="en">
+              <p>Self-contained solvers, drop-in browser client, and verification middleware for Go, JavaScript/TypeScript, Python, PHP, and POSIX Shell.</p>
+            </div>
+            <div data-lang="fa">
+              <p>کتابخانه‌های مستقل کلاینت، سالورهای چندزبانه و میدل‌ورهای اعتبارسنجی برای Go، جاوااسکریپت، پایتون، PHP و POSIX Shell.</p>
+            </div>
+          </div>
 
         <div class="lang-bar-compact" role="tablist">
           <button type="button" class="lang-btn-sm active" data-lang-panel="code-client">
@@ -749,6 +923,8 @@
           <pre class="code-pre-sm"><code id="src-sh"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">#!/bin/sh</span></span></span><span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-comment"># POSIX-compliant PoW solver</span></span></span><span class="code-line"><span class="line-num">3</span><span class="line-content">SALT=<span class="tok-string">&quot;a1b2c3d4e5f67890&quot;</span></span></span><span class="code-line"><span class="line-num">4</span><span class="line-content">CTX=<span class="tok-string">&quot;job_context_fingerprint&quot;</span></span></span><span class="code-line"><span class="line-num">5</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">6</span><span class="line-content">nonce=<span class="tok-number">0</span></span></span><span class="code-line"><span class="line-num">7</span><span class="line-content"><span class="tok-keyword">while</span> :; <span class="tok-keyword">do</span></span></span><span class="code-line"><span class="line-num">8</span><span class="line-content">    hash=$(printf <span class="tok-string">&quot;%s:%s:%s&quot;</span> <span class="tok-string">&quot;$SALT&quot;</span> <span class="tok-string">&quot;$nonce&quot;</span> <span class="tok-string">&quot;$CTX&quot;</span> | sha256sum | awk <span class="tok-string">&quot;{print \$1}&quot;</span>)</span></span><span class="code-line"><span class="line-num">9</span><span class="line-content">    case <span class="tok-string">&quot;$hash&quot;</span> in</span></span><span class="code-line"><span class="line-num">10</span><span class="line-content">        <span class="tok-number">0000</span>*)</span></span><span class="code-line"><span class="line-num">11</span><span class="line-content">            printf <span class="tok-string">&quot;Solved! Nonce: %s Hash: %s\n&quot;</span> <span class="tok-string">&quot;$nonce&quot;</span> <span class="tok-string">&quot;$hash&quot;</span></span></span><span class="code-line"><span class="line-num">12</span><span class="line-content">            break</span></span><span class="code-line"><span class="line-num">13</span><span class="line-content">            ;;</span></span><span class="code-line"><span class="line-num">14</span><span class="line-content">    esac</span></span><span class="code-line"><span class="line-num">15</span><span class="line-content">    nonce=$((nonce + <span class="tok-number">1</span>))</span></span><span class="code-line"><span class="line-num">16</span><span class="line-content"><span class="tok-keyword">done</span></span></span></code></pre>
         </div>
 
+        </div><!-- /implementation-code-section -->
+
       </div>
     </div>
 
@@ -770,9 +946,9 @@
       <svg class="icon bottom-nav-icon" aria-hidden="true"><use href="#nav-spec"></use></svg>
       <span data-i18n="nav.spec">Spec</span>
     </a>
-    <a href="/examples" class="bottom-nav-link" data-route="/examples">
-      <svg class="icon bottom-nav-icon" aria-hidden="true"><use href="#nav-examples"></use></svg>
-      <span data-i18n="nav.code">Code</span>
+    <a href="/implementation" class="bottom-nav-link" data-route="/implementation">
+      <svg class="icon bottom-nav-icon" aria-hidden="true"><use href="#nav-implementation"></use></svg>
+      <span data-i18n="nav.implementation">Implementation</span>
     </a>
   </nav>
 

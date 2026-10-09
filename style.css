@@ -1182,6 +1182,229 @@ main {
 }
 
 /* =============================================
+   IMPLEMENTATION & PROTOCOL FLOWCHART
+   ============================================= */
+
+.flowchart-section-card {
+  background: var(--card-bg);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.flowchart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.flowchart-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.flowchart-title-wrap h2 {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.flowchart-intro {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-6);
+}
+
+.flowchart-svg-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+  -webkit-overflow-scrolling: touch;
+}
+
+.flowchart-svg {
+  display: block;
+  width: 100%;
+  min-width: 48rem;
+  height: auto;
+}
+
+/* Flowchart SVG components */
+.fc-actor-box {
+  rx: var(--radius-sm);
+  ry: var(--radius-sm);
+  stroke-width: 0.0625rem;
+}
+.fc-actor-client {
+  fill: var(--card-bg);
+  stroke: var(--info);
+}
+.fc-actor-gateway {
+  fill: var(--card-bg);
+  stroke: var(--accent);
+}
+.fc-actor-backend {
+  fill: var(--card-bg);
+  stroke: var(--success);
+}
+.fc-actor-title {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  fill: var(--text-primary);
+}
+.fc-actor-sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  fill: var(--text-dim);
+}
+.fc-lifeline {
+  stroke: var(--border);
+  stroke-width: 0.0625rem;
+  stroke-dasharray: 0.35rem 0.35rem;
+}
+.fc-arrow {
+  stroke: var(--accent);
+  stroke-width: 0.1rem;
+  fill: none;
+}
+.fc-arrow-return {
+  stroke: var(--info);
+  stroke-width: 0.1rem;
+  stroke-dasharray: 0.35rem 0.25rem;
+  fill: none;
+}
+.fc-arrow-success {
+  stroke: var(--success);
+  stroke-width: 0.1rem;
+  stroke-dasharray: 0.35rem 0.25rem;
+  fill: none;
+}
+.fc-self-loop {
+  stroke: var(--info);
+  stroke-width: 0.1rem;
+  fill: none;
+}
+.fc-step-badge {
+  rx: var(--radius-sm);
+  ry: var(--radius-sm);
+  fill: var(--bg-primary);
+  stroke: var(--border);
+  stroke-width: 0.0625rem;
+}
+.fc-step-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  fill: var(--accent);
+}
+.fc-step-label {
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  fill: var(--text-primary);
+}
+.fc-step-code {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  fill: var(--text-secondary);
+}
+.fc-step-status {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  fill: var(--success);
+}
+
+/* Steps Breakdown Cards Grid */
+.flow-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--space-4);
+}
+
+.flow-step-card {
+  background: var(--bg-tertiary);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+  transition: border-color var(--duration-fast);
+}
+
+.flow-step-card:hover {
+  border-color: var(--border-strong);
+}
+
+.flow-step-num {
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: var(--radius-full);
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border: 0.0625rem solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--text-xs);
+  flex-shrink: 0;
+}
+
+.flow-step-body {
+  flex: 1;
+}
+
+.flow-step-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.flow-step-desc {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--space-2);
+}
+
+.flow-step-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: var(--badge-bg);
+  color: var(--text-dim);
+  border: 0.0625rem solid var(--border);
+}
+
+/* Implementation Code Section */
+.implementation-code-section {
+  background: var(--card-bg);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.implementation-code-head {
+  margin-bottom: var(--space-4);
+}
+
+/* =============================================
    CODE PANELS (TABS & SYNTAX HIGHLIGHTING)
    ============================================= */
 

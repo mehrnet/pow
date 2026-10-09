@@ -22,7 +22,8 @@ const TRANSLATIONS = {
     "nav.playground": "Playground",
     "nav.widgets": "Design System",
     "nav.spec": "Specification",
-    "nav.code": "Examples",
+    "nav.implementation": "Implementation",
+    "nav.code": "Implementation",
     "pref.theme": "Theme",
     "pref.language": "Language",
     "hero.badge": "Anti-Bot Standard",
@@ -34,6 +35,8 @@ const TRANSLATIONS = {
     "widgets.subtitle": "Reusable, production-ready UI gates and progress state components for project-wide account generation.",
     "spec.title": "Technical Specification & Architecture",
     "spec.subtitle": "Cryptographic HMAC tokens, context fingerprinting, replay resistance, and multi-tenant sharding.",
+    "implementation.title": "Implementation Guide & Architecture Flow",
+    "implementation.subtitle": "End-to-end cryptographic sequence flow, browser drop-in client, and production-ready backend verification middleware.",
     "examples.title": "Production Implementation Examples",
     "examples.subtitle": "Self-contained solvers and middleware for Go, JavaScript/TypeScript, Python, PHP, and POSIX Shell.",
     "mode.label": "Execution Strategy:",
@@ -58,7 +61,8 @@ const TRANSLATIONS = {
     "nav.playground": "آزمایشگاه زنده",
     "nav.widgets": "سامانه طراحی",
     "nav.spec": "مشخصات فنی",
-    "nav.code": "نمونه‌کدها",
+    "nav.implementation": "پیاده‌سازی",
+    "nav.code": "پیاده‌سازی",
     "pref.theme": "پوسته",
     "pref.language": "زبان",
     "hero.badge": "استاندارد ضد بات",
@@ -70,6 +74,8 @@ const TRANSLATIONS = {
     "widgets.subtitle": "طراحی کامپوننت‌های پیشرفت و وضعیت برای تولید حساب‌ها و صدور فاکتور در سراسر سامانه‌های مهر.",
     "spec.title": "مشخصات فنی و معماری امنیتی",
     "spec.subtitle": "توکن‌های امضاشده بدون دیتابیس، اتصال به زمینه درخواست، جلوگیری از بازپخش و درجه سختی متغیر.",
+    "implementation.title": "راهنمای پیاده‌سازی و جریان معماری",
+    "implementation.subtitle": "فلوچارت چرخه اعتماد پروتکل رمزنگاری و نمونه‌کدهای آماده برای اتصال فرانت‌اند و بک‌اند.",
     "examples.title": "نمونه‌کدهای آماده پیاده‌سازی",
     "examples.subtitle": "کتابخانه‌های مستقل و میدل‌ور برای زبان‌های Go، جاوااسکریپت، پایتون، PHP و POSIX Shell.",
     "mode.label": "شیوه اجرا:",
@@ -628,12 +634,13 @@ function initRouter() {
   function navigateTo(path, push = true) {
     let normalized = path.replace(/\/+$/, '') || '/';
     if (normalized === '/playground') normalized = '/';
+    if (normalized === '/examples') normalized = '/implementation';
 
     const views = {
       '/': document.getElementById('view-playground'),
       '/widgets': document.getElementById('view-widgets'),
       '/spec': document.getElementById('view-spec'),
-      '/examples': document.getElementById('view-examples')
+      '/implementation': document.getElementById('view-implementation')
     };
 
     Object.entries(views).forEach(([route, el]) => {
@@ -643,7 +650,9 @@ function initRouter() {
 
     document.querySelectorAll('.nav-link[data-route], .bottom-nav-link[data-route]').forEach(link => {
       const route = link.getAttribute('data-route');
-      const active = route === normalized || (normalized === '/' && (route === '/' || route === '/playground'));
+      const active = route === normalized || 
+                     (normalized === '/' && (route === '/' || route === '/playground')) ||
+                     (normalized === '/implementation' && (route === '/implementation' || route === '/examples'));
       link.classList.toggle('active', active);
     });
 
@@ -651,7 +660,8 @@ function initRouter() {
       '/': 'Mehr Proof-of-Work (PoW) — Anti-Bot Standard',
       '/widgets': 'Visual Design Language & Components — Mehr PoW',
       '/spec': 'Technical Specification & Architecture — Mehr PoW',
-      '/examples': 'Production Implementation Examples — Mehr PoW'
+      '/implementation': 'Implementation Guide & Flowchart — Mehr PoW',
+      '/examples': 'Implementation Guide & Flowchart — Mehr PoW'
     };
     if (titles[normalized]) {
       document.title = titles[normalized];
