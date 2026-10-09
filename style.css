@@ -772,12 +772,12 @@ main {
   flex-shrink: 0;
 }
 
-/* SVG Precision Soft Rounded Progress Bar */
+/* SVG Precision Thin Rounded Rectangle Progress Bar */
 .pow-bar-track {
   width: 100%;
-  height: 0.65rem;
+  height: 0.3rem;
   background: var(--bg-tertiary);
-  border-radius: var(--radius-full);
+  border-radius: 0.1rem;
   overflow: hidden;
   position: relative;
   box-shadow: inset 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.25);
@@ -788,20 +788,20 @@ main {
   height: 100%;
   display: block;
   overflow: hidden;
-  border-radius: var(--radius-full);
+  border-radius: 0.1rem;
 }
 
 .pow-bar-bg {
   fill: transparent;
-  rx: 999;
-  ry: 999;
+  rx: 2;
+  ry: 2;
 }
 
 .pow-bar-fill {
   fill: #ff8a2a;
   fill: url(#powGrad);
-  rx: 999;
-  ry: 999;
+  rx: 2;
+  ry: 2;
   transition: width 150ms ease-out;
 }
 

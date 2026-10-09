@@ -166,7 +166,7 @@ function initPlaygroundController() {
     currentSolution = null;
     currentChallenge = null;
 
-    const val = diffSlider ? parseInt(diffSlider.value, 10) : 19;
+    const val = diffSlider ? parseInt(diffSlider.value, 10) : 18;
     const isFa = document.documentElement.getAttribute('lang') === 'fa';
     if (percentLabel) percentLabel.textContent = '0%';
     if (barFill) barFill.setAttribute('width', '0%');
@@ -274,10 +274,10 @@ function initPlaygroundController() {
     isCatchupMode = catchup;
     currentSolution = null;
 
-    const difficulty = diffSlider ? parseInt(diffSlider.value, 10) : 19;
+    const difficulty = diffSlider ? parseInt(diffSlider.value, 10) : 18;
     const actionName = difficulty === 14 ? 'form.submit'
       : (difficulty === 16 ? 'comment.create'
-      : (difficulty === 19 ? 'invoice.create'
+      : (difficulty === 18 ? 'invoice.create'
       : (difficulty === 21 ? 'account.register'
       : 'security.barrier')));
     const contextStr = `action=${actionName}&diff=${difficulty}&session=${Math.random().toString(36).slice(2, 10)}`;
@@ -514,7 +514,7 @@ function setLocale(lang, save = true) {
   const statusLabel = document.getElementById('gate-status-text');
   const btnSubmit = document.getElementById('demo-submit-btn');
   const diffSlider = document.getElementById('diff-slider');
-  const val = diffSlider ? parseInt(diffSlider.value, 10) : 19;
+  const val = diffSlider ? parseInt(diffSlider.value, 10) : 18;
 
   if (updateDifficultyDisplayGlobal) {
     updateDifficultyDisplayGlobal();
