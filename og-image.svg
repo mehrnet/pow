@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="bgGlow" cx="70%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#ff8a2a" stop-opacity="0.16" />
+      <stop offset="60%" stop-color="#ff8a2a" stop-opacity="0.02" />
+      <stop offset="100%" stop-color="#0c0f12" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="cubeTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd1a1" />
+      <stop offset="100%" stop-color="#ff8a2a" />
+    </linearGradient>
+    <linearGradient id="cubeLeft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff9a3d" />
+      <stop offset="100%" stop-color="#c45300" />
+    </linearGradient>
+    <linearGradient id="cubeRight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffb870" />
+      <stop offset="100%" stop-color="#e06500" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#181e26" />
+      <stop offset="100%" stop-color="#10141a" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0c0f12" />
+  <rect width="1200" height="630" fill="url(#bgGlow)" />
+
+  <!-- Subtle grid lines -->
+  <g stroke="#ffffff" stroke-opacity="0.03" stroke-width="1">
+    <line x1="80" y1="0" x2="80" y2="630" />
+    <line x1="240" y1="0" x2="240" y2="630" />
+    <line x1="400" y1="0" x2="400" y2="630" />
+    <line x1="560" y1="0" x2="560" y2="630" />
+    <line x1="720" y1="0" x2="720" y2="630" />
+    <line x1="880" y1="0" x2="880" y2="630" />
+    <line x1="1040" y1="0" x2="1040" y2="630" />
+    <line x1="0" y1="90" x2="1200" y2="90" />
+    <line x1="0" y1="210" x2="1200" y2="210" />
+    <line x1="0" y1="330" x2="1200" y2="330" />
+    <line x1="0" y1="450" x2="1200" y2="450" />
+    <line x1="0" y1="570" x2="1200" y2="570" />
+  </g>
+
+  <!-- Brand Header -->
+  <g transform="translate(80, 75)">
+    <g transform="scale(1.2)">
+      <polygon points="27.6,6 47.2,17.3 27.6,28.6 8,17.3" fill="url(#cubeTop)" />
+      <polygon points="8,19.1 27.6,30.4 27.6,54 8,42.7" fill="url(#cubeLeft)" />
+      <polygon points="27.6,30.4 47.2,19.1 47.2,42.7 27.6,54" fill="url(#cubeRight)" />
+    </g>
+    <text x="96" y="32" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" fill="#ff8a2a" letter-spacing="1">MEHRNET SPECIFICATION</text>
+    <text x="96" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="900" fill="#f8fafc" letter-spacing="-0.5">Mehr Proof-of-Work (PoW)</text>
+  </g>
+
+  <!-- Subtitle -->
+  <text x="80" y="210" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="400" fill="#94a3b8">
+    Transparent, long-lasting anti-bot architecture: Stateless HMAC tokens, invisible Web Workers &amp; zero-wait UX.
+  </text>
+
+  <!-- Card Mockup -->
+  <g transform="translate(80, 245)" filter="url(#shadow)">
+    <rect width="1040" height="270" rx="16" fill="url(#cardGrad)" stroke="#262f3d" stroke-width="1.5" />
+
+    <text x="32" y="44" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#f8fafc">ZERO-WAIT PROOF PIPELINING</text>
+    <rect x="850" y="24" width="158" height="28" rx="14" fill="rgba(34, 197, 94, 0.15)" stroke="rgba(34, 197, 94, 0.35)" stroke-width="1" />
+    <text x="929" y="43" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#22c55e" text-anchor="middle">VERIFIED IN BACKGROUND</text>
+
+    <!-- Progress Visualization -->
+    <g transform="translate(32, 70)">
+      <rect width="976" height="74" rx="10" fill="#0d1117" stroke="#1f2733" stroke-width="1" />
+      <text x="20" y="28" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#64748b">JOB: account.register &#183; DIFFICULTY: 18 BITS &#183; ALGORITHM: SHA256 / MEM-BOUND</text>
+      <text x="956" y="28" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" fill="#22c55e" text-anchor="end">READY &#183; 0.94s</text>
+
+      <!-- Progress Fill -->
+      <rect x="20" y="42" width="936" height="14" rx="7" fill="#1e293b" />
+      <rect x="20" y="42" width="936" height="14" rx="7" fill="url(#cubeTop)" />
+    </g>
+
+    <!-- Token Strip -->
+    <g transform="translate(32, 160)">
+      <rect width="976" height="76" rx="10" fill="#0d1117" stroke="#1f2733" stroke-width="1" />
+      <text x="20" y="28" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#64748b">STATELESS HMAC CHALLENGE VERIFICATION</text>
+      <text x="20" y="56" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
+        <tspan fill="#ff8a2a">v1.account_register.1790022600.18</tspan><tspan fill="#64748b"> &#183; </tspan><tspan fill="#38bdf8">Nonce: 0x4f9c2a</tspan><tspan fill="#64748b"> &#183; </tspan><tspan fill="#22c55e">HMAC-SHA256 Valid</tspan>
+      </text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <g transform="translate(80, 565)">
+    <text x="0" y="20" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="600" fill="#64748b">100% SELF-HOSTED &#183; ZERO TRACKING &#183; ZERO 3RD-PARTY CDNS</text>
+    <text x="1040" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#94a3b8" text-anchor="end">pow.mehrnet.com</text>
+  </g>
+</svg>

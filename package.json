@@ -1,0 +1,15 @@
+{
+  "name": "pow",
+  "version": "1.0.0",
+  "description": "Mehr Proof of Work (PoW) specification, transparent anti-bot design system, and multi-language implementations",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test test/**/*.test.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4.149.0"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pow",
+  "compatibility_date": "2026-07-15",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    {
+      "pattern": "pow.mehrnet.com",
+      "custom_domain": true
+    }
+  ]
+}

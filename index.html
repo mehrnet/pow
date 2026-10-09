@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mehr Proof-of-Work (PoW) | Anti-Bot Architecture &amp; UI System</title>
+  <meta name="description" content="Transparent, long-lasting anti-bot architecture and visual design system: Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX.">
+  <meta name="author" content="Mehrnet">
+  <meta name="theme-color" content="#0c0f12">
+
+  <link rel="canonical" href="https://pow.mehrnet.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pow.mehrnet.com/">
+  <meta property="og:site_name" content="Mehrnet">
+  <meta property="og:title" content="Mehr Proof-of-Work (PoW) | Anti-Bot Architecture &amp; UI System">
+  <meta property="og:description" content="Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX for registrations, invoice creation, and public forms.">
+  <meta property="og:image" content="https://pow.mehrnet.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Mehr Proof of Work Architecture and UI Design System">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@mehrnet">
+  <meta name="twitter:title" content="Mehr Proof-of-Work (PoW) | Anti-Bot Architecture &amp; UI System">
+  <meta name="twitter:description" content="Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX for registrations, invoice creation, and public forms.">
+  <meta name="twitter:image" content="https://pow.mehrnet.com/og-image.png">
+
+  <script>
+    (function () {
+      var t = localStorage.getItem("mehr_pow_theme") || "dark";
+      document.documentElement.setAttribute("data-theme", t);
+      var l = localStorage.getItem("mehr_pow_locale") || "en";
+      document.documentElement.setAttribute("lang", l);
+      document.documentElement.setAttribute("dir", l === "fa" ? "rtl" : "ltr");
+    })();
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =============================================
+       INLINE SVG SYMBOLS (ZERO EXTERNAL ASSETS)
+       ============================================= -->
+  <svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="moon" viewBox="0 0 24 24">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="contrast" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="flag-us" viewBox="0 0 24 24">
+      <rect x="2" y="4.5" width="20" height="15" rx="2.5" fill="#f8fafc" />
+      <path d="M2 6.5h20M2 9.5h20M2 12.5h20M2 15.5h20M2 18h20" stroke="#ef4444" stroke-width="1.3" />
+      <rect x="2" y="4.5" width="9.5" height="8" rx="1.5" fill="#1d4ed8" />
+      <circle cx="4.8" cy="7" r="0.75" fill="#ffffff" />
+      <circle cx="8.6" cy="7" r="0.75" fill="#ffffff" />
+      <circle cx="6.7" cy="9.2" r="0.75" fill="#ffffff" />
+    </symbol>
+    <symbol id="flag-ir" viewBox="0 0 24 24">
+      <rect x="2" y="4.5" width="20" height="15" rx="2.5" fill="#ffffff" />
+      <path d="M2 4.5h20v5H2z" fill="#16a34a" />
+      <path d="M2 14.5h20v5H2z" fill="#dc2626" />
+      <circle cx="12" cy="12" r="1.8" fill="#dc2626" />
+      <path d="M12 10.5v3M10.5 12h3" stroke="#ffffff" stroke-width="0.7" stroke-linecap="round" />
+    </symbol>
+    <symbol id="chevron-down" viewBox="0 0 24 24">
+      <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="copy" viewBox="0 0 24 24">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="check" viewBox="0 0 24 24">
+      <path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="refresh" viewBox="0 0 24 24">
+      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="shield" viewBox="0 0 24 24">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="zap" viewBox="0 0 24 24">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="hash" viewBox="0 0 24 24">
+      <line x1="4" y1="9" x2="20" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="4" y1="15" x2="20" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="10" y1="3" x2="8" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="16" y1="3" x2="14" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="lock" viewBox="0 0 24 24">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- Nav Icons -->
+    <symbol id="nav-playground" viewBox="0 0 24 24">
+      <polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="nav-widgets" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="14" y="3" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="14" y="14" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="3" y="14" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+    <symbol id="nav-spec" viewBox="0 0 24 24">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="8" y1="17" x2="14" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="nav-examples" viewBox="0 0 24 24">
+      <polyline points="4 17 10 11 4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="12" y1="19" x2="20" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Language Icons -->
+    <symbol id="lang-go" viewBox="0 0 24 24">
+      <path d="M1.811 10.231c-.047 0-.058-.023-.035-.059l.246-.315c.023-.035.081-.058.128-.058h4.172c.046 0 .058.035.035.07l-.199.303c-.023.036-.082.07-.117.07zM.047 11.306c-.047 0-.059-.023-.035-.058l.245-.316c.023-.035.082-.058.129-.058h5.328c.047 0 .07.035.058.07l-.093.28c-.012.047-.058.07-.105.07zm2.828 1.075c-.047 0-.059-.035-.035-.07l.163-.292c.023-.035.07-.07.117-.07h2.337c.047 0 .07.035.07.082l-.023.28c0 .047-.047.082-.082.082zm12.129-2.36c-.736.187-1.239.327-1.963.514-.176.046-.187.058-.34-.117-.174-.199-.303-.327-.548-.444-.737-.362-1.45-.257-2.115.175-.795.514-1.204 1.274-1.192 2.22.011.935.654 1.706 1.577 1.835.795.105 1.46-.175 1.987-.77.105-.13.198-.27.315-.434H10.47c-.245 0-.304-.152-.222-.35.152-.362.432-.97.596-1.274a.315.315 0 01.292-.187h4.253c-.023.316-.023.631-.07.947a4.983 4.983 0 01-.958 2.29c-.841 1.11-1.94 1.8-3.33 1.986-1.145.152-2.209-.07-3.143-.77-.865-.655-1.356-1.52-1.484-2.595-.152-1.274.222-2.419.993-3.424.83-1.086 1.928-1.776 3.272-2.02 1.098-.2 2.15-.07 3.096.571.62.41 1.063.97 1.356 1.648.07.105.023.164-.117.2m3.868 6.461c-1.064-.024-2.034-.328-2.852-1.029a3.665 3.665 0 01-1.262-2.255c-.21-1.32.152-2.489.947-3.529.853-1.122 1.881-1.706 3.272-1.95 1.192-.21 2.314-.095 3.33.595.923.63 1.496 1.484 1.648 2.605.198 1.578-.257 2.863-1.344 3.962-.771.783-1.718 1.273-2.805 1.495-.315.06-.63.07-.934.106zm2.78-4.72c-.011-.153-.011-.27-.034-.387-.21-1.157-1.274-1.81-2.384-1.554-1.087.245-1.788.935-2.045 2.033-.21.912.234 1.835 1.075 2.21.643.28 1.285.244 1.905-.07.923-.48 1.425-1.228 1.484-2.233z" fill="currentColor"/>
+    </symbol>
+    <symbol id="lang-js" viewBox="0 0 24 24">
+      <rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M7 14.5v1.5a1.5 1.5 0 0 0 3 0V11M13.5 16.5c1.5.5 3-.5 3-2s-3-1.5-3-3 1.5-2.5 3-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="lang-py" viewBox="0 0 24 24">
+      <path d="M12 2C7.5 2 7 4 7 4v3h5v1H5S2 8 2 12.5 4 17 4 17h2v-3c0-1.5 1-2.5 2.5-2.5h5c1.5 0 2.5-1 2.5-2.5V4s.5-2-4-2zm-2.5 2a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M12 22c4.5 0 5-2 5-2v-3h-5v-1h7s3 0 3-4.5S20 7 20 7h-2v3c0 1.5-1 2.5-2.5 2.5h-5c-1.5 0-2.5 1-2.5 2.5v7s-.5 2 4 2zm2.5-2a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="lang-php" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="12" rx="10" ry="7" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M6.5 14.5V9.5h2.5a1.5 1.5 0 0 1 0 3H6.5M12 9.5v5m-1.5-2.5h3M15.5 14.5V9.5h2.5a1.5 1.5 0 0 1 0 3h-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="lang-sh" viewBox="0 0 24 24">
+      <rect x="2" y="3" width="20" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <polyline points="6 9 9 12 6 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="12" y1="15" x2="17" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+  </svg>
+
+  <!-- =============================================
+       HEADER
+       ============================================= -->
+  <header class="nav">
+    <div class="nav-container">
+      <a href="/" class="nav-brand" data-route="/" aria-label="Mehr PoW">
+        <svg class="brand-cube" viewBox="0 0 60 60" fill="none" shape-rendering="geometricPrecision" aria-hidden="true">
+          <defs>
+            <linearGradient id="navTop" gradientUnits="userSpaceOnUse" x1="8" y1="6" x2="47.2" y2="27.8">
+              <stop offset="0" stop-color="#ffd1a1" />
+              <stop offset="1" stop-color="#ff8a2a" />
+            </linearGradient>
+            <linearGradient id="navLeft" gradientUnits="userSpaceOnUse" x1="8" y1="19.1" x2="27.6" y2="54">
+              <stop offset="0" stop-color="#ff9a3d" />
+              <stop offset="1" stop-color="#c45300" />
+            </linearGradient>
+            <linearGradient id="navRight" gradientUnits="userSpaceOnUse" x1="27.6" y1="19.1" x2="47.2" y2="54">
+              <stop offset="0" stop-color="#ffb870" />
+              <stop offset="1" stop-color="#e06500" />
+            </linearGradient>
+          </defs>
+          <polygon points="27.6,6 47.2,17.3 27.6,28.6 8,17.3" fill="url(#navTop)" />
+          <polygon points="8,19.1 27.6,30.4 27.6,54 8,42.7" fill="url(#navLeft)" />
+          <polygon points="27.6,30.4 47.2,19.1 47.2,42.7 27.6,54" fill="url(#navRight)" />
+        </svg>
+        <span class="brand-text">
+          <span>Mehr</span>
+          <span class="brand-sub">PoW</span>
+        </span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="nav-center" aria-label="Main Navigation">
+        <a href="/" class="nav-link active" data-route="/">
+          <svg class="icon nav-item-icon" aria-hidden="true"><use href="#nav-playground"></use></svg>
+          <span data-i18n="nav.playground">Playground</span>
+        </a>
+        <a href="/widgets" class="nav-link" data-route="/widgets">
+          <svg class="icon nav-item-icon" aria-hidden="true"><use href="#nav-widgets"></use></svg>
+          <span data-i18n="nav.widgets">Design System</span>
+        </a>
+        <a href="/spec" class="nav-link" data-route="/spec">
+          <svg class="icon nav-item-icon" aria-hidden="true"><use href="#nav-spec"></use></svg>
+          <span data-i18n="nav.spec">Specification</span>
+        </a>
+        <a href="/examples" class="nav-link" data-route="/examples">
+          <svg class="icon nav-item-icon" aria-hidden="true"><use href="#nav-examples"></use></svg>
+          <span data-i18n="nav.code">Examples</span>
+        </a>
+      </nav>
+
+      <!-- Preferences Dropdown -->
+      <div class="nav-actions">
+        <div class="dropdown-wrap" data-menu-root>
+          <button type="button" class="pref-btn" data-dropdown-toggle aria-label="Preferences Menu" aria-expanded="false">
+            <svg class="icon icon-sm" data-pref-theme-icon aria-hidden="true"><use href="#moon"></use></svg>
+            <svg class="icon icon-sm" data-pref-lang-icon aria-hidden="true"><use href="#flag-us"></use></svg>
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#chevron-down"></use></svg>
+          </button>
+
+          <div class="dropdown-menu">
+            <div class="dropdown-section-title" data-i18n="pref.theme">Theme</div>
+            <button type="button" class="dropdown-item" data-theme-val="dark">
+              <span>Dark Theme</span>
+              <svg class="icon icon-sm"><use href="#moon"></use></svg>
+            </button>
+            <button type="button" class="dropdown-item" data-theme-val="light">
+              <span>Light Theme</span>
+              <svg class="icon icon-sm"><use href="#sun"></use></svg>
+            </button>
+            <button type="button" class="dropdown-item" data-theme-val="black">
+              <span>OLED Black</span>
+              <svg class="icon icon-sm"><use href="#contrast"></use></svg>
+            </button>
+
+            <div class="dropdown-section-title mt-sm" data-i18n="pref.language">Language</div>
+            <button type="button" class="dropdown-item" data-lang-val="en">
+              <span>English</span>
+              <svg class="icon icon-sm"><use href="#flag-us"></use></svg>
+            </button>
+            <button type="button" class="dropdown-item" data-lang-val="fa">
+              <span>فارسی (Persian)</span>
+              <svg class="icon icon-sm"><use href="#flag-ir"></use></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =============================================
+       MAIN CONTENT (SPA VIEWS)
+       ============================================= -->
+  <main>
+
+    <!-- View 1: Playground (/ or /playground) -->
+    <div class="page-view active" id="view-playground">
+      <div class="container">
+        <div class="hero-header">
+          <h1 class="hero-title-compact" data-i18n="hero.title">Mehr Proof-of-Work (PoW)</h1>
+          <p class="hero-subtitle" data-i18n="hero.subtitle">Transparent, long-lasting anti-bot architecture: Stateless HMAC challenges, non-blocking Web Workers, and zero-wait human UX.</p>
+          <div class="spec-badges-wrap">
+            <span class="spec-badge-pill accent">100% Self-Hosted</span>
+            <span class="spec-badge-pill">Zero External CDNs</span>
+            <span class="spec-badge-pill">Stateless HMAC Tokens</span>
+            <span class="spec-badge-pill">Zero UI Thread Freeze</span>
+            <span class="spec-badge-pill">Context-Bound Security</span>
+          </div>
+        </div>
+
+        <div class="pow-demo-card">
+          <div class="pow-demo-grid">
+
+            <!-- Interactive Form Simulation -->
+            <div>
+              <form id="demo-form" class="demo-form" autocomplete="off">
+                <div class="form-group">
+                  <label class="form-label" for="job-select">Target Task Context</label>
+                  <select id="job-select" class="form-select">
+                    <option value="account.register">Account Registration (Baseline · 16b)</option>
+                    <option value="invoice.create">Public Invoice Generation (Medium · 17b)</option>
+                    <option value="message.dispatch">Anonymous Message Dispatch (High · 18b)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="diff-slider">Difficulty Level: <strong id="diff-val">16 bits</strong></label>
+                  <input type="range" id="diff-slider" min="10" max="20" value="16" class="form-input">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="inp-user">Username / Entity</label>
+                  <input type="text" id="inp-user" name="username" class="form-input" value="mehr_admin" placeholder="Type to trigger background solve...">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="inp-email">Email / Payload Data</label>
+                  <input type="email" id="inp-email" name="email" class="form-input" value="admin@mehrnet.com" placeholder="Notice verification ready before done typing...">
+                </div>
+
+                <!-- Docked PoW Gate Micro-Widget -->
+                <div class="pow-gate state-idle" id="pow-gate">
+                  <div class="pow-gate-head">
+                    <span class="pow-gate-status">
+                      <svg class="icon icon-base icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
+                      <span id="gate-status-text">Waiting for input...</span>
+                    </span>
+                    <span class="pow-gate-pill" id="gate-percent">0%</span>
+                  </div>
+
+                  <!-- Precision Progress Bar -->
+                  <div class="pow-bar-track">
+                    <div class="pow-bar-fill" id="pow-bar-fill"></div>
+                  </div>
+
+                  <div class="pow-gate-meta">
+                    <span>Target: Lead Zero Bits</span>
+                    <span>Worker: Non-Blocking Background</span>
+                  </div>
+                </div>
+
+                <!-- Submit Action Buttons -->
+                <button type="submit" id="demo-submit-btn" class="pow-submit-btn" data-i18n="btn.submit">
+                  Create Account
+                </button>
+
+                <div class="lang-bar-compact">
+                  <button type="button" id="btn-sim-fast" class="lang-btn-sm" title="Test how catch-up mode smoothly handles 100ms rapid clicks">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#zap"></use></svg>
+                    <span>Simulate Rapid Autofill / Fast Click</span>
+                  </button>
+                  <button type="button" id="btn-reset" class="lang-btn-sm">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#refresh"></use></svg>
+                    <span>Reset Simulation</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Live Telemetry & Inspector -->
+            <div class="telemetry-card">
+              <div class="telemetry-head">
+                <span>Real-Time Solver Telemetry</span>
+                <span class="badge">Web Worker</span>
+              </div>
+
+              <div class="telemetry-stats">
+                <div class="stat-item">
+                  <div class="stat-label">Hashrate</div>
+                  <div class="stat-val" id="stat-hashrate">--</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label">Total Hashes</div>
+                  <div class="stat-val info" id="stat-iterations">--</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label">Elapsed Time</div>
+                  <div class="stat-val" id="stat-elapsed">--</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label">Verified Nonce</div>
+                  <div class="stat-val success" id="stat-nonce">--</div>
+                </div>
+              </div>
+
+              <div class="telemetry-head mt-sm">
+                <span>Stateless Token Inspector</span>
+              </div>
+              <pre class="token-inspect-box" id="token-inspect-box">Waiting for challenge generation...</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View 2: Design System (/widgets) -->
+    <div class="page-view" id="view-widgets">
+      <div class="container">
+        <div class="hero-header">
+          <h1 class="hero-title-compact" data-i18n="widgets.title">Visual Design Language &amp; Components</h1>
+          <p class="hero-subtitle" data-i18n="widgets.subtitle">Reusable, production-ready UI gates and progress state components for project-wide account generation.</p>
+        </div>
+
+        <div class="widget-showcase-grid">
+          <!-- Pattern 1: Embedded CTA Button Gate -->
+          <div class="widget-card">
+            <h3>
+              <svg class="icon icon-accent" aria-hidden="true"><use href="#zap"></use></svg>
+              <span>Pattern 1: Embedded CTA Button Gate</span>
+            </h3>
+            <div data-lang="en">
+              <p>For compact cards and modal dialogs. The progress shimmer is embedded directly on the button edge so the interface stays clean and clutter-free.</p>
+            </div>
+            <div data-lang="fa">
+              <p>برای فرم‌های فشرده و پنجره‌های پاپ‌آپ. نوار پیشرفت دقیقا در لبه دکمه اصلی قرار گرفته و رابط کاربری خلوت و مدرن باقی می‌ماند.</p>
+            </div>
+            <div class="widget-preview-box">
+              <button type="button" class="pow-submit-btn ready">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#check"></use></svg>
+                <span>Account Primed · Instant Create</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Pattern 2: Docked Form Gate Card -->
+          <div class="widget-card">
+            <h3>
+              <svg class="icon icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
+              <span>Pattern 2: Docked Form Gate Card</span>
+            </h3>
+            <div data-lang="en">
+              <p>For high-trust flows like checkout, invoice generation, or account creation. Transparently displays verification progress and cryptographic telemetry.</p>
+            </div>
+            <div data-lang="fa">
+              <p>برای فرآیندهای مالی و حساس مانند پرداخت و ایجاد حساب کاربری. پیشرفت اثبات کار و وضعیت امنیتی را با شفافیت کامل نمایش می‌دهد.</p>
+            </div>
+            <div class="widget-preview-box">
+              <div class="pow-gate state-solving">
+                <div class="pow-gate-head">
+                  <span class="pow-gate-status">
+                    <svg class="icon icon-base icon-accent"><use href="#shield"></use></svg>
+                    <span>Securing invoice.create...</span>
+                  </span>
+                  <span class="pow-gate-pill">75%</span>
+                </div>
+                <div class="pow-bar-track">
+                  <div class="pow-bar-fill"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View 3: Specification (/spec) -->
+    <div class="page-view" id="view-spec">
+      <div class="container">
+        <div class="hero-header">
+          <h1 class="hero-title-compact" data-i18n="spec.title">Technical Specification &amp; Architecture</h1>
+          <p class="hero-subtitle" data-i18n="spec.subtitle">Cryptographic HMAC tokens, context fingerprinting, replay resistance, and multi-tenant sharding.</p>
+        </div>
+
+        <div class="spec-grid-compact">
+          <!-- Card 1: Stateless Challenge Token -->
+          <div class="spec-card full-width">
+            <div class="spec-card-head">
+              <h3>
+                <svg class="icon icon-accent" aria-hidden="true"><use href="#hash"></use></svg>
+                <span>1. The Stateless HMAC Challenge Token</span>
+              </h3>
+              <span class="badge">Zero Database State</span>
+            </div>
+            <div data-lang="en">
+              <p>Servers do not store active challenges in Redis or databases. Puzzles are distributed as cryptographically signed stateless tokens verified in O(1) time:</p>
+            </div>
+            <div data-lang="fa">
+              <p>سرورها چالش‌های فعال را در دیتابیس یا ردیس ذخیره نمی‌کنند. معماها به عنوان توکن‌های بدون حالت و امضاشده صادر می‌شوند که در زمان O(1) تأیید می‌گردند:</p>
+            </div>
+            <div class="code-box-mini">
+              <span>Token = Base64Url(Payload) + "." + HMAC_SHA256(SecretKey, Base64Url(Payload))</span>
+              <button type="button" class="copy-btn" onclick="copySnippet('Base64Url(Payload) + "." + HMAC_SHA256(SecretKey, Base64Url(Payload))', this)">
+                <svg class="icon icon-copy"><use href="#copy"></use></svg>
+                <svg class="icon icon-check"><use href="#check"></use></svg>
+                <span>Copy</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Context Binding -->
+          <div class="spec-card">
+            <h3>
+              <svg class="icon icon-accent" aria-hidden="true"><use href="#lock"></use></svg>
+              <span>2. Context Binding &amp; Swapping Prevention</span>
+            </h3>
+            <div data-lang="en">
+              <p>Every challenge binds cryptographically to the exact form context: <code>ctx = SHA256(form_fields)</code>. A bot cannot pre-compute a proof for account A and reuse it for account B or an invoice.</p>
+            </div>
+            <div data-lang="fa">
+              <p>هر چالش به صورت رمزنگاری‌شده به زمینه فرم متصل است. بات‌ها نمی‌توانند اثبات حل‌شده را از یک حساب به حساب یا عملیات دیگر منتقل کنند.</p>
+            </div>
+          </div>
+
+          <!-- Card 3: Dynamic Difficulty -->
+          <div class="spec-card">
+            <h3>
+              <svg class="icon icon-success" aria-hidden="true"><use href="#zap"></use></svg>
+              <span>3. Dynamic Difficulty &amp; Subnet Escalation</span>
+            </h3>
+            <div data-lang="en">
+              <p>Clean residential traffic receives effortless baseline difficulty (14–16 bits, ~0.8s). Datacenter/Tor subnets generating rapid requests face scaled difficulty (18–22 bits), exhausting automated bot servers.</p>
+            </div>
+            <div data-lang="fa">
+              <p>کاربران عادی سختی پایه (۰.۸ ثانیه) دریافت می‌کنند؛ در حالی که دیتاسنترها و بات‌های مشکوک با سختی‌های تصاعدی مواجه شده و توان سرورشان مسدود می‌شود.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View 4: Implementation Examples (/examples) -->
+    <div class="page-view" id="view-examples">
+      <div class="container">
+        <div class="hero-header">
+          <h1 class="hero-title-compact" data-i18n="examples.title">Production Implementation Examples</h1>
+          <p class="hero-subtitle" data-i18n="examples.subtitle">Self-contained solvers and middleware for Go, JavaScript/TypeScript, Python, PHP, and POSIX Shell.</p>
+        </div>
+
+        <div class="lang-bar-compact" role="tablist">
+          <button type="button" class="lang-btn-sm active" data-lang-panel="code-go">
+            <svg class="icon lang-icon" aria-hidden="true"><use href="#lang-go"></use></svg>
+            <span>Go</span>
+          </button>
+          <button type="button" class="lang-btn-sm" data-lang-panel="code-js">
+            <svg class="icon lang-icon" aria-hidden="true"><use href="#lang-js"></use></svg>
+            <span>JavaScript</span>
+          </button>
+          <button type="button" class="lang-btn-sm" data-lang-panel="code-py">
+            <svg class="icon lang-icon" aria-hidden="true"><use href="#lang-py"></use></svg>
+            <span>Python</span>
+          </button>
+          <button type="button" class="lang-btn-sm" data-lang-panel="code-php">
+            <svg class="icon lang-icon" aria-hidden="true"><use href="#lang-php"></use></svg>
+            <span>PHP</span>
+          </button>
+          <button type="button" class="lang-btn-sm" data-lang-panel="code-sh">
+            <svg class="icon lang-icon" aria-hidden="true"><use href="#lang-sh"></use></svg>
+            <span>POSIX Shell</span>
+          </button>
+        </div>
+
+        <!-- Go -->
+        <div class="code-panel-sm active" id="code-go">
+          <div class="code-head-sm">
+            <span>pow.go</span>
+            <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-go'), this)">
+              <svg class="icon icon-copy"><use href="#copy"></use></svg>
+              <svg class="icon icon-check"><use href="#check"></use></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="code-pre-sm"><code id="src-go"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-keyword">package</span> main</span></span><span class="code-line"><span class="line-num">2</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">3</span><span class="line-content"><span class="tok-keyword">import</span> (</span></span><span class="code-line"><span class="line-num">4</span><span class="line-content">	<span class="tok-string">&quot;crypto/hmac&quot;</span></span></span><span class="code-line"><span class="line-num">5</span><span class="line-content">	<span class="tok-string">&quot;crypto/sha256&quot;</span></span></span><span class="code-line"><span class="line-num">6</span><span class="line-content">	<span class="tok-string">&quot;encoding/hex&quot;</span></span></span><span class="code-line"><span class="line-num">7</span><span class="line-content">	<span class="tok-string">&quot;fmt&quot;</span></span></span><span class="code-line"><span class="line-num">8</span><span class="line-content">	<span class="tok-string">&quot;math/bits&quot;</span></span></span><span class="code-line"><span class="line-num">9</span><span class="line-content">	<span class="tok-string">&quot;net/http&quot;</span></span></span><span class="code-line"><span class="line-num">10</span><span class="line-content">	<span class="tok-string">&quot;strconv&quot;</span></span></span><span class="code-line"><span class="line-num">11</span><span class="line-content">	<span class="tok-string">&quot;strings&quot;</span></span></span><span class="code-line"><span class="line-num">12</span><span class="line-content">)</span></span><span class="code-line"><span class="line-num">13</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">14</span><span class="line-content"><span class="tok-comment">// VerifyPoW verifies client proof in O(1) time</span></span></span><span class="code-line"><span class="line-num">15</span><span class="line-content"><span class="tok-keyword">func</span> VerifyPoW(secretKey, token <span class="tok-type">string</span>, nonce int64, context <span class="tok-type">string</span>) (<span class="tok-type">bool</span>, <span class="tok-type">error</span>) {</span></span><span class="code-line"><span class="line-num">16</span><span class="line-content">	parts := strings.Split(token, <span class="tok-string">&quot;.&quot;</span>)</span></span><span class="code-line"><span class="line-num">17</span><span class="line-content">	<span class="tok-keyword">if</span> len(parts) != <span class="tok-number">2</span> {</span></span><span class="code-line"><span class="line-num">18</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;invalid token format&quot;</span>)</span></span><span class="code-line"><span class="line-num">19</span><span class="line-content">	}</span></span><span class="code-line"><span class="line-num">20</span><span class="line-content">	payloadB64, sig := parts[<span class="tok-number">0</span>], parts[<span class="tok-number">1</span>]</span></span><span class="code-line"><span class="line-num">21</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">22</span><span class="line-content">	<span class="tok-comment">// 1. Verify HMAC-SHA256 signature</span></span></span><span class="code-line"><span class="line-num">23</span><span class="line-content">	mac := hmac.New(sha256.New, []<span class="tok-type">byte</span>(secretKey))</span></span><span class="code-line"><span class="line-num">24</span><span class="line-content">	mac.Write([]<span class="tok-type">byte</span>(payloadB64))</span></span><span class="code-line"><span class="line-num">25</span><span class="line-content">	expectedSig := hex.EncodeToString(mac.Sum(<span class="tok-type">nil</span>))</span></span><span class="code-line"><span class="line-num">26</span><span class="line-content">	<span class="tok-keyword">if</span> !hmac.Equal([]<span class="tok-type">byte</span>(sig), []<span class="tok-type">byte</span>(expectedSig)) {</span></span><span class="code-line"><span class="line-num">27</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;signature mismatch&quot;</span>)</span></span><span class="code-line"><span class="line-num">28</span><span class="line-content">	}</span></span><span class="code-line"><span class="line-num">29</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">30</span><span class="line-content">	<span class="tok-comment">// 2. Count leading zero bits of candidate hash</span></span></span><span class="code-line"><span class="line-num">31</span><span class="line-content">	candidate := fmt.Sprintf(<span class="tok-string">&quot;salt:%d:%s&quot;</span>, nonce, context)</span></span><span class="code-line"><span class="line-num">32</span><span class="line-content">	h := sha256.Sum256([]<span class="tok-type">byte</span>(candidate))</span></span><span class="code-line"><span class="line-num">33</span><span class="line-content">	</span></span><span class="code-line"><span class="line-num">34</span><span class="line-content">	<span class="tok-keyword">var</span> zeroBits <span class="tok-type">int</span></span></span><span class="code-line"><span class="line-num">35</span><span class="line-content">	<span class="tok-keyword">for</span> _, b := range h {</span></span><span class="code-line"><span class="line-num">36</span><span class="line-content">		<span class="tok-keyword">if</span> b == <span class="tok-number">0</span> {</span></span><span class="code-line"><span class="line-num">37</span><span class="line-content">			zeroBits += <span class="tok-number">8</span></span></span><span class="code-line"><span class="line-num">38</span><span class="line-content">		} <span class="tok-keyword">else</span> {</span></span><span class="code-line"><span class="line-num">39</span><span class="line-content">			zeroBits += bits.LeadingZeros8(b)</span></span><span class="code-line"><span class="line-num">40</span><span class="line-content">			break</span></span><span class="code-line"><span class="line-num">41</span><span class="line-content">		}</span></span><span class="code-line"><span class="line-num">42</span><span class="line-content">	}</span></span><span class="code-line"><span class="line-num">43</span><span class="line-content">	<span class="tok-keyword">return</span> zeroBits >= <span class="tok-number">16</span>, <span class="tok-type">nil</span></span></span><span class="code-line"><span class="line-num">44</span><span class="line-content">}</span></span></code></pre>
+        </div>
+
+        <!-- JS -->
+        <div class="code-panel-sm" id="code-js">
+          <div class="code-head-sm">
+            <span>worker.js</span>
+            <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-js'), this)">
+              <svg class="icon icon-copy"><use href="#copy"></use></svg>
+              <svg class="icon icon-check"><use href="#check"></use></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="code-pre-sm"><code id="src-js"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">// Background Web Worker PoW Solver (worker.js)</span></span></span><span class="code-line"><span class="line-num">2</span><span class="line-content">self.onmessage = <span class="tok-keyword">async</span> (e) => {</span></span><span class="code-line"><span class="line-num">3</span><span class="line-content">  <span class="tok-keyword">const</span> { salt, context, difficulty } = e.data;</span></span><span class="code-line"><span class="line-num">4</span><span class="line-content">  <span class="tok-keyword">const</span> encoder = <span class="tok-keyword">new</span> TextEncoder();</span></span><span class="code-line"><span class="line-num">5</span><span class="line-content">  <span class="tok-keyword">let</span> nonce = <span class="tok-number">0</span>;</span></span><span class="code-line"><span class="line-num">6</span><span class="line-content">  </span></span><span class="code-line"><span class="line-num">7</span><span class="line-content">  <span class="tok-keyword">while</span> (<span class="tok-type">true</span>) {</span></span><span class="code-line"><span class="line-num">8</span><span class="line-content">    <span class="tok-keyword">const</span> candidate = <span class="tok-string">`${salt}:${nonce}:${context}`</span>;</span></span><span class="code-line"><span class="line-num">9</span><span class="line-content">    <span class="tok-keyword">const</span> buf = <span class="tok-keyword">await</span> crypto.subtle.digest(<span class="tok-string">&quot;SHA-256&quot;</span>, encoder.encode(candidate));</span></span><span class="code-line"><span class="line-num">10</span><span class="line-content">    <span class="tok-keyword">const</span> bytes = <span class="tok-keyword">new</span> <span class="tok-type">Uint8Array</span>(buf);</span></span><span class="code-line"><span class="line-num">11</span><span class="line-content">    </span></span><span class="code-line"><span class="line-num">12</span><span class="line-content">    <span class="tok-comment">// Count leading zero bits</span></span></span><span class="code-line"><span class="line-num">13</span><span class="line-content">    <span class="tok-keyword">let</span> zeroBits = <span class="tok-number">0</span>;</span></span><span class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="tok-keyword">for</span> (<span class="tok-keyword">let</span> i = <span class="tok-number">0</span>; i < bytes.length; i++) {</span></span><span class="code-line"><span class="line-num">15</span><span class="line-content">      <span class="tok-keyword">if</span> (bytes[i] === <span class="tok-number">0</span>) zeroBits += <span class="tok-number">8</span>;</span></span><span class="code-line"><span class="line-num">16</span><span class="line-content">      <span class="tok-keyword">else</span> { zeroBits += Math.clz32(bytes[i]) - <span class="tok-number">24</span>; break; }</span></span><span class="code-line"><span class="line-num">17</span><span class="line-content">    }</span></span><span class="code-line"><span class="line-num">18</span><span class="line-content">    </span></span><span class="code-line"><span class="line-num">19</span><span class="line-content">    <span class="tok-keyword">if</span> (zeroBits >= difficulty) {</span></span><span class="code-line"><span class="line-num">20</span><span class="line-content">      self.postMessage({ solved: <span class="tok-type">true</span>, nonce });</span></span><span class="code-line"><span class="line-num">21</span><span class="line-content">      <span class="tok-keyword">return</span>;</span></span><span class="code-line"><span class="line-num">22</span><span class="line-content">    }</span></span><span class="code-line"><span class="line-num">23</span><span class="line-content">    nonce++;</span></span><span class="code-line"><span class="line-num">24</span><span class="line-content">  }</span></span><span class="code-line"><span class="line-num">25</span><span class="line-content">};</span></span></code></pre>
+        </div>
+
+        <!-- Python -->
+        <div class="code-panel-sm" id="code-py">
+          <div class="code-head-sm">
+            <span>pow.py</span>
+            <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-py'), this)">
+              <svg class="icon icon-copy"><use href="#copy"></use></svg>
+              <svg class="icon icon-check"><use href="#check"></use></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="code-pre-sm"><code id="src-py"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-keyword">import</span> hashlib, hmac</span></span><span class="code-line"><span class="line-num">2</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">3</span><span class="line-content"><span class="tok-keyword">def</span> verify_pow(secret_key: <span class="tok-type">str</span>, token: <span class="tok-type">str</span>, nonce: <span class="tok-type">int</span>, context: <span class="tok-type">str</span>) -> <span class="tok-type">bool</span>:</span></span><span class="code-line"><span class="line-num">4</span><span class="line-content">    parts = token.split(<span class="tok-string">&quot;.&quot;</span>)</span></span><span class="code-line"><span class="line-num">5</span><span class="line-content">    <span class="tok-keyword">if</span> len(parts) != <span class="tok-number">2</span>:</span></span><span class="code-line"><span class="line-num">6</span><span class="line-content">        <span class="tok-keyword">return</span> <span class="tok-type">False</span></span></span><span class="code-line"><span class="line-num">7</span><span class="line-content">    payload_b64, signature = parts</span></span><span class="code-line"><span class="line-num">8</span><span class="line-content">    </span></span><span class="code-line"><span class="line-num">9</span><span class="line-content">    <span class="tok-comment"># 1. Verify HMAC</span></span></span><span class="code-line"><span class="line-num">10</span><span class="line-content">    expected = hmac.<span class="tok-keyword">new</span>(secret_key.encode(), payload_b64.encode(), hashlib.sha256).hexdigest()</span></span><span class="code-line"><span class="line-num">11</span><span class="line-content">    <span class="tok-keyword">if</span> not hmac.compare_digest(signature, expected):</span></span><span class="code-line"><span class="line-num">12</span><span class="line-content">        <span class="tok-keyword">return</span> <span class="tok-type">False</span></span></span><span class="code-line"><span class="line-num">13</span><span class="line-content">        </span></span><span class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="tok-comment"># 2. Check hash difficulty</span></span></span><span class="code-line"><span class="line-num">15</span><span class="line-content">    candidate = f<span class="tok-string">&quot;salt:{nonce}:{context}&quot;</span>.encode()</span></span><span class="code-line"><span class="line-num">16</span><span class="line-content">    digest = hashlib.sha256(candidate).digest()</span></span><span class="code-line"><span class="line-num">17</span><span class="line-content">    </span></span><span class="code-line"><span class="line-num">18</span><span class="line-content">    zero_bits = <span class="tok-number">0</span></span></span><span class="code-line"><span class="line-num">19</span><span class="line-content">    <span class="tok-keyword">for</span> <span class="tok-type">byte</span> in digest:</span></span><span class="code-line"><span class="line-num">20</span><span class="line-content">        <span class="tok-keyword">if</span> <span class="tok-type">byte</span> == <span class="tok-number">0</span>:</span></span><span class="code-line"><span class="line-num">21</span><span class="line-content">            zero_bits += <span class="tok-number">8</span></span></span><span class="code-line"><span class="line-num">22</span><span class="line-content">        <span class="tok-keyword">else</span>:</span></span><span class="code-line"><span class="line-num">23</span><span class="line-content">            zero_bits += (<span class="tok-number">8</span> - <span class="tok-type">byte</span>.bit_length())</span></span><span class="code-line"><span class="line-num">24</span><span class="line-content">            break</span></span><span class="code-line"><span class="line-num">25</span><span class="line-content">            </span></span><span class="code-line"><span class="line-num">26</span><span class="line-content">    <span class="tok-keyword">return</span> zero_bits >= <span class="tok-number">16</span></span></span></code></pre>
+        </div>
+
+        <!-- PHP -->
+        <div class="code-panel-sm" id="code-php">
+          <div class="code-head-sm">
+            <span>pow.php</span>
+            <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-php'), this)">
+              <svg class="icon icon-copy"><use href="#copy"></use></svg>
+              <svg class="icon icon-check"><use href="#check"></use></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="code-pre-sm"><code id="src-php"><span class="code-line"><span class="line-num">1</span><span class="line-content"><?php</span></span><span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-keyword">function</span> verify_pow($secret_key, $token, $nonce, $context) {</span></span><span class="code-line"><span class="line-num">3</span><span class="line-content">    $parts = explode(<span class="tok-string">&quot;.&quot;</span>, $token);</span></span><span class="code-line"><span class="line-num">4</span><span class="line-content">    <span class="tok-keyword">if</span> (count($parts) !== <span class="tok-number">2</span>) <span class="tok-keyword">return</span> <span class="tok-type">false</span>;</span></span><span class="code-line"><span class="line-num">5</span><span class="line-content">    list($payload_b64, $signature) = $parts;</span></span><span class="code-line"><span class="line-num">6</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">7</span><span class="line-content">    <span class="tok-comment">// 1. Verify HMAC</span></span></span><span class="code-line"><span class="line-num">8</span><span class="line-content">    $expected = hash_hmac(<span class="tok-string">&quot;sha256&quot;</span>, $payload_b64, $secret_key);</span></span><span class="code-line"><span class="line-num">9</span><span class="line-content">    <span class="tok-keyword">if</span> (!hash_equals($signature, $expected)) <span class="tok-keyword">return</span> <span class="tok-type">false</span>;</span></span><span class="code-line"><span class="line-num">10</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">11</span><span class="line-content">    <span class="tok-comment">// 2. Check hash candidate</span></span></span><span class="code-line"><span class="line-num">12</span><span class="line-content">    $candidate = <span class="tok-string">&quot;salt:&quot;</span> . $nonce . <span class="tok-string">&quot;:&quot;</span> . $context;</span></span><span class="code-line"><span class="line-num">13</span><span class="line-content">    $raw_hash = hash(<span class="tok-string">&quot;sha256&quot;</span>, $candidate, <span class="tok-type">true</span>);</span></span><span class="code-line"><span class="line-num">14</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">15</span><span class="line-content">    $zero_bits = <span class="tok-number">0</span>;</span></span><span class="code-line"><span class="line-num">16</span><span class="line-content">    <span class="tok-keyword">for</span> ($i = <span class="tok-number">0</span>; $i < strlen($raw_hash); $i++) {</span></span><span class="code-line"><span class="line-num">17</span><span class="line-content">        $<span class="tok-type">byte</span> = ord($raw_hash[$i]);</span></span><span class="code-line"><span class="line-num">18</span><span class="line-content">        <span class="tok-keyword">if</span> ($<span class="tok-type">byte</span> === <span class="tok-number">0</span>) {</span></span><span class="code-line"><span class="line-num">19</span><span class="line-content">            $zero_bits += <span class="tok-number">8</span>;</span></span><span class="code-line"><span class="line-num">20</span><span class="line-content">        } <span class="tok-keyword">else</span> {</span></span><span class="code-line"><span class="line-num">21</span><span class="line-content">            $zero_bits += (<span class="tok-number">8</span> - strlen(decbin($<span class="tok-type">byte</span>)));</span></span><span class="code-line"><span class="line-num">22</span><span class="line-content">            break;</span></span><span class="code-line"><span class="line-num">23</span><span class="line-content">        }</span></span><span class="code-line"><span class="line-num">24</span><span class="line-content">    }</span></span><span class="code-line"><span class="line-num">25</span><span class="line-content">    <span class="tok-keyword">return</span> $zero_bits >= <span class="tok-number">16</span>;</span></span><span class="code-line"><span class="line-num">26</span><span class="line-content">}</span></span></code></pre>
+        </div>
+
+        <!-- Shell -->
+        <div class="code-panel-sm" id="code-sh">
+          <div class="code-head-sm">
+            <span>pow.sh</span>
+            <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-sh'), this)">
+              <svg class="icon icon-copy"><use href="#copy"></use></svg>
+              <svg class="icon icon-check"><use href="#check"></use></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="code-pre-sm"><code id="src-sh"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">#!/bin/sh</span></span></span><span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-comment"># POSIX-compliant PoW solver</span></span></span><span class="code-line"><span class="line-num">3</span><span class="line-content">SALT=<span class="tok-string">&quot;a1b2c3d4e5f67890&quot;</span></span></span><span class="code-line"><span class="line-num">4</span><span class="line-content">CTX=<span class="tok-string">&quot;job_context_fingerprint&quot;</span></span></span><span class="code-line"><span class="line-num">5</span><span class="line-content"> </span></span><span class="code-line"><span class="line-num">6</span><span class="line-content">nonce=<span class="tok-number">0</span></span></span><span class="code-line"><span class="line-num">7</span><span class="line-content"><span class="tok-keyword">while</span> :; <span class="tok-keyword">do</span></span></span><span class="code-line"><span class="line-num">8</span><span class="line-content">    hash=$(printf <span class="tok-string">&quot;%s:%s:%s&quot;</span> <span class="tok-string">&quot;$SALT&quot;</span> <span class="tok-string">&quot;$nonce&quot;</span> <span class="tok-string">&quot;$CTX&quot;</span> | sha256sum | awk <span class="tok-string">&quot;{print \$1}&quot;</span>)</span></span><span class="code-line"><span class="line-num">9</span><span class="line-content">    case <span class="tok-string">&quot;$hash&quot;</span> in</span></span><span class="code-line"><span class="line-num">10</span><span class="line-content">        <span class="tok-number">0000</span>*)</span></span><span class="code-line"><span class="line-num">11</span><span class="line-content">            printf <span class="tok-string">&quot;Solved! Nonce: %s Hash: %s\n&quot;</span> <span class="tok-string">&quot;$nonce&quot;</span> <span class="tok-string">&quot;$hash&quot;</span></span></span><span class="code-line"><span class="line-num">12</span><span class="line-content">            break</span></span><span class="code-line"><span class="line-num">13</span><span class="line-content">            ;;</span></span><span class="code-line"><span class="line-num">14</span><span class="line-content">    esac</span></span><span class="code-line"><span class="line-num">15</span><span class="line-content">    nonce=$((nonce + <span class="tok-number">1</span>))</span></span><span class="code-line"><span class="line-num">16</span><span class="line-content"><span class="tok-keyword">done</span></span></span></code></pre>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- =============================================
+       MOBILE BOTTOM NAVIGATION BAR
+       ============================================= -->
+  <nav class="bottom-nav" aria-label="Mobile Navigation">
+    <a href="/" class="bottom-nav-link active" data-route="/">
+      <svg class="icon bottom-nav-icon" aria-hidden="true"><use href="#nav-playground"></use></svg>
+      <span data-i18n="nav.playground">Playground</span>
+    </a>
+    <a href="/widgets" class="bottom-nav-link" data-route="/widgets">
+      <svg class="icon bottom-nav-icon" aria-hidden="true"><use href="#nav-widgets"></use></svg>
+      <span data-i18n="nav.widgets">Widgets</span>
+    </a>
+    <a href="/spec" class="bottom-nav-link" data-route="/spec">
+      <svg class="icon bottom-nav-icon" aria-hidden="true"><use href="#nav-spec"></use></svg>
+      <span data-i18n="nav.spec">Spec</span>
+    </a>
+    <a href="/examples" class="bottom-nav-link" data-route="/examples">
+      <svg class="icon bottom-nav-icon" aria-hidden="true"><use href="#nav-examples"></use></svg>
+      <span data-i18n="nav.code">Code</span>
+    </a>
+  </nav>
+
+  <!-- Toast Notice -->
+  <div class="toast-notice" id="toast-notice">
+    <svg class="icon icon-sm icon-success" aria-hidden="true"><use href="#check"></use></svg>
+    <span class="toast-msg">Copied!</span>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
