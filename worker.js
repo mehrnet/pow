@@ -68,6 +68,7 @@ self.onmessage = async (e) => {
             nonce,
             iterations: iterations + 1,
             zeroBits,
+            percent: 100,
             hash: bytesToHex(hash),
             elapsedMs,
             hashesPerSec: Math.round(((iterations + 1) / (elapsedMs || 1)) * 1000)
@@ -78,11 +79,12 @@ self.onmessage = async (e) => {
       }
 
       const now = performance.now();
-      if (now - lastProgressReport > 60) {
+      if (now - lastProgressReport > 50) {
         lastProgressReport = now;
         const elapsedMs = now - startTime;
-        // Progress heuristic capped at 98% until actual solve
-        const percent = Math.min(98, Math.round((iterations / expectedIterations) * 100));
+        // Asymptotic statistical curve reflecting search space progress
+        const ratio = iterations / expectedIterations;
+        const percent = Math.min(99, Math.max(1, Math.round((1 - Math.exp(-ratio * 1.15)) * 100)));
         self.postMessage({
           type: 'progress',
           nonce,

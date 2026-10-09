@@ -59,7 +59,7 @@ The Mehr PoW visual gate provides honest, transparent telemetry across 4 states:
 | :--- | :--- | :--- |
 | **Idle** | Muted outline, inactive track | *"Waiting for input..."* |
 | **Solving** | Smooth pulse shimmer with telemetry | *"Securing in background... (45%)"* |
-| **Ready** | Accent glow & crisp checkmark | *"Proof Verified · Instant Ready"* |
+| **Ready** | Emerald green fill & verified timing | *"Browser Verified — took 14.01s (27,767 H/s)"* |
 | **Catch-up** | High-precision fill for fast autofill | *"Securing proof (80%)..."* & auto-submits |
 
 ---

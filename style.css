@@ -550,7 +550,7 @@ main {
   color: var(--text-dim);
 }
 
-/* Progress bar */
+/* SVG Precision Progress Bar */
 .pow-bar-track {
   width: 100%;
   height: 0.5rem;
@@ -560,49 +560,26 @@ main {
   position: relative;
 }
 
-.pow-bar-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #ff9a3d, #ff8a2a);
+.pow-bar-svg {
+  width: 100%;
+  height: 0.5rem;
+  display: block;
+  overflow: hidden;
   border-radius: var(--radius-full);
-  transition: width var(--duration-normal) var(--ease-spring);
 }
 
-.pow-gate.state-idle .pow-bar-fill {
-  width: 0%;
+.pow-bar-bg {
+  fill: var(--bg-tertiary);
 }
 
-.pow-gate.state-solving .pow-bar-fill {
-  width: 65%;
-  background: linear-gradient(90deg, #ff9a3d, #ff8a2a);
-  box-shadow: 0 0 0.5rem var(--accent-glow);
-  animation: pow-pulse 1.2s infinite alternate;
-}
-
-.pow-gate.state-catchup .pow-bar-fill {
-  width: 85%;
-  background: linear-gradient(90deg, #38bdf8, #ff8a2a);
-  animation: pow-pulse 0.7s infinite alternate;
+.pow-bar-fill {
+  fill: url(#powGrad);
+  transition: width 150ms ease-out;
 }
 
 .pow-gate.state-ready .pow-bar-fill {
-  width: 100%;
-  background: var(--success);
-  box-shadow: 0 0 0.5rem var(--success-subtle);
-  animation: none;
-}
-
-@keyframes pow-pulse {
-  0% { opacity: 0.6; transform: scaleX(0.7); transform-origin: left; }
-  100% { opacity: 1; transform: scaleX(1); transform-origin: left; }
-}
-
-.pow-gate-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.7rem;
-  color: var(--text-dim);
+  fill: var(--success);
+  transition: width 200ms ease-out, fill 250ms ease-out;
 }
 
 /* The Submit Button with embedded PoW states */

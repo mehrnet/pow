@@ -164,16 +164,22 @@ function initPlaygroundController() {
     if (gateEl) {
       gateEl.className = catchup ? 'pow-gate state-catchup' : 'pow-gate state-solving';
     }
-    if (statusLabel) statusLabel.textContent = catchup ? 'Catch-Up Solving...' : 'Securing in Background...';
-    if (percentLabel) percentLabel.textContent = '10%';
+    const isFa = document.documentElement.getAttribute('lang') === 'fa';
+    if (statusLabel) {
+      statusLabel.textContent = catchup
+        ? (isFa ? 'در حال حل سریع...' : 'Catch-Up Solving...')
+        : (isFa ? 'ایمن‌سازی در پس‌زمینه...' : 'Securing in Background...');
+    }
+    if (percentLabel) percentLabel.textContent = '0%';
+    if (barFill) barFill.setAttribute('width', '0');
 
     if (btnSubmit) {
       if (catchup) {
         btnSubmit.className = 'pow-submit-btn catchup';
-        btnSubmit.textContent = 'Securing Proof...';
+        btnSubmit.textContent = isFa ? 'در حال اثبات...' : 'Securing Proof...';
       } else {
         btnSubmit.className = 'pow-submit-btn';
-        btnSubmit.textContent = 'Create Account';
+        btnSubmit.textContent = isFa ? 'ایجاد حساب کاربری' : 'Create Account';
       }
     }
 
@@ -196,22 +202,34 @@ function initPlaygroundController() {
         if (statIterations) statIterations.textContent = msg.iterations.toLocaleString();
         if (statElapsed) statElapsed.textContent = `${Math.round(msg.elapsedMs)} ms`;
         if (percentLabel) percentLabel.textContent = `${msg.percent}%`;
+        if (barFill) barFill.setAttribute('width', String(msg.percent));
 
         if (isCatchupMode && btnSubmit) {
-          btnSubmit.textContent = `Securing Proof (${msg.percent}%)...`;
+          btnSubmit.textContent = isFa
+            ? `در حال اثبات (${msg.percent}%)...`
+            : `Securing Proof (${msg.percent}%)...`;
         }
       } else if (msg.type === 'solved') {
         isSolving = false;
         currentSolution = msg;
 
-        if (statHashrate) statHashrate.textContent = `${msg.hashesPerSec.toLocaleString()} H/s`;
+        const durationSec = (msg.elapsedMs / 1000).toFixed(2);
+        const hps = Math.round(msg.hashesPerSec).toLocaleString('en-US');
+        const isCurrentFa = document.documentElement.getAttribute('lang') === 'fa';
+
+        if (statHashrate) statHashrate.textContent = `${hps} H/s`;
         if (statIterations) statIterations.textContent = msg.iterations.toLocaleString();
-        if (statElapsed) statElapsed.textContent = `${Math.round(msg.elapsedMs)} ms`;
+        if (statElapsed) statElapsed.textContent = `${durationSec}s (${Math.round(msg.elapsedMs)} ms)`;
         if (statNonce) statNonce.textContent = `0x${msg.nonce.toString(16)}`;
 
         if (percentLabel) percentLabel.textContent = '100%';
+        if (barFill) barFill.setAttribute('width', '100');
         if (gateEl) gateEl.className = 'pow-gate state-ready';
-        if (statusLabel) statusLabel.textContent = 'Proof Verified · Instant Ready';
+        if (statusLabel) {
+          statusLabel.textContent = isCurrentFa
+            ? `مرورگر تأیید شد — در ${durationSec} ثانیه (${hps} هش/ثانیه)`
+            : `Browser Verified - took ${durationSec}s (${hps} H/s)`;
+        }
 
         // Server-side instant verification check
         const serverVerify = await verifySolution({
@@ -223,7 +241,7 @@ function initPlaygroundController() {
         });
 
         if (tokenInspectBox) {
-          tokenInspectBox.textContent = `Token: ${currentChallenge}\nNonce: 0x${msg.nonce.toString(16)} (${msg.nonce})\nServer Verify: ${serverVerify.valid ? 'VALID (O(1) verified)' : 'FAILED'}\nHash: ${msg.hash}\nElapsed: ${Math.round(msg.elapsedMs)}ms`;
+          tokenInspectBox.textContent = `Token: ${currentChallenge}\nNonce: 0x${msg.nonce.toString(16)} (${msg.nonce})\nServer Verify: ${serverVerify.valid ? 'VALID (O(1) verified)' : 'FAILED'}\nHash: ${msg.hash}\nElapsed: ${durationSec}s (${Math.round(msg.elapsedMs)}ms)`;
         }
 
         if (isCatchupMode) {
@@ -232,7 +250,9 @@ function initPlaygroundController() {
         } else {
           if (btnSubmit) {
             btnSubmit.className = 'pow-submit-btn ready';
-            btnSubmit.textContent = 'Verified & Ready · Submit Now';
+            btnSubmit.textContent = isCurrentFa
+              ? `تأییدشده (${durationSec} ثانیه) · ارسال فرم`
+              : `Verified (${durationSec}s) · Submit Now`;
           }
         }
       }
@@ -240,11 +260,16 @@ function initPlaygroundController() {
   }
 
   function triggerSubmissionSuccess(sol) {
+    const durationSec = (sol.elapsedMs / 1000).toFixed(2);
+    const isFa = document.documentElement.getAttribute('lang') === 'fa';
     if (btnSubmit) {
       btnSubmit.className = 'pow-submit-btn ready';
-      btnSubmit.textContent = 'Success! Account Created';
+      btnSubmit.textContent = isFa ? 'موفقیت‌آمیز! حساب ایجاد شد' : 'Success! Account Created';
     }
-    showToast(`Proof verified in ${Math.round(sol.elapsedMs)}ms! Form submitted with 0 delay.`);
+    showToast(isFa
+      ? `اثبات در ${durationSec} ثانیه تأیید شد! فرم بدون معطلی ثبت گردید.`
+      : `Proof verified in ${durationSec}s! Form submitted with 0 delay.`
+    );
   }
 
   if (form) {
@@ -278,13 +303,15 @@ function initPlaygroundController() {
       currentChallenge = null;
 
       if (percentLabel) percentLabel.textContent = '0%';
+      if (barFill) barFill.setAttribute('width', '0');
       if (gateEl) gateEl.className = 'pow-gate state-idle';
-      if (statusLabel) statusLabel.textContent = 'Waiting for input...';
+      const isFa = document.documentElement.getAttribute('lang') === 'fa';
+      if (statusLabel) statusLabel.textContent = isFa ? 'در انتظار ورودی...' : 'Waiting for input...';
       if (btnSubmit) {
         btnSubmit.className = 'pow-submit-btn';
-        btnSubmit.textContent = 'Create Account';
+        btnSubmit.textContent = isFa ? 'ایجاد حساب کاربری' : 'Create Account';
       }
-      if (tokenInspectBox) tokenInspectBox.textContent = 'Waiting for challenge generation...';
+      if (tokenInspectBox) tokenInspectBox.textContent = isFa ? 'در انتظار تولید چالش...' : 'Waiting for challenge generation...';
       if (statHashrate) statHashrate.textContent = '--';
       if (statIterations) statIterations.textContent = '--';
       if (statElapsed) statElapsed.textContent = '--';
@@ -364,6 +391,23 @@ function setLocale(lang, save = true) {
       el.textContent = dict[k];
     }
   });
+
+  const statusLabel = document.getElementById('gate-status-text');
+  const btnSubmit = document.getElementById('demo-submit-btn');
+  if (currentSolution && statusLabel) {
+    const durationSec = (currentSolution.elapsedMs / 1000).toFixed(2);
+    const hps = Math.round(currentSolution.hashesPerSec).toLocaleString('en-US');
+    statusLabel.textContent = lang === 'fa'
+      ? `مرورگر تأیید شد — در ${durationSec} ثانیه (${hps} هش/ثانیه)`
+      : `Browser Verified - took ${durationSec}s (${hps} H/s)`;
+    if (btnSubmit && btnSubmit.classList.contains('ready')) {
+      btnSubmit.textContent = lang === 'fa'
+        ? `تأییدشده (${durationSec} ثانیه) · ارسال فرم`
+        : `Verified (${durationSec}s) · Submit Now`;
+    }
+  } else if (!isSolving && statusLabel) {
+    statusLabel.textContent = lang === 'fa' ? 'در انتظار ورودی...' : 'Waiting for input...';
+  }
 }
 
 /* =============================================
