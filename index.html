@@ -648,76 +648,122 @@
 
           <!-- Flowchart Visual SVG Sequence Diagram -->
           <div class="flowchart-svg-wrap">
-            <svg class="flowchart-svg" viewBox="0 0 940 430" width="100%" height="100%" aria-label="Mehr PoW Cryptographic Protocol Flowchart" dir="ltr">
+            <svg class="flowchart-svg" viewBox="0 0 960 530" aria-label="Mehr PoW Cryptographic Protocol Flowchart" dir="ltr">
               <defs>
-                <marker id="fc-arrow-accent" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--accent)" />
+                <!-- Forward arrow: orange (accent) -->
+                <marker id="fca" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L9 3.5 L0 7Z" fill="var(--accent)"/>
                 </marker>
-                <marker id="fc-arrow-info" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--info)" />
+                <!-- Return arrow: blue (info) -->
+                <marker id="fci" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L9 3.5 L0 7Z" fill="var(--info)"/>
                 </marker>
-                <marker id="fc-arrow-success" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--success)" />
+                <!-- Final response arrow: green (success) -->
+                <marker id="fcs" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L9 3.5 L0 7Z" fill="var(--success)"/>
                 </marker>
               </defs>
 
-              <!-- Lifelines -->
-              <line x1="155" y1="68" x2="155" y2="415" class="fc-lifeline" />
-              <line x1="470" y1="68" x2="470" y2="415" class="fc-lifeline" />
-              <line x1="785" y1="68" x2="785" y2="415" class="fc-lifeline" />
+              <!-- ══ SWIMLANE COLUMN BACKGROUNDS ══ -->
+              <!-- Client column -->
+              <rect x="22" y="10" width="264" height="510" rx="10" class="fc-col-client"/>
+              <rect x="22" y="10" width="264" height="510" rx="10" class="fc-col-border-client"/>
+              <!-- Gateway column -->
+              <rect x="348" y="10" width="264" height="510" rx="10" class="fc-col-gateway"/>
+              <rect x="348" y="10" width="264" height="510" rx="10" class="fc-col-border-gateway"/>
+              <!-- Backend column -->
+              <rect x="674" y="10" width="264" height="510" rx="10" class="fc-col-backend"/>
+              <rect x="674" y="10" width="264" height="510" rx="10" class="fc-col-border-backend"/>
 
-              <!-- Actor Nodes (Headers) -->
-              <!-- Actor 1: Client Browser -->
-              <rect x="40" y="16" width="230" height="52" class="fc-actor-box fc-actor-client" />
-              <text x="155" y="38" text-anchor="middle" class="fc-actor-title">Client Browser / App</text>
-              <text x="155" y="55" text-anchor="middle" class="fc-actor-sub">Untrusted Client · Web Worker</text>
+              <!-- ══ ACTOR BOXES ══ -->
+              <rect x="30" y="18" width="248" height="58" class="fc-actor-box fc-actor-client"/>
+              <text x="154" y="41" text-anchor="middle" class="fc-actor-title">Client Browser / App</text>
+              <text x="154" y="57" text-anchor="middle" class="fc-actor-sub">Untrusted · Web Worker</text>
 
-              <!-- Actor 2: Stateless Challenge Gateway -->
-              <rect x="355" y="16" width="230" height="52" class="fc-actor-box fc-actor-gateway" />
-              <text x="470" y="38" text-anchor="middle" class="fc-actor-title">Challenge Gateway</text>
-              <text x="470" y="55" text-anchor="middle" class="fc-actor-sub">POST /pow/challenge · HMAC Issuer</text>
+              <rect x="356" y="18" width="248" height="58" class="fc-actor-box fc-actor-gateway"/>
+              <text x="480" y="41" text-anchor="middle" class="fc-actor-title">Challenge Gateway</text>
+              <text x="480" y="57" text-anchor="middle" class="fc-actor-sub">POST /pow/challenge · HMAC</text>
 
-              <!-- Actor 3: Destination Backend API -->
-              <rect x="670" y="16" width="230" height="52" class="fc-actor-box fc-actor-backend" />
-              <text x="785" y="38" text-anchor="middle" class="fc-actor-title">Destination Backend API</text>
-              <text x="785" y="55" text-anchor="middle" class="fc-actor-sub">Protected Service · O(1) Gate</text>
+              <rect x="682" y="18" width="248" height="58" class="fc-actor-box fc-actor-backend"/>
+              <text x="806" y="41" text-anchor="middle" class="fc-actor-title">Destination Backend API</text>
+              <text x="806" y="57" text-anchor="middle" class="fc-actor-sub">Protected Service · O(1) Gate</text>
 
-              <!-- Message 1: Client -> Challenge Gateway -->
-              <line x1="155" y1="108" x2="460" y2="108" class="fc-arrow" marker-end="url(#fc-arrow-accent)" />
-              <rect x="180" y="94" width="265" height="26" class="fc-step-badge" />
-              <text x="192" y="112" class="fc-step-num">1.</text>
-              <text x="210" y="112" class="fc-step-code">POST /pow/challenge { action, context }</text>
+              <!-- ══ LIFELINES ══ -->
+              <line x1="154" y1="76" x2="154" y2="516" class="fc-lifeline"/>
+              <line x1="480" y1="76" x2="480" y2="516" class="fc-lifeline"/>
+              <line x1="806" y1="76" x2="806" y2="516" class="fc-lifeline"/>
 
-              <!-- Message 2: Challenge Gateway -> Client -->
-              <line x1="470" y1="165" x2="165" y2="165" class="fc-arrow-return" marker-end="url(#fc-arrow-info)" />
-              <rect x="185" y="151" width="255" height="26" class="fc-step-badge" />
-              <text x="197" y="169" class="fc-step-num">2.</text>
-              <text x="215" y="169" class="fc-step-code">200 OK { token: HMAC, salt, diff: 18 }</text>
+              <!-- ══════════════════════════════════════════════
+                   STEP 1 · Client → Challenge Gateway
+                   Message: POST /pow/challenge
+                   ══════════════════════════════════════════════ -->
+              <!-- Activation bar on Client (sender) -->
+              <rect x="150" y="98" width="8" height="34" rx="2" class="fc-act-info"/>
+              <!-- Arrow label above line -->
+              <text x="317" y="103" class="fc-msg-text">POST /pow/challenge · { action, context }</text>
+              <!-- Arrow -->
+              <line x1="158" y1="116" x2="472" y2="116" class="fc-arrow" marker-end="url(#fca)"/>
+              <!-- Step number circle at midpoint -->
+              <circle cx="262" cy="116" r="11" class="fc-circle-accent"/>
+              <text x="262" y="116" class="fc-circle-num">1</text>
 
-              <!-- Message 3: Client Web Worker Loop -->
-              <path d="M 155 210 C 225 210, 225 258, 155 258" class="fc-self-loop" marker-end="url(#fc-arrow-info)" />
-              <rect x="180" y="215" width="260" height="38" class="fc-step-badge" />
-              <text x="192" y="231" class="fc-step-num">3.</text>
-              <text x="210" y="231" class="fc-step-label">Web Worker Non-Blocking Search</text>
-              <text x="210" y="246" class="fc-step-code">SHA-256(salt:nonce:ctx) -> zeroBits >= 18</text>
+              <!-- ══════════════════════════════════════════════
+                   STEP 2 · Challenge Gateway → Client
+                   Response: 200 OK + HMAC token + salt + diff
+                   ══════════════════════════════════════════════ -->
+              <rect x="476" y="144" width="8" height="34" rx="2" class="fc-act-accent"/>
+              <text x="317" y="150" class="fc-msg-text">200 OK · { token: HMAC, salt, diff: 18, exp }</text>
+              <line x1="476" y1="164" x2="162" y2="164" class="fc-arrow-return" marker-end="url(#fci)"/>
+              <circle cx="364" cy="164" r="11" class="fc-circle-info"/>
+              <text x="364" y="164" class="fc-circle-num">2</text>
 
-              <!-- Message 4: Client -> Destination Backend -->
-              <line x1="155" y1="305" x2="775" y2="305" class="fc-arrow" marker-end="url(#fc-arrow-accent)" />
-              <rect x="310" y="291" width="320" height="26" class="fc-step-badge" />
-              <text x="322" y="309" class="fc-step-num">4.</text>
-              <text x="340" y="309" class="fc-step-code">POST /api/register + Headers: [Token, Nonce]</text>
+              <!-- ══════════════════════════════════════════════
+                   STEP 3 · Web Worker (client self-loop)
+                   SHA-256 search — UI stays at 60 FPS
+                   ══════════════════════════════════════════════ -->
+              <!-- Activation bar (tall — solver running) -->
+              <rect x="150" y="196" width="8" height="100" rx="2" class="fc-act-info"/>
+              <!-- Self-loop arc -->
+              <path d="M 158 212 C 248 212, 248 288, 158 288" class="fc-self-loop" marker-end="url(#fci)"/>
+              <!-- Detail box -->
+              <rect x="170" y="208" width="244" height="72" rx="6" class="fc-detail-box-info"/>
+              <circle cx="190" cy="226" r="11" class="fc-circle-info"/>
+              <text x="190" y="226" class="fc-circle-num">3</text>
+              <text x="210" y="226" class="fc-detail-title">Web Worker (Off-Thread)</text>
+              <text x="210" y="248" class="fc-detail-line">SHA-256( salt : nonce : ctx ) ≥ 18 bits</text>
+              <text x="210" y="267" class="fc-detail-line">UI stays at 60 FPS while solving</text>
 
-              <!-- Message 5: Backend Self Verification -->
-              <rect x="670" y="335" width="230" height="38" class="fc-step-badge" />
-              <text x="682" y="351" class="fc-step-num">5.</text>
-              <text x="700" y="351" class="fc-step-label">Stateless O(1) Verification</text>
-              <text x="700" y="365" class="fc-step-code">6 Crypto Gates (HMAC, exp, minDiff)</text>
+              <!-- ══════════════════════════════════════════════
+                   STEP 4 · Client → Destination Backend
+                   Submits solved proof via HTTP headers
+                   ══════════════════════════════════════════════ -->
+              <rect x="150" y="318" width="8" height="34" rx="2" class="fc-act-accent"/>
+              <text x="480" y="325" class="fc-msg-text">POST /api/register + X-Mehr-PoW-Token + X-Mehr-PoW-Nonce</text>
+              <line x1="158" y1="338" x2="798" y2="338" class="fc-arrow" marker-end="url(#fca)"/>
+              <circle cx="422" cy="338" r="11" class="fc-circle-accent"/>
+              <text x="422" y="338" class="fc-circle-num">4</text>
 
-              <!-- Message 6: Destination Backend -> Client -->
-              <line x1="785" y1="405" x2="165" y2="405" class="fc-arrow-success" marker-end="url(#fc-arrow-success)" />
-              <rect x="340" y="391" width="260" height="26" class="fc-step-badge" />
-              <text x="352" y="409" class="fc-step-num">6.</text>
-              <text x="370" y="409" class="fc-step-status">200 OK (Accepted) / 403 Forbidden</text>
+              <!-- ══════════════════════════════════════════════
+                   STEP 5 · Backend O(1) Stateless Verification
+                   6 crypto gates, < 0.05 ms, no DB needed
+                   ══════════════════════════════════════════════ -->
+              <rect x="802" y="362" width="8" height="90" rx="2" class="fc-act-success"/>
+              <rect x="682" y="368" width="240" height="82" rx="6" class="fc-detail-box-success"/>
+              <circle cx="702" cy="386" r="11" class="fc-circle-success"/>
+              <text x="702" y="386" class="fc-circle-num">5</text>
+              <text x="722" y="386" class="fc-detail-title">Stateless O(1) Verification</text>
+              <text x="722" y="408" class="fc-detail-line">① HMAC sig  ② exp window  ③ action</text>
+              <text x="722" y="426" class="fc-detail-line">④ minDifficulty  ⑤ ctx hash  ⑥ nonce</text>
+              <text x="722" y="444" class="fc-detail-ok">All 6 gates verified · &lt; 0.05 ms</text>
+
+              <!-- ══════════════════════════════════════════════
+                   STEP 6 · Backend → Client
+                   200 Accepted or 403 Forbidden
+                   ══════════════════════════════════════════════ -->
+              <text x="480" y="470" class="fc-msg-text">200 OK — Request Accepted  ·  or  ·  403 Forbidden</text>
+              <line x1="798" y1="482" x2="162" y2="482" class="fc-arrow-success" marker-end="url(#fcs)"/>
+              <circle cx="538" cy="482" r="11" class="fc-circle-success"/>
+              <text x="538" y="482" class="fc-circle-num">6</text>
             </svg>
           </div>
 

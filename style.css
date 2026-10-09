@@ -1246,18 +1246,9 @@ main {
   ry: var(--radius-sm);
   stroke-width: 0.0625rem;
 }
-.fc-actor-client {
-  fill: var(--card-bg);
-  stroke: var(--info);
-}
-.fc-actor-gateway {
-  fill: var(--card-bg);
-  stroke: var(--accent);
-}
-.fc-actor-backend {
-  fill: var(--card-bg);
-  stroke: var(--success);
-}
+.fc-actor-client  { fill: var(--card-bg); stroke: var(--info); }
+.fc-actor-gateway { fill: var(--card-bg); stroke: var(--accent); }
+.fc-actor-backend { fill: var(--card-bg); stroke: var(--success); }
 .fc-actor-title {
   font-family: var(--font-sans);
   font-size: 0.82rem;
@@ -1266,34 +1257,35 @@ main {
 }
 .fc-actor-sub {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.67rem;
   fill: var(--text-dim);
 }
 .fc-lifeline {
-  stroke: var(--border);
-  stroke-width: 0.0625rem;
-  stroke-dasharray: 0.35rem 0.35rem;
+  stroke: var(--border-strong);
+  stroke-width: 0.05rem;
+  stroke-dasharray: 0.3rem 0.3rem;
 }
 .fc-arrow {
   stroke: var(--accent);
-  stroke-width: 0.1rem;
+  stroke-width: 0.12rem;
   fill: none;
 }
 .fc-arrow-return {
   stroke: var(--info);
-  stroke-width: 0.1rem;
-  stroke-dasharray: 0.35rem 0.25rem;
+  stroke-width: 0.12rem;
+  stroke-dasharray: 0.4rem 0.25rem;
   fill: none;
 }
 .fc-arrow-success {
   stroke: var(--success);
-  stroke-width: 0.1rem;
-  stroke-dasharray: 0.35rem 0.25rem;
+  stroke-width: 0.12rem;
+  stroke-dasharray: 0.4rem 0.25rem;
   fill: none;
 }
 .fc-self-loop {
   stroke: var(--info);
-  stroke-width: 0.1rem;
+  stroke-width: 0.12rem;
+  stroke-dasharray: 0.4rem 0.25rem;
   fill: none;
 }
 .fc-step-badge {
@@ -1326,6 +1318,66 @@ main {
   font-weight: 700;
   fill: var(--success);
 }
+
+/* Swimlane column backgrounds */
+.fc-col-client  { fill: var(--info-subtle);    opacity: 0.5; }
+.fc-col-gateway { fill: var(--accent-subtle);  opacity: 0.5; }
+.fc-col-backend { fill: var(--success-subtle); opacity: 0.5; }
+.fc-col-border-client  { stroke: var(--info);    stroke-width: 0.04rem; fill: none; }
+.fc-col-border-gateway { stroke: var(--accent);  stroke-width: 0.04rem; fill: none; }
+.fc-col-border-backend { stroke: var(--success); stroke-width: 0.04rem; fill: none; }
+
+/* UML-style activation bars */
+.fc-act-info    { fill: var(--info);    opacity: 0.6; }
+.fc-act-accent  { fill: var(--accent);  opacity: 0.6; }
+.fc-act-success { fill: var(--success); opacity: 0.7; }
+
+/* Step number circles */
+.fc-circle-accent  { fill: var(--accent); }
+.fc-circle-info    { fill: var(--info); }
+.fc-circle-success { fill: var(--success); }
+.fc-circle-num {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 800;
+  fill: var(--bg-primary);
+  dominant-baseline: central;
+  text-anchor: middle;
+}
+
+/* Message annotation text (above arrow lines) */
+.fc-msg-text {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  fill: var(--text-dim);
+  dominant-baseline: central;
+  text-anchor: middle;
+}
+
+/* Detail boxes (Worker self-loop, Backend verification) */
+.fc-detail-box-info    { fill: var(--card-bg); stroke: var(--info);    stroke-width: 0.06rem; }
+.fc-detail-box-success { fill: var(--card-bg); stroke: var(--success); stroke-width: 0.06rem; }
+.fc-detail-title {
+  font-family: var(--font-sans);
+  font-size: 0.73rem;
+  font-weight: 700;
+  fill: var(--text-primary);
+  dominant-baseline: central;
+}
+.fc-detail-line {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  fill: var(--text-secondary);
+  dominant-baseline: central;
+}
+.fc-detail-ok {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  fill: var(--success);
+  dominant-baseline: central;
+}
+
 
 /* Steps Breakdown Cards Grid */
 .flow-steps-grid {
