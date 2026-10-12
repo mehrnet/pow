@@ -67,6 +67,8 @@
 
   --success: #22c55e;
   --success-subtle: rgba(34, 197, 94, 0.15);
+  --warn: #eab308;
+  --warn-subtle: rgba(234, 179, 8, 0.15);
   --error: #ef4444;
   --error-subtle: rgba(239, 68, 68, 0.15);
   --info: #38bdf8;
@@ -102,6 +104,8 @@
 
   --success: #16a34a;
   --success-subtle: rgba(22, 163, 74, 0.12);
+  --warn: #d97706;
+  --warn-subtle: rgba(217, 119, 6, 0.12);
   --error: #dc2626;
   --error-subtle: rgba(220, 38, 38, 0.12);
   --info: #0284c7;
@@ -137,6 +141,8 @@
 
   --success: #22c55e;
   --success-subtle: rgba(34, 197, 94, 0.18);
+  --warn: #eab308;
+  --warn-subtle: rgba(234, 179, 8, 0.18);
   --error: #ef4444;
   --error-subtle: rgba(239, 68, 68, 0.18);
   --info: #38bdf8;
@@ -712,15 +718,34 @@ main {
 
 /* Docked PoW Gate Component */
 .pow-gate {
-  background: var(--code-bg);
-  border: 0.0625rem solid var(--code-border);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-4);
+  padding: var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  transition: all var(--duration-normal);
+  gap: 0.5rem;
+  transition: border-color var(--duration-fast), background-color var(--duration-fast);
   min-width: 0;
+  margin: var(--space-3) 0;
+}
+
+.pow-gate.state-idle {
+  border-color: var(--border);
+}
+
+.pow-gate.state-solving {
+  border-color: rgba(var(--accent-rgb), 0.4);
+}
+
+.pow-gate.state-ready {
+  border-color: rgba(34, 197, 94, 0.45);
+  background: rgba(34, 197, 94, 0.04);
+}
+
+.pow-gate.state-catchup {
+  border-color: rgba(234, 179, 8, 0.5);
+  background: rgba(234, 179, 8, 0.04);
 }
 
 .pow-gate-head {
@@ -734,11 +759,153 @@ main {
 .pow-gate-status {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-weight: 700;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: var(--text-secondary);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pow-gate.state-solving .pow-gate-status {
+  color: var(--text-primary);
+}
+
+.pow-gate.state-ready .pow-gate-status {
+  color: var(--success);
+}
+
+.pow-gate.state-catchup .pow-gate-status {
+  color: var(--warn, #eab308);
+}
+
+.pow-gate-status svg,
+.pow-gate-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  transition: color var(--duration-fast);
+}
+
+.pow-gate.state-solving .pow-gate-icon {
+  color: var(--accent);
+}
+
+.pow-gate.state-catchup .pow-gate-icon {
+  color: var(--warn, #eab308);
+}
+
+.pow-gate.state-ready .pow-gate-icon {
+  color: var(--success);
+}
+
+.pow-icon-arrow {
+  display: block;
+  transform-box: view-box;
+  transform-origin: 27.315px 26.739px;
+  transition: transform var(--duration-fast), opacity var(--duration-fast);
+}
+
+.pow-spinner-wrap {
+  display: none;
+  transform-box: view-box;
+  transform-origin: 27.315px 26.739px;
+}
+
+.pow-spinner-circle {
+  transform-box: view-box;
+  transform-origin: 27.315px 26.739px;
+  stroke-dasharray: 1, 112;
+  stroke-dashoffset: 0;
+}
+
+.pow-icon-check {
+  transform-box: view-box;
+  transform-origin: 27.315px 26.739px;
+  transition: transform var(--duration-fast);
+}
+
+/* While solving / catchup: Hide static arrow with tip, show expanding/contracting dynamic Material spinner */
+.pow-gate.state-solving .pow-icon-arrow,
+.pow-gate.state-catchup .pow-icon-arrow {
+  display: none;
+}
+
+.pow-gate.state-solving .pow-spinner-wrap,
+.pow-gate.state-catchup .pow-spinner-wrap {
+  display: block;
+  animation: pow-material-rot 1.4s linear infinite;
+}
+
+.pow-gate.state-solving .pow-spinner-circle,
+.pow-gate.state-catchup .pow-spinner-circle {
+  animation: pow-material-dash 1.4s ease-in-out infinite;
+}
+
+.pow-gate.state-catchup .pow-spinner-wrap {
+  animation-duration: 0.8s;
+}
+
+.pow-gate.state-catchup .pow-spinner-circle {
+  animation-duration: 0.8s;
+}
+
+/* When ready (Browser Verified): Reveal complete brand arrow with tip, pop in */
+.pow-gate.state-ready .pow-spinner-wrap {
+  display: none;
+}
+
+.pow-gate.state-ready .pow-icon-arrow {
+  display: block;
+  animation: pow-pop-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.pow-gate.state-ready .pow-icon-check {
+  animation: pow-check-pop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pow-material-rot {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pow-material-dash {
+  0% {
+    stroke-dasharray: 1, 112;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 82, 112;
+    stroke-dashoffset: -20;
+  }
+  100% {
+    stroke-dasharray: 1, 112;
+    stroke-dashoffset: -110;
+  }
+}
+
+@keyframes pow-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pow-check-pop {
+  0% {
+    transform: scale(0.92);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .pow-gate-head-actions {
@@ -761,12 +928,19 @@ main {
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--duration-fast);
+  line-height: 1.2;
 }
 
 .pow-cancel-btn:hover {
   background: #ef4444;
   color: #ffffff;
   border-color: #ef4444;
+}
+
+.pow-cancel-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
 }
 
 .pow-gate.state-solving .pow-cancel-btn,
@@ -777,6 +951,7 @@ main {
 .pow-gate-pill {
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 600;
   color: var(--text-dim);
   flex-shrink: 0;
 }
@@ -789,7 +964,7 @@ main {
   border-radius: 0.1rem;
   overflow: hidden;
   position: relative;
-  box-shadow: inset 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2);
 }
 
 .pow-bar-svg {
@@ -809,14 +984,65 @@ main {
 .pow-bar-fill {
   fill: #ff8a2a;
   fill: url(#powGrad);
+  fill: url(#powGradAuto);
+  fill: url(#powGradWidgets);
   rx: 2;
   ry: 2;
   transition: width 150ms ease-out;
 }
 
 .pow-gate.state-ready .pow-bar-fill {
-  fill: var(--success);
+  fill: var(--success) !important;
   transition: width 200ms ease-out, fill 250ms ease-out;
+}
+
+.pow-gate.state-catchup .pow-bar-fill {
+  fill: var(--warn, #eab308);
+}
+
+.pow-gate-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  gap: 0.35rem;
+  margin-top: -0.15rem;
+  user-select: none;
+}
+
+.pow-foot-icon {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  color: var(--accent);
+  opacity: 0.85;
+}
+
+.pow-gate-foot a {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.15s ease;
+}
+
+.pow-gate-foot a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.pow-foot-dot {
+  opacity: 0.5;
+}
+
+[dir="rtl"] .pow-gate,
+.pow-gate[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .pow-gate-foot,
+.pow-gate[dir="rtl"] .pow-gate-foot {
+  justify-content: flex-start;
 }
 
 /* Primary Action Controls */

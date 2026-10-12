@@ -311,18 +311,31 @@
               </div>
 
               <!-- Docked PoW Gate Micro-Widget with Rounded Soft Bar -->
-              <div class="pow-gate state-idle" id="pow-gate">
+              <div class="pow-gate state-idle" id="pow-gate" data-pow-gate>
                 <div class="pow-gate-head">
                   <span class="pow-gate-status">
-                    <svg class="icon icon-base icon-accent" aria-hidden="true"><use href="#shield"></use></svg>
-                    <span id="gate-status-text">Ready to verify (18 bits)...</span>
+                    <svg class="pow-gate-icon" viewBox="6.05 4.85 41.36 41.36" fill="none" aria-hidden="true">
+                      <g class="pow-icon-arrow">
+                        <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="currentColor"/>
+                      </g>
+                      <g class="pow-spinner-wrap">
+                        <circle class="pow-spinner-circle" cx="27.315" cy="26.739" r="17.825" stroke="currentColor" stroke-width="3.305" stroke-linecap="round" fill="none"/>
+                      </g>
+                      <g class="pow-icon-check">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="currentColor"/>
+                      </g>
+                    </svg>
+                    <span data-pow-status id="gate-status-text">Ready to verify (18 bits)...</span>
                   </span>
                   <div class="pow-gate-head-actions">
-                    <button type="button" class="pow-cancel-btn" id="btn-cancel-pow" title="Cancel verification">
-                      <svg class="icon icon-sm" aria-hidden="true"><use href="#close"></use></svg>
+                    <button type="button" class="pow-cancel-btn" data-pow-cancel id="btn-cancel-pow" title="Cancel verification">
+                      <svg class="pow-cancel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
                       <span data-i18n="btn.cancel">Cancel</span>
                     </button>
-                    <span class="pow-gate-pill" id="gate-percent">0%</span>
+                    <span class="pow-gate-pill" data-pow-percent id="gate-percent">0%</span>
                   </div>
                 </div>
 
@@ -330,14 +343,24 @@
                 <div class="pow-bar-track">
                   <svg class="pow-bar-svg" aria-hidden="true">
                     <defs>
-                      <linearGradient id="powGrad" x1="0" y1="0" x2="1" y2="0">
+                      <linearGradient id="powGradAuto" x1="0" y1="0" x2="1" y2="0">
                         <stop offset="0%" stop-color="#ff9a3d" />
                         <stop offset="100%" stop-color="#ff8a2a" />
                       </linearGradient>
                     </defs>
                     <rect class="pow-bar-bg" x="0" y="0" width="100%" height="100%" rx="2" ry="2" />
-                    <rect id="pow-bar-fill" class="pow-bar-fill" x="0" y="0" width="0%" height="100%" rx="2" ry="2" />
+                    <rect id="pow-bar-fill" class="pow-bar-fill" data-pow-bar x="0" y="0" width="0%" height="100%" rx="2" ry="2" fill="url(#powGradAuto)" />
                   </svg>
+                </div>
+
+                <div class="pow-gate-foot">
+                  <svg class="pow-foot-icon" viewBox="6.05 4.85 41.36 41.36" fill="none" aria-hidden="true">
+                    <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="currentColor"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="currentColor"/>
+                  </svg>
+                  <span>Proof of Work</span>
+                  <span class="pow-foot-dot">·</span>
+                  <a href="https://pow.mehrnet.com" target="_blank" rel="noopener noreferrer">mehrnet</a>
                 </div>
               </div>
 
@@ -442,7 +465,17 @@
               <div class="pow-gate state-solving">
                 <div class="pow-gate-head">
                   <span class="pow-gate-status">
-                    <svg class="icon icon-base icon-accent"><use href="#shield"></use></svg>
+                    <svg class="pow-gate-icon" viewBox="6.05 4.85 41.36 41.36" fill="none" aria-hidden="true">
+                      <g class="pow-icon-arrow">
+                        <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="currentColor"/>
+                      </g>
+                      <g class="pow-spinner-wrap">
+                        <circle class="pow-spinner-circle" cx="27.315" cy="26.739" r="17.825" stroke="currentColor" stroke-width="3.305" stroke-linecap="round" fill="none"/>
+                      </g>
+                      <g class="pow-icon-check">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="currentColor"/>
+                      </g>
+                    </svg>
                     <span>Verifying invoice.create...</span>
                   </span>
                   <span class="pow-gate-pill">75%</span>
@@ -458,6 +491,15 @@
                     <rect class="pow-bar-bg" x="0" y="0" width="100%" height="100%" rx="2" ry="2" />
                     <rect class="pow-bar-fill" x="0" y="0" width="75%" height="100%" rx="2" ry="2" fill="url(#powGradWidgets)" />
                   </svg>
+                </div>
+                <div class="pow-gate-foot">
+                  <svg class="pow-foot-icon" viewBox="6.05 4.85 41.36 41.36" fill="none" aria-hidden="true">
+                    <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="currentColor"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="currentColor"/>
+                  </svg>
+                  <span>Proof of Work</span>
+                  <span class="pow-foot-dot">·</span>
+                  <a href="https://pow.mehrnet.com" target="_blank" rel="noopener noreferrer">mehrnet</a>
                 </div>
               </div>
             </div>
@@ -741,7 +783,7 @@
                 </div>
               </div>
               <div data-lang="en">
-                <p class="flow-node-desc">An off-thread Web Worker computes nonces without blocking the browser UI thread.</p>
+                <p class="flow-node-desc">An off-thread Web Worker computes nonces without blocking the browser UI thread, finding SHA-256 nonces that satisfy target difficulty while preserving a fluid 60 FPS user experience.</p>
               </div>
               <div data-lang="fa">
                 <p class="flow-node-desc">یک وب‌ورکر مستقل خارج از ترد اصلی رابط کاربری، نانس‌های متوالی را بررسی می‌کند تا تعداد بیت‌های صفر معین تولید شود؛ رابط کاربری با ۶۰ فریم بر ثانیه کاملاً روان می‌ماند.</p>
@@ -773,10 +815,10 @@
                 </div>
               </div>
               <div data-lang="en">
-                <p class="flow-node-desc">The user submits the form or API request. MehrPoW transparently attaches <code>X-Mehr-PoW-Token</code> and <code>X-Mehr-PoW-Nonce</code> headers alongside the form payload.</p>
+                <p class="flow-node-desc">The user submits the form or API request. MehrPoW transparently attaches <code>X-Mehr-PoW-Token</code> and <code>X-Mehr-PoW-Nonce</code> headers (or hidden form fields <code>pow_token</code> and <code>pow_nonce</code>) alongside the payload.</p>
               </div>
               <div data-lang="fa">
-                <p class="flow-node-desc">کاربر فرم یا درخواست نهایی را ارسال می‌کند. کتابخانه مهر به صورت خودکار هدرهای توکن امضاشده و نانس محاسبه‌شده را همراه با اطلاعات فرم ارسال می‌نماید.</p>
+                <p class="flow-node-desc">کاربر فرم یا درخواست نهایی را ارسال می‌کند. کتابخانه مهر به صورت خودکار هدرهای توکن امضاشده و نانس محاسبه‌شده (یا فیلدهای پنهان فرم) را همراه با داده‌ها ارسال می‌نماید.</p>
               </div>
               <div class="flow-node-footer">
                 <span>Binding: Form fields deterministically hashed into <code>ctx</code></span>
@@ -915,41 +957,61 @@
         </div>
 
         <!-- Drop-in Client -->
+        <!-- Drop-in Client & SPA -->
         <div class="code-panel-sm active" id="code-client">
           <div class="code-head-sm">
-            <span>index.html (Drop-in Client)</span>
+            <span>index.html (Drop-in Client &amp; SPA)</span>
             <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-client'), this)">
               <svg class="icon icon-copy"><use href="#copy"></use></svg>
               <svg class="icon icon-check"><use href="#check"></use></svg>
               <span>Copy</span>
             </button>
           </div>
-          <pre class="code-pre-sm"><code id="src-client"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">&lt;!-- 1. Include the drop-in library --&gt;</span></span></span>
+          <pre class="code-pre-sm"><code id="src-client"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">&lt;!-- Pattern A: Drop-in HTML Form Protection --&gt;</span></span></span>
 <span class="code-line"><span class="line-num">2</span><span class="line-content">&lt;<span class="tok-keyword">script</span> <span class="tok-type">src</span>=<span class="tok-string">&quot;https://pow.mehrnet.com/pow-client.js&quot;</span>&gt;&lt;/<span class="tok-keyword">script</span>&gt;</span></span>
 <span class="code-line"><span class="line-num">3</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">4</span><span class="line-content"><span class="tok-comment">&lt;!-- 2. Your standard HTML form --&gt;</span></span></span>
-<span class="code-line"><span class="line-num">5</span><span class="line-content">&lt;<span class="tok-keyword">form</span> <span class="tok-type">id</span>=<span class="tok-string">&quot;signup-form&quot;</span> <span class="tok-type">action</span>=<span class="tok-string">&quot;https://api.example.com/register&quot;</span> <span class="tok-type">method</span>=<span class="tok-string">&quot;POST&quot;</span>&gt;</span></span>
-<span class="code-line"><span class="line-num">6</span><span class="line-content">  &lt;<span class="tok-keyword">input</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;email&quot;</span> <span class="tok-type">name</span>=<span class="tok-string">&quot;email&quot;</span> <span class="tok-type">required</span> /&gt;</span></span>
-<span class="code-line"><span class="line-num">7</span><span class="line-content">  &lt;<span class="tok-keyword">input</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;password&quot;</span> <span class="tok-type">name</span>=<span class="tok-string">&quot;password&quot;</span> <span class="tok-type">required</span> /&gt;</span></span>
-<span class="code-line"><span class="line-num">8</span><span class="line-content">  &lt;<span class="tok-keyword">button</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;submit&quot;</span>&gt;Register&lt;/<span class="tok-keyword">button</span>&gt;</span></span>
-<span class="code-line"><span class="line-num">9</span><span class="line-content">&lt;/<span class="tok-keyword">form</span>&gt;</span></span>
-<span class="code-line"><span class="line-num">10</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">11</span><span class="line-content"><span class="tok-comment">&lt;!-- 3. Auto-protect with optional cross-origin domain --&gt;</span></span></span>
-<span class="code-line"><span class="line-num">12</span><span class="line-content">&lt;<span class="tok-keyword">script</span>&gt;</span></span>
-<span class="code-line"><span class="line-num">13</span><span class="line-content">  <span class="tok-type">MehrPoW</span>.protect(<span class="tok-string">&#39;#signup-form&#39;</span>, {</span></span>
-<span class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="tok-comment">// Optional: for cross-domain API setups (e.g. api.example.com)</span></span></span>
-<span class="code-line"><span class="line-num">15</span><span class="line-content">    domain: <span class="tok-string">&#39;https://api.example.com&#39;</span>,</span></span>
-<span class="code-line"><span class="line-num">16</span><span class="line-content">    endpoint: <span class="tok-string">&#39;/api/pow/challenge&#39;</span>,</span></span>
-<span class="code-line"><span class="line-num">17</span><span class="line-content">    action: <span class="tok-string">&#39;account.register&#39;</span>,</span></span>
-<span class="code-line"><span class="line-num">18</span><span class="line-content">    mode: <span class="tok-string">&#39;background&#39;</span> <span class="tok-comment">// Solves non-blockingly while user fills form</span></span></span>
-<span class="code-line"><span class="line-num">19</span><span class="line-content">  });</span></span>
-<span class="code-line"><span class="line-num">20</span><span class="line-content">&lt;/<span class="tok-keyword">script</span>&gt;</span></span></code></pre>
+<span class="code-line"><span class="line-num">4</span><span class="line-content">&lt;<span class="tok-keyword">form</span> <span class="tok-type">id</span>=<span class="tok-string">&quot;signup-form&quot;</span> <span class="tok-type">action</span>=<span class="tok-string">&quot;https://api.example.com/register&quot;</span> <span class="tok-type">method</span>=<span class="tok-string">&quot;POST&quot;</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">5</span><span class="line-content">  &lt;<span class="tok-keyword">input</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;email&quot;</span> <span class="tok-type">name</span>=<span class="tok-string">&quot;email&quot;</span> <span class="tok-type">required</span> /&gt;</span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content">  &lt;<span class="tok-keyword">input</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;password&quot;</span> <span class="tok-type">name</span>=<span class="tok-string">&quot;password&quot;</span> <span class="tok-type">required</span> /&gt;</span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content">  &lt;<span class="tok-keyword">button</span> <span class="tok-type">type</span>=<span class="tok-string">&quot;submit&quot;</span>&gt;Register&lt;/<span class="tok-keyword">button</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content">&lt;/<span class="tok-keyword">form</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">10</span><span class="line-content">&lt;<span class="tok-keyword">script</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">11</span><span class="line-content">  <span class="tok-comment">// Auto-mounts widget and solves in background Web Worker</span></span></span>
+<span class="code-line"><span class="line-num">12</span><span class="line-content">  <span class="tok-type">MehrPoW</span>.protect(<span class="tok-string">&#39;#signup-form&#39;</span>, {</span></span>
+<span class="code-line"><span class="line-num">13</span><span class="line-content">    domain: <span class="tok-string">&#39;https://api.example.com&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">14</span><span class="line-content">    endpoint: <span class="tok-string">&#39;/api/pow/challenge&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">15</span><span class="line-content">    action: <span class="tok-string">&#39;account.register&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content">    mode: <span class="tok-string">&#39;background&#39;</span></span></span>
+<span class="code-line"><span class="line-num">17</span><span class="line-content">  });</span></span>
+<span class="code-line"><span class="line-num">18</span><span class="line-content">&lt;/<span class="tok-keyword">script</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">19</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">20</span><span class="line-content"><span class="tok-comment">&lt;!-- Pattern B: Single Page Apps (fetch / axios) --&gt;</span></span></span>
+<span class="code-line"><span class="line-num">21</span><span class="line-content">&lt;<span class="tok-keyword">script</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">22</span><span class="line-content">  <span class="tok-keyword">async</span> <span class="tok-keyword">function</span> onCheckout() {</span></span>
+<span class="code-line"><span class="line-num">23</span><span class="line-content">    <span class="tok-comment">// 1. Compute proof-of-work challenge</span></span></span>
+<span class="code-line"><span class="line-num">24</span><span class="line-content">    <span class="tok-keyword">const</span> solution = <span class="tok-keyword">await</span> <span class="tok-type">MehrPoW</span>.solve({</span></span>
+<span class="code-line"><span class="line-num">25</span><span class="line-content">      domain: <span class="tok-string">&#39;https://api.example.com&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">26</span><span class="line-content">      action: <span class="tok-string">&#39;payment.checkout&#39;</span></span></span>
+<span class="code-line"><span class="line-num">27</span><span class="line-content">    });</span></span>
+<span class="code-line"><span class="line-num">28</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">29</span><span class="line-content">    <span class="tok-comment">// 2. Attach X-Mehr-PoW-* cryptographic headers</span></span></span>
+<span class="code-line"><span class="line-num">30</span><span class="line-content">    <span class="tok-keyword">const</span> res = <span class="tok-keyword">await</span> fetch(<span class="tok-string">&#39;https://api.example.com/checkout&#39;</span>, {</span></span>
+<span class="code-line"><span class="line-num">31</span><span class="line-content">      method: <span class="tok-string">&#39;POST&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">32</span><span class="line-content">      headers: {</span></span>
+<span class="code-line"><span class="line-num">33</span><span class="line-content">        <span class="tok-string">&#39;Content-Type&#39;</span>: <span class="tok-string">&#39;application/json&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">34</span><span class="line-content">        ...<span class="tok-type">MehrPoW</span>.getHeaders(solution)</span></span>
+<span class="code-line"><span class="line-num">35</span><span class="line-content">      },</span></span>
+<span class="code-line"><span class="line-num">36</span><span class="line-content">      body: JSON.stringify({ amount: <span class="tok-number">1500</span> })</span></span>
+<span class="code-line"><span class="line-num">37</span><span class="line-content">    });</span></span>
+<span class="code-line"><span class="line-num">38</span><span class="line-content">  }</span></span>
+<span class="code-line"><span class="line-num">39</span><span class="line-content">&lt;/<span class="tok-keyword">script</span>&gt;</span></span></code></pre>
         </div>
 
         <!-- Go -->
         <div class="code-panel-sm" id="code-go">
           <div class="code-head-sm">
-            <span>pow.go</span>
+            <span>pow.go (Server Verifier)</span>
             <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-go'), this)">
               <svg class="icon icon-copy"><use href="#copy"></use></svg>
               <svg class="icon icon-check"><use href="#check"></use></svg>
@@ -957,130 +1019,165 @@
             </button>
           </div>
           <pre class="code-pre-sm"><code id="src-go"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-keyword">package</span> main</span></span>
-<span class="code-line"><span class="line-num">2</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">2</span><span class="line-content"></span></span>
 <span class="code-line"><span class="line-num">3</span><span class="line-content"><span class="tok-keyword">import</span> (</span></span>
 <span class="code-line"><span class="line-num">4</span><span class="line-content">	<span class="tok-string">&quot;crypto/hmac&quot;</span></span></span>
 <span class="code-line"><span class="line-num">5</span><span class="line-content">	<span class="tok-string">&quot;crypto/sha256&quot;</span></span></span>
-<span class="code-line"><span class="line-num">6</span><span class="line-content">	<span class="tok-string">&quot;encoding/hex&quot;</span></span></span>
-<span class="code-line"><span class="line-num">7</span><span class="line-content">	<span class="tok-string">&quot;fmt&quot;</span></span></span>
-<span class="code-line"><span class="line-num">8</span><span class="line-content">	<span class="tok-string">&quot;math/bits&quot;</span></span></span>
-<span class="code-line"><span class="line-num">9</span><span class="line-content">	<span class="tok-string">&quot;net/http&quot;</span></span></span>
-<span class="code-line"><span class="line-num">10</span><span class="line-content">	<span class="tok-string">&quot;strconv&quot;</span></span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content">	<span class="tok-string">&quot;encoding/base64&quot;</span></span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content">	<span class="tok-string">&quot;encoding/hex&quot;</span></span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content">	<span class="tok-string">&quot;encoding/json&quot;</span></span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content">	<span class="tok-string">&quot;fmt&quot;</span></span></span>
+<span class="code-line"><span class="line-num">10</span><span class="line-content">	<span class="tok-string">&quot;math/bits&quot;</span></span></span>
 <span class="code-line"><span class="line-num">11</span><span class="line-content">	<span class="tok-string">&quot;strings&quot;</span></span></span>
-<span class="code-line"><span class="line-num">12</span><span class="line-content">)</span></span>
-<span class="code-line"><span class="line-num">13</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">14</span><span class="line-content"><span class="tok-comment">// VerifyPoW verifies client proof in O(1) time</span></span></span>
-<span class="code-line"><span class="line-num">15</span><span class="line-content"><span class="tok-keyword">func</span> VerifyPoW(secretKey, token <span class="tok-type">string</span>, nonce int64, context <span class="tok-type">string</span>) (<span class="tok-type">bool</span>, <span class="tok-type">error</span>) {</span></span>
-<span class="code-line"><span class="line-num">16</span><span class="line-content">	parts := strings.Split(token, <span class="tok-string">&quot;.&quot;</span>)</span></span>
-<span class="code-line"><span class="line-num">17</span><span class="line-content">	<span class="tok-keyword">if</span> len(parts) != <span class="tok-number">2</span> {</span></span>
-<span class="code-line"><span class="line-num">18</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;invalid token format&quot;</span>)</span></span>
-<span class="code-line"><span class="line-num">19</span><span class="line-content">	}</span></span>
-<span class="code-line"><span class="line-num">20</span><span class="line-content">	payloadB64, sig := parts[<span class="tok-number">0</span>], parts[<span class="tok-number">1</span>]</span></span>
-<span class="code-line"><span class="line-num">21</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">22</span><span class="line-content">	<span class="tok-comment">// 1. Verify HMAC-SHA256 signature</span></span></span>
-<span class="code-line"><span class="line-num">23</span><span class="line-content">	mac := hmac.New(sha256.New, []<span class="tok-type">byte</span>(secretKey))</span></span>
-<span class="code-line"><span class="line-num">24</span><span class="line-content">	mac.Write([]<span class="tok-type">byte</span>(payloadB64))</span></span>
-<span class="code-line"><span class="line-num">25</span><span class="line-content">	expectedSig := hex.EncodeToString(mac.Sum(<span class="tok-type">nil</span>))</span></span>
-<span class="code-line"><span class="line-num">26</span><span class="line-content">	<span class="tok-keyword">if</span> !hmac.Equal([]<span class="tok-type">byte</span>(sig), []<span class="tok-type">byte</span>(expectedSig)) {</span></span>
-<span class="code-line"><span class="line-num">27</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;signature mismatch&quot;</span>)</span></span>
-<span class="code-line"><span class="line-num">28</span><span class="line-content">	}</span></span>
-<span class="code-line"><span class="line-num">29</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">30</span><span class="line-content">	<span class="tok-comment">// 2. Count leading zero bits of candidate hash</span></span></span>
-<span class="code-line"><span class="line-num">31</span><span class="line-content">	candidate := fmt.Sprintf(<span class="tok-string">&quot;salt:%d:%s&quot;</span>, nonce, context)</span></span>
-<span class="code-line"><span class="line-num">32</span><span class="line-content">	h := sha256.Sum256([]<span class="tok-type">byte</span>(candidate))</span></span>
-<span class="code-line"><span class="line-num">33</span><span class="line-content">	</span></span>
-<span class="code-line"><span class="line-num">34</span><span class="line-content">	<span class="tok-keyword">var</span> zeroBits <span class="tok-type">int</span></span></span>
-<span class="code-line"><span class="line-num">35</span><span class="line-content">	<span class="tok-keyword">for</span> _, b := range h {</span></span>
-<span class="code-line"><span class="line-num">36</span><span class="line-content">		<span class="tok-keyword">if</span> b == <span class="tok-number">0</span> {</span></span>
-<span class="code-line"><span class="line-num">37</span><span class="line-content">			zeroBits += <span class="tok-number">8</span></span></span>
-<span class="code-line"><span class="line-num">38</span><span class="line-content">		} <span class="tok-keyword">else</span> {</span></span>
-<span class="code-line"><span class="line-num">39</span><span class="line-content">			zeroBits += bits.LeadingZeros8(b)</span></span>
-<span class="code-line"><span class="line-num">40</span><span class="line-content">			break</span></span>
-<span class="code-line"><span class="line-num">41</span><span class="line-content">		}</span></span>
-<span class="code-line"><span class="line-num">42</span><span class="line-content">	}</span></span>
-<span class="code-line"><span class="line-num">43</span><span class="line-content">	<span class="tok-keyword">return</span> zeroBits >= <span class="tok-number">16</span>, <span class="tok-type">nil</span></span></span>
-<span class="code-line"><span class="line-num">44</span><span class="line-content">}</span></span></code></pre>
+<span class="code-line"><span class="line-num">12</span><span class="line-content">	<span class="tok-string">&quot;time&quot;</span></span></span>
+<span class="code-line"><span class="line-num">13</span><span class="line-content">)</span></span>
+<span class="code-line"><span class="line-num">14</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">15</span><span class="line-content"><span class="tok-keyword">type</span> TokenPayload <span class="tok-keyword">struct</span> {</span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content">	V    <span class="tok-type">int</span>    <span class="tok-string">`json:&quot;v&quot;`</span></span></span>
+<span class="code-line"><span class="line-num">17</span><span class="line-content">	Act  <span class="tok-type">string</span> <span class="tok-string">`json:&quot;act&quot;`</span></span></span>
+<span class="code-line"><span class="line-num">18</span><span class="line-content">	Exp  <span class="tok-type">int64</span>  <span class="tok-string">`json:&quot;exp&quot;`</span></span></span>
+<span class="code-line"><span class="line-num">19</span><span class="line-content">	Diff <span class="tok-type">int</span>    <span class="tok-string">`json:&quot;diff&quot;`</span></span></span>
+<span class="code-line"><span class="line-num">20</span><span class="line-content">	Salt <span class="tok-type">string</span> <span class="tok-string">`json:&quot;salt&quot;`</span></span></span>
+<span class="code-line"><span class="line-num">21</span><span class="line-content">	Ctx  <span class="tok-type">string</span> <span class="tok-string">`json:&quot;ctx&quot;`</span></span></span>
+<span class="code-line"><span class="line-num">22</span><span class="line-content">}</span></span>
+<span class="code-line"><span class="line-num">23</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">24</span><span class="line-content"><span class="tok-comment">// VerifyPoW verifies HMAC signature, expiration, and proof-of-work in O(1) time</span></span></span>
+<span class="code-line"><span class="line-num">25</span><span class="line-content"><span class="tok-keyword">func</span> VerifyPoW(secretKey, token <span class="tok-type">string</span>, nonce <span class="tok-type">int64</span>) (<span class="tok-type">bool</span>, <span class="tok-type">error</span>) {</span></span>
+<span class="code-line"><span class="line-num">26</span><span class="line-content">	parts := strings.Split(token, <span class="tok-string">&quot;.&quot;</span>)</span></span>
+<span class="code-line"><span class="line-num">27</span><span class="line-content">	<span class="tok-keyword">if</span> len(parts) != <span class="tok-number">2</span> {</span></span>
+<span class="code-line"><span class="line-num">28</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;invalid token format&quot;</span>)</span></span>
+<span class="code-line"><span class="line-num">29</span><span class="line-content">	}</span></span>
+<span class="code-line"><span class="line-num">30</span><span class="line-content">	payloadB64, sig := parts[<span class="tok-number">0</span>], parts[<span class="tok-number">1</span>]</span></span>
+<span class="code-line"><span class="line-num">31</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">32</span><span class="line-content">	<span class="tok-comment">// 1. Verify HMAC-SHA256 signature</span></span></span>
+<span class="code-line"><span class="line-num">33</span><span class="line-content">	mac := hmac.New(sha256.New, []<span class="tok-type">byte</span>(secretKey))</span></span>
+<span class="code-line"><span class="line-num">34</span><span class="line-content">	mac.Write([]<span class="tok-type">byte</span>(payloadB64))</span></span>
+<span class="code-line"><span class="line-num">35</span><span class="line-content">	expectedSig := hex.EncodeToString(mac.Sum(<span class="tok-type">nil</span>))</span></span>
+<span class="code-line"><span class="line-num">36</span><span class="line-content">	<span class="tok-keyword">if</span> !hmac.Equal([]<span class="tok-type">byte</span>(strings.ToLower(sig)), []<span class="tok-type">byte</span>(strings.ToLower(expectedSig))) {</span></span>
+<span class="code-line"><span class="line-num">37</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;signature mismatch&quot;</span>)</span></span>
+<span class="code-line"><span class="line-num">38</span><span class="line-content">	}</span></span>
+<span class="code-line"><span class="line-num">39</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">40</span><span class="line-content">	<span class="tok-comment">// 2. Decode payload &amp; verify expiration</span></span></span>
+<span class="code-line"><span class="line-num">41</span><span class="line-content">	data, err := base64.RawURLEncoding.DecodeString(payloadB64)</span></span>
+<span class="code-line"><span class="line-num">42</span><span class="line-content">	<span class="tok-keyword">if</span> err != <span class="tok-type">nil</span> {</span></span>
+<span class="code-line"><span class="line-num">43</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;invalid payload: %w&quot;</span>, err)</span></span>
+<span class="code-line"><span class="line-num">44</span><span class="line-content">	}</span></span>
+<span class="code-line"><span class="line-num">45</span><span class="line-content">	<span class="tok-keyword">var</span> p TokenPayload</span></span>
+<span class="code-line"><span class="line-num">46</span><span class="line-content">	<span class="tok-keyword">if</span> err := json.Unmarshal(data, &amp;p); err != <span class="tok-type">nil</span> {</span></span>
+<span class="code-line"><span class="line-num">47</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;invalid json: %w&quot;</span>, err)</span></span>
+<span class="code-line"><span class="line-num">48</span><span class="line-content">	}</span></span>
+<span class="code-line"><span class="line-num">49</span><span class="line-content">	<span class="tok-keyword">if</span> time.Now().Unix() &gt; p.Exp {</span></span>
+<span class="code-line"><span class="line-num">50</span><span class="line-content">		<span class="tok-keyword">return</span> <span class="tok-type">false</span>, fmt.Errorf(<span class="tok-string">&quot;token expired&quot;</span>)</span></span>
+<span class="code-line"><span class="line-num">51</span><span class="line-content">	}</span></span>
+<span class="code-line"><span class="line-num">52</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">53</span><span class="line-content">	<span class="tok-comment">// 3. Recompute SHA-256 and count leading zero bits</span></span></span>
+<span class="code-line"><span class="line-num">54</span><span class="line-content">	candidate := fmt.Sprintf(<span class="tok-string">&quot;%s:%d:%s&quot;</span>, p.Salt, nonce, p.Ctx)</span></span>
+<span class="code-line"><span class="line-num">55</span><span class="line-content">	h := sha256.Sum256([]<span class="tok-type">byte</span>(candidate))</span></span>
+<span class="code-line"><span class="line-num">56</span><span class="line-content">	<span class="tok-keyword">var</span> zeroBits <span class="tok-type">int</span></span></span>
+<span class="code-line"><span class="line-num">57</span><span class="line-content">	<span class="tok-keyword">for</span> _, b := <span class="tok-keyword">range</span> h {</span></span>
+<span class="code-line"><span class="line-num">58</span><span class="line-content">		<span class="tok-keyword">if</span> b == <span class="tok-number">0</span> {</span></span>
+<span class="code-line"><span class="line-num">59</span><span class="line-content">			zeroBits += <span class="tok-number">8</span></span></span>
+<span class="code-line"><span class="line-num">60</span><span class="line-content">		} <span class="tok-keyword">else</span> {</span></span>
+<span class="code-line"><span class="line-num">61</span><span class="line-content">			zeroBits += bits.LeadingZeros8(b)</span></span>
+<span class="code-line"><span class="line-num">62</span><span class="line-content">			<span class="tok-keyword">break</span></span></span>
+<span class="code-line"><span class="line-num">63</span><span class="line-content">		}</span></span>
+<span class="code-line"><span class="line-num">64</span><span class="line-content">	}</span></span>
+<span class="code-line"><span class="line-num">65</span><span class="line-content">	<span class="tok-keyword">return</span> zeroBits &gt;= p.Diff, <span class="tok-type">nil</span></span></span>
+<span class="code-line"><span class="line-num">66</span><span class="line-content">}</span></span></code></pre>
         </div>
 
-        <!-- JS -->
+        <!-- Node / CF Worker -->
         <div class="code-panel-sm" id="code-js">
           <div class="code-head-sm">
-            <span>worker.js</span>
+            <span>verify.js (Node / Cloudflare Worker)</span>
             <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-js'), this)">
               <svg class="icon icon-copy"><use href="#copy"></use></svg>
               <svg class="icon icon-check"><use href="#check"></use></svg>
               <span>Copy</span>
             </button>
           </div>
-          <pre class="code-pre-sm"><code id="src-js"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">// Background Web Worker PoW Solver (worker.js)</span></span></span>
-<span class="code-line"><span class="line-num">2</span><span class="line-content">self.onmessage = <span class="tok-keyword">async</span> (e) => {</span></span>
-<span class="code-line"><span class="line-num">3</span><span class="line-content">  <span class="tok-keyword">const</span> { salt, context, difficulty } = e.data;</span></span>
-<span class="code-line"><span class="line-num">4</span><span class="line-content">  <span class="tok-keyword">const</span> encoder = <span class="tok-keyword">new</span> TextEncoder();</span></span>
-<span class="code-line"><span class="line-num">5</span><span class="line-content">  <span class="tok-keyword">let</span> nonce = <span class="tok-number">0</span>;</span></span>
-<span class="code-line"><span class="line-num">6</span><span class="line-content">  </span></span>
-<span class="code-line"><span class="line-num">7</span><span class="line-content">  <span class="tok-keyword">while</span> (<span class="tok-type">true</span>) {</span></span>
-<span class="code-line"><span class="line-num">8</span><span class="line-content">    <span class="tok-keyword">const</span> candidate = <span class="tok-string">`${salt}:${nonce}:${context}`</span>;</span></span>
-<span class="code-line"><span class="line-num">9</span><span class="line-content">    <span class="tok-keyword">const</span> buf = <span class="tok-keyword">await</span> crypto.subtle.digest(<span class="tok-string">&quot;SHA-256&quot;</span>, encoder.encode(candidate));</span></span>
-<span class="code-line"><span class="line-num">10</span><span class="line-content">    <span class="tok-keyword">const</span> bytes = <span class="tok-keyword">new</span> <span class="tok-type">Uint8Array</span>(buf);</span></span>
-<span class="code-line"><span class="line-num">11</span><span class="line-content">    </span></span>
-<span class="code-line"><span class="line-num">12</span><span class="line-content">    <span class="tok-comment">// Count leading zero bits</span></span></span>
-<span class="code-line"><span class="line-num">13</span><span class="line-content">    <span class="tok-keyword">let</span> zeroBits = <span class="tok-number">0</span>;</span></span>
-<span class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="tok-keyword">for</span> (<span class="tok-keyword">let</span> i = <span class="tok-number">0</span>; i &lt; bytes.length; i++) {</span></span>
-<span class="code-line"><span class="line-num">15</span><span class="line-content">      <span class="tok-keyword">if</span> (bytes[i] === <span class="tok-number">0</span>) zeroBits += <span class="tok-number">8</span>;</span></span>
-<span class="code-line"><span class="line-num">16</span><span class="line-content">      <span class="tok-keyword">else</span> { zeroBits += Math.clz32(bytes[i]) - <span class="tok-number">24</span>; break; }</span></span>
-<span class="code-line"><span class="line-num">17</span><span class="line-content">    }</span></span>
-<span class="code-line"><span class="line-num">18</span><span class="line-content">    </span></span>
-<span class="code-line"><span class="line-num">19</span><span class="line-content">    <span class="tok-keyword">if</span> (zeroBits >= difficulty) {</span></span>
-<span class="code-line"><span class="line-num">20</span><span class="line-content">      self.postMessage({ solved: <span class="tok-type">true</span>, nonce });</span></span>
-<span class="code-line"><span class="line-num">21</span><span class="line-content">      <span class="tok-keyword">return</span>;</span></span>
-<span class="code-line"><span class="line-num">22</span><span class="line-content">    }</span></span>
-<span class="code-line"><span class="line-num">23</span><span class="line-content">    nonce++;</span></span>
-<span class="code-line"><span class="line-num">24</span><span class="line-content">  }</span></span>
-<span class="code-line"><span class="line-num">25</span><span class="line-content">};</span></span></code></pre>
+          <pre class="code-pre-sm"><code id="src-js"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">// Universal Edge &amp; Node.js PoW Verifier (Cloudflare Workers, Bun, Node 18+)</span></span></span>
+<span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-keyword">export</span> <span class="tok-keyword">async</span> <span class="tok-keyword">function</span> verifyPoW({ token, nonce, secretKey }) {</span></span>
+<span class="code-line"><span class="line-num">3</span><span class="line-content">  <span class="tok-keyword">const</span> [payloadB64, signature] = (token || <span class="tok-string">&quot;&quot;</span>).split(<span class="tok-string">&quot;.&quot;</span>);</span></span>
+<span class="code-line"><span class="line-num">4</span><span class="line-content">  <span class="tok-keyword">if</span> (!payloadB64 || !signature) <span class="tok-keyword">return</span> { valid: <span class="tok-type">false</span>, error: <span class="tok-string">&quot;Malformed token&quot;</span> };</span></span>
+<span class="code-line"><span class="line-num">5</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content">  <span class="tok-comment">// 1. Verify HMAC-SHA256 signature</span></span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content">  <span class="tok-keyword">const</span> enc = <span class="tok-keyword">new</span> <span class="tok-type">TextEncoder</span>();</span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content">  <span class="tok-keyword">const</span> key = <span class="tok-keyword">await</span> crypto.subtle.importKey(</span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content">    <span class="tok-string">&quot;raw&quot;</span>, enc.encode(secretKey), { name: <span class="tok-string">&quot;HMAC&quot;</span>, hash: <span class="tok-string">&quot;SHA-256&quot;</span> }, <span class="tok-type">false</span>, [<span class="tok-string">&quot;verify&quot;</span>]</span></span>
+<span class="code-line"><span class="line-num">10</span><span class="line-content">  );</span></span>
+<span class="code-line"><span class="line-num">11</span><span class="line-content">  <span class="tok-keyword">const</span> sigBytes = <span class="tok-keyword">new</span> <span class="tok-type">Uint8Array</span>(signature.match(/.{1,2}/g).map(b =&gt; parseInt(b, <span class="tok-number">16</span>)));</span></span>
+<span class="code-line"><span class="line-num">12</span><span class="line-content">  <span class="tok-keyword">const</span> validSig = <span class="tok-keyword">await</span> crypto.subtle.verify(<span class="tok-string">&quot;HMAC&quot;</span>, key, sigBytes, enc.encode(payloadB64));</span></span>
+<span class="code-line"><span class="line-num">13</span><span class="line-content">  <span class="tok-keyword">if</span> (!validSig) <span class="tok-keyword">return</span> { valid: <span class="tok-type">false</span>, error: <span class="tok-string">&quot;Signature mismatch&quot;</span> };</span></span>
+<span class="code-line"><span class="line-num">14</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">15</span><span class="line-content">  <span class="tok-comment">// 2. Decode payload and check expiration</span></span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content">  <span class="tok-keyword">const</span> payload = <span class="tok-type">JSON</span>.parse(atob(payloadB64.replace(/-/g, <span class="tok-string">&quot;+&quot;</span>).replace(/_/g, <span class="tok-string">&quot;/&quot;</span>)));</span></span>
+<span class="code-line"><span class="line-num">17</span><span class="line-content">  <span class="tok-keyword">if</span> (<span class="tok-type">Math</span>.floor(<span class="tok-type">Date</span>.now() / <span class="tok-number">1000</span>) &gt; payload.exp) <span class="tok-keyword">return</span> { valid: <span class="tok-type">false</span>, error: <span class="tok-string">&quot;Token expired&quot;</span> };</span></span>
+<span class="code-line"><span class="line-num">18</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">19</span><span class="line-content">  <span class="tok-comment">// 3. Verify SHA-256 leading zero bits</span></span></span>
+<span class="code-line"><span class="line-num">20</span><span class="line-content">  <span class="tok-keyword">const</span> candidate = <span class="tok-string">`${payload.salt}:${nonce}:${payload.ctx}`</span>;</span></span>
+<span class="code-line"><span class="line-num">21</span><span class="line-content">  <span class="tok-keyword">const</span> hashBuf = <span class="tok-keyword">await</span> crypto.subtle.digest(<span class="tok-string">&quot;SHA-256&quot;</span>, enc.encode(candidate));</span></span>
+<span class="code-line"><span class="line-num">22</span><span class="line-content">  <span class="tok-keyword">const</span> bytes = <span class="tok-keyword">new</span> <span class="tok-type">Uint8Array</span>(hashBuf);</span></span>
+<span class="code-line"><span class="line-num">23</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">24</span><span class="line-content">  <span class="tok-keyword">let</span> zeroBits = <span class="tok-number">0</span>;</span></span>
+<span class="code-line"><span class="line-num">25</span><span class="line-content">  <span class="tok-keyword">for</span> (<span class="tok-keyword">let</span> i = <span class="tok-number">0</span>; i &lt; bytes.length; i++) {</span></span>
+<span class="code-line"><span class="line-num">26</span><span class="line-content">    <span class="tok-keyword">if</span> (bytes[i] === <span class="tok-number">0</span>) zeroBits += <span class="tok-number">8</span>;</span></span>
+<span class="code-line"><span class="line-num">27</span><span class="line-content">    <span class="tok-keyword">else</span> { zeroBits += <span class="tok-type">Math</span>.clz32(bytes[i]) - <span class="tok-number">24</span>; <span class="tok-keyword">break</span>; }</span></span>
+<span class="code-line"><span class="line-num">28</span><span class="line-content">  }</span></span>
+<span class="code-line"><span class="line-num">29</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">30</span><span class="line-content">  <span class="tok-keyword">return</span> { valid: zeroBits &gt;= payload.diff, zeroBits, difficulty: payload.diff };</span></span>
+<span class="code-line"><span class="line-num">31</span><span class="line-content">}</span></span></code></pre>
         </div>
 
         <!-- Python -->
         <div class="code-panel-sm" id="code-py">
           <div class="code-head-sm">
-            <span>pow.py</span>
+            <span>pow.py (Server Verifier)</span>
             <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-py'), this)">
               <svg class="icon icon-copy"><use href="#copy"></use></svg>
               <svg class="icon icon-check"><use href="#check"></use></svg>
               <span>Copy</span>
             </button>
           </div>
-          <pre class="code-pre-sm"><code id="src-py"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-keyword">import</span> hashlib, hmac</span></span>
-<span class="code-line"><span class="line-num">2</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">3</span><span class="line-content"><span class="tok-keyword">def</span> verify_pow(secret_key: <span class="tok-type">str</span>, token: <span class="tok-type">str</span>, nonce: <span class="tok-type">int</span>, context: <span class="tok-type">str</span>) -> <span class="tok-type">bool</span>:</span></span>
-<span class="code-line"><span class="line-num">4</span><span class="line-content">    parts = token.split(<span class="tok-string">&quot;.&quot;</span>)</span></span>
-<span class="code-line"><span class="line-num">5</span><span class="line-content">    <span class="tok-keyword">if</span> len(parts) != <span class="tok-number">2</span>:</span></span>
-<span class="code-line"><span class="line-num">6</span><span class="line-content">        <span class="tok-keyword">return</span> <span class="tok-type">False</span></span></span>
-<span class="code-line"><span class="line-num">7</span><span class="line-content">    payload_b64, signature = parts</span></span>
-<span class="code-line"><span class="line-num">8</span><span class="line-content">    </span></span>
-<span class="code-line"><span class="line-num">9</span><span class="line-content">    <span class="tok-comment"># 1. Verify HMAC</span></span></span>
-<span class="code-line"><span class="line-num">10</span><span class="line-content">    expected = hmac.<span class="tok-keyword">new</span>(secret_key.encode(), payload_b64.encode(), hashlib.sha256).hexdigest()</span></span>
-<span class="code-line"><span class="line-num">11</span><span class="line-content">    <span class="tok-keyword">if</span> not hmac.compare_digest(signature, expected):</span></span>
-<span class="code-line"><span class="line-num">12</span><span class="line-content">        <span class="tok-keyword">return</span> <span class="tok-type">False</span></span></span>
-<span class="code-line"><span class="line-num">13</span><span class="line-content">        </span></span>
-<span class="code-line"><span class="line-num">14</span><span class="line-content">    <span class="tok-comment"># 2. Check hash difficulty</span></span></span>
-<span class="code-line"><span class="line-num">15</span><span class="line-content">    candidate = f<span class="tok-string">&quot;salt:{nonce}:{context}&quot;</span>.encode()</span></span>
-<span class="code-line"><span class="line-num">16</span><span class="line-content">    digest = hashlib.sha256(candidate).digest()</span></span>
-<span class="code-line"><span class="line-num">17</span><span class="line-content">    </span></span>
-<span class="code-line"><span class="line-num">18</span><span class="line-content">    zero_bits = <span class="tok-number">0</span></span></span>
-<span class="code-line"><span class="line-num">19</span><span class="line-content">    <span class="tok-keyword">for</span> <span class="tok-type">byte</span> in digest:</span></span>
-<span class="code-line"><span class="line-num">20</span><span class="line-content">        <span class="tok-keyword">if</span> <span class="tok-type">byte</span> == <span class="tok-number">0</span>:</span></span>
-<span class="code-line"><span class="line-num">21</span><span class="line-content">            zero_bits += <span class="tok-number">8</span></span></span>
-<span class="code-line"><span class="line-num">22</span><span class="line-content">        <span class="tok-keyword">else</span>:</span></span>
-<span class="code-line"><span class="line-num">23</span><span class="line-content">            zero_bits += (<span class="tok-number">8</span> - <span class="tok-type">byte</span>.bit_length())</span></span>
-<span class="code-line"><span class="line-num">24</span><span class="line-content">            break</span></span>
-<span class="code-line"><span class="line-num">25</span><span class="line-content">            </span></span>
-<span class="code-line"><span class="line-num">26</span><span class="line-content">    <span class="tok-keyword">return</span> zero_bits >= <span class="tok-number">16</span></span></span></code></pre>
+          <pre class="code-pre-sm"><code id="src-py"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-keyword">import</span> base64, hashlib, hmac, json, time</span></span>
+<span class="code-line"><span class="line-num">2</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">3</span><span class="line-content"><span class="tok-comment"># VerifyPoW verifies HMAC signature, expiration, and zero bits in O(1) time</span></span></span>
+<span class="code-line"><span class="line-num">4</span><span class="line-content"><span class="tok-keyword">def</span> verify_pow(secret_key: <span class="tok-type">str</span>, token: <span class="tok-type">str</span>, nonce: <span class="tok-type">int</span>) -&gt; <span class="tok-type">bool</span>:</span></span>
+<span class="code-line"><span class="line-num">5</span><span class="line-content">    parts = token.split(<span class="tok-string">&quot;.&quot;</span>)</span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content">    <span class="tok-keyword">if</span> len(parts) != <span class="tok-number">2</span>:</span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content">        <span class="tok-keyword">return</span> <span class="tok-type">False</span></span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content">    payload_b64, signature = parts</span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">10</span><span class="line-content">    <span class="tok-comment"># 1. Verify HMAC-SHA256</span></span></span>
+<span class="code-line"><span class="line-num">11</span><span class="line-content">    expected = hmac.new(secret_key.encode(), payload_b64.encode(), hashlib.sha256).hexdigest()</span></span>
+<span class="code-line"><span class="line-num">12</span><span class="line-content">    <span class="tok-keyword">if</span> <span class="tok-keyword">not</span> hmac.compare_digest(signature.lower(), expected.lower()):</span></span>
+<span class="code-line"><span class="line-num">13</span><span class="line-content">        <span class="tok-keyword">return</span> <span class="tok-type">False</span></span></span>
+<span class="code-line"><span class="line-num">14</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">15</span><span class="line-content">    <span class="tok-comment"># 2. Decode payload &amp; verify expiration</span></span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content">    padded = payload_b64 + <span class="tok-string">&quot;=&quot;</span> * (-len(payload_b64) % <span class="tok-number">4</span>)</span></span>
+<span class="code-line"><span class="line-num">17</span><span class="line-content">    payload = json.loads(base64.urlsafe_b64decode(padded).decode())</span></span>
+<span class="code-line"><span class="line-num">18</span><span class="line-content">    <span class="tok-keyword">if</span> time.time() &gt; payload.get(<span class="tok-string">&quot;exp&quot;</span>, <span class="tok-number">0</span>):</span></span>
+<span class="code-line"><span class="line-num">19</span><span class="line-content">        <span class="tok-keyword">return</span> <span class="tok-type">False</span></span></span>
+<span class="code-line"><span class="line-num">20</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">21</span><span class="line-content">    <span class="tok-comment"># 3. Check leading zero bits</span></span></span>
+<span class="code-line"><span class="line-num">22</span><span class="line-content">    candidate = f<span class="tok-string">&quot;{payload[&#x27;salt&#x27;]}:{nonce}:{payload.get(&#x27;ctx&#x27;, &#x27;&#x27;)}&quot;</span>.encode()</span></span>
+<span class="code-line"><span class="line-num">23</span><span class="line-content">    digest = hashlib.sha256(candidate).digest()</span></span>
+<span class="code-line"><span class="line-num">24</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">25</span><span class="line-content">    zero_bits = <span class="tok-number">0</span></span></span>
+<span class="code-line"><span class="line-num">26</span><span class="line-content">    <span class="tok-keyword">for</span> b <span class="tok-keyword">in</span> digest:</span></span>
+<span class="code-line"><span class="line-num">27</span><span class="line-content">        <span class="tok-keyword">if</span> b == <span class="tok-number">0</span>:</span></span>
+<span class="code-line"><span class="line-num">28</span><span class="line-content">            zero_bits += <span class="tok-number">8</span></span></span>
+<span class="code-line"><span class="line-num">29</span><span class="line-content">        <span class="tok-keyword">else</span>:</span></span>
+<span class="code-line"><span class="line-num">30</span><span class="line-content">            zero_bits += (<span class="tok-number">8</span> - b.bit_length())</span></span>
+<span class="code-line"><span class="line-num">31</span><span class="line-content">            <span class="tok-keyword">break</span></span></span>
+<span class="code-line"><span class="line-num">32</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">33</span><span class="line-content">    <span class="tok-keyword">return</span> zero_bits &gt;= payload.get(<span class="tok-string">&quot;diff&quot;</span>, <span class="tok-number">16</span>)</span></span></code></pre>
         </div>
 
         <!-- PHP -->
         <div class="code-panel-sm" id="code-php">
           <div class="code-head-sm">
-            <span>pow.php</span>
+            <span>pow.php (Server Verifier)</span>
             <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-php'), this)">
               <svg class="icon icon-copy"><use href="#copy"></use></svg>
               <svg class="icon icon-check"><use href="#check"></use></svg>
@@ -1088,37 +1185,43 @@
             </button>
           </div>
           <pre class="code-pre-sm"><code id="src-php"><span class="code-line"><span class="line-num">1</span><span class="line-content">&lt;?php</span></span>
-<span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-keyword">function</span> verify_pow($secret_key, $token, $nonce, $context) {</span></span>
-<span class="code-line"><span class="line-num">3</span><span class="line-content">    $parts = explode(<span class="tok-string">&quot;.&quot;</span>, $token);</span></span>
-<span class="code-line"><span class="line-num">4</span><span class="line-content">    <span class="tok-keyword">if</span> (count($parts) !== <span class="tok-number">2</span>) <span class="tok-keyword">return</span> <span class="tok-type">false</span>;</span></span>
-<span class="code-line"><span class="line-num">5</span><span class="line-content">    list($payload_b64, $signature) = $parts;</span></span>
-<span class="code-line"><span class="line-num">6</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">7</span><span class="line-content">    <span class="tok-comment">// 1. Verify HMAC</span></span></span>
-<span class="code-line"><span class="line-num">8</span><span class="line-content">    $expected = hash_hmac(<span class="tok-string">&quot;sha256&quot;</span>, $payload_b64, $secret_key);</span></span>
-<span class="code-line"><span class="line-num">9</span><span class="line-content">    <span class="tok-keyword">if</span> (!hash_equals($signature, $expected)) <span class="tok-keyword">return</span> <span class="tok-type">false</span>;</span></span>
-<span class="code-line"><span class="line-num">10</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">11</span><span class="line-content">    <span class="tok-comment">// 2. Check hash candidate</span></span></span>
-<span class="code-line"><span class="line-num">12</span><span class="line-content">    $candidate = <span class="tok-string">&quot;salt:&quot;</span> . $nonce . <span class="tok-string">&quot;:&quot;</span> . $context;</span></span>
-<span class="code-line"><span class="line-num">13</span><span class="line-content">    $raw_hash = hash(<span class="tok-string">&quot;sha256&quot;</span>, $candidate, <span class="tok-type">true</span>);</span></span>
-<span class="code-line"><span class="line-num">14</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">15</span><span class="line-content">    $zero_bits = <span class="tok-number">0</span>;</span></span>
-<span class="code-line"><span class="line-num">16</span><span class="line-content">    <span class="tok-keyword">for</span> ($i = <span class="tok-number">0</span>; $i &lt; strlen($raw_hash); $i++) {</span></span>
-<span class="code-line"><span class="line-num">17</span><span class="line-content">        $<span class="tok-type">byte</span> = ord($raw_hash[$i]);</span></span>
-<span class="code-line"><span class="line-num">18</span><span class="line-content">        <span class="tok-keyword">if</span> ($<span class="tok-type">byte</span> === <span class="tok-number">0</span>) {</span></span>
-<span class="code-line"><span class="line-num">19</span><span class="line-content">            $zero_bits += <span class="tok-number">8</span>;</span></span>
-<span class="code-line"><span class="line-num">20</span><span class="line-content">        } <span class="tok-keyword">else</span> {</span></span>
-<span class="code-line"><span class="line-num">21</span><span class="line-content">            $zero_bits += (<span class="tok-number">8</span> - strlen(decbin($<span class="tok-type">byte</span>)));</span></span>
-<span class="code-line"><span class="line-num">22</span><span class="line-content">            break;</span></span>
-<span class="code-line"><span class="line-num">23</span><span class="line-content">        }</span></span>
-<span class="code-line"><span class="line-num">24</span><span class="line-content">    }</span></span>
-<span class="code-line"><span class="line-num">25</span><span class="line-content">    <span class="tok-keyword">return</span> $zero_bits >= <span class="tok-number">16</span>;</span></span>
-<span class="code-line"><span class="line-num">26</span><span class="line-content">}</span></span></code></pre>
+<span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-comment">// VerifyPoW verifies client proof in O(1) time</span></span></span>
+<span class="code-line"><span class="line-num">3</span><span class="line-content"><span class="tok-keyword">function</span> verify_pow(<span class="tok-type">string</span> $secretKey, <span class="tok-type">string</span> $token, <span class="tok-type">int</span> $nonce): <span class="tok-type">bool</span> {</span></span>
+<span class="code-line"><span class="line-num">4</span><span class="line-content">    $parts = explode(<span class="tok-string">&quot;.&quot;</span>, $token);</span></span>
+<span class="code-line"><span class="line-num">5</span><span class="line-content">    <span class="tok-keyword">if</span> (count($parts) !== <span class="tok-number">2</span>) <span class="tok-keyword">return</span> <span class="tok-type">false</span>;</span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content">    <span class="tok-keyword">list</span>($payloadB64, $signature) = $parts;</span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content">    <span class="tok-comment">// 1. Verify HMAC-SHA256</span></span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content">    $expected = hash_hmac(<span class="tok-string">&quot;sha256&quot;</span>, $payloadB64, $secretKey);</span></span>
+<span class="code-line"><span class="line-num">10</span><span class="line-content">    <span class="tok-keyword">if</span> (!hash_equals(strtolower($signature), strtolower($expected))) <span class="tok-keyword">return</span> <span class="tok-type">false</span>;</span></span>
+<span class="code-line"><span class="line-num">11</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">12</span><span class="line-content">    <span class="tok-comment">// 2. Decode payload &amp; verify expiration</span></span></span>
+<span class="code-line"><span class="line-num">13</span><span class="line-content">    $json = base64_decode(strtr($payloadB64, <span class="tok-string">&quot;-_&quot;</span>, <span class="tok-string">&quot;+/&quot;</span>));</span></span>
+<span class="code-line"><span class="line-num">14</span><span class="line-content">    $payload = json_decode($json, <span class="tok-type">true</span>);</span></span>
+<span class="code-line"><span class="line-num">15</span><span class="line-content">    <span class="tok-keyword">if</span> (!$payload || time() &gt; ($payload[<span class="tok-string">&quot;exp&quot;</span>] ?? <span class="tok-number">0</span>)) <span class="tok-keyword">return</span> <span class="tok-type">false</span>;</span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">17</span><span class="line-content">    <span class="tok-comment">// 3. Check leading zero bits</span></span></span>
+<span class="code-line"><span class="line-num">18</span><span class="line-content">    $candidate = ($payload[<span class="tok-string">&quot;salt&quot;</span>] ?? <span class="tok-string">&quot;&quot;</span>) . <span class="tok-string">&quot;:&quot;</span> . $nonce . <span class="tok-string">&quot;:&quot;</span> . ($payload[<span class="tok-string">&quot;ctx&quot;</span>] ?? <span class="tok-string">&quot;&quot;</span>);</span></span>
+<span class="code-line"><span class="line-num">19</span><span class="line-content">    $rawHash = hash(<span class="tok-string">&quot;sha256&quot;</span>, $candidate, <span class="tok-type">true</span>);</span></span>
+<span class="code-line"><span class="line-num">20</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">21</span><span class="line-content">    $zeroBits = <span class="tok-number">0</span>;</span></span>
+<span class="code-line"><span class="line-num">22</span><span class="line-content">    <span class="tok-keyword">for</span> ($i = <span class="tok-number">0</span>; $i &lt; strlen($rawHash); $i++) {</span></span>
+<span class="code-line"><span class="line-num">23</span><span class="line-content">        $byte = ord($rawHash[$i]);</span></span>
+<span class="code-line"><span class="line-num">24</span><span class="line-content">        <span class="tok-keyword">if</span> ($byte === <span class="tok-number">0</span>) {</span></span>
+<span class="code-line"><span class="line-num">25</span><span class="line-content">            $zeroBits += <span class="tok-number">8</span>;</span></span>
+<span class="code-line"><span class="line-num">26</span><span class="line-content">        } <span class="tok-keyword">else</span> {</span></span>
+<span class="code-line"><span class="line-num">27</span><span class="line-content">            $zeroBits += (<span class="tok-number">8</span> - strlen(decbin($byte)));</span></span>
+<span class="code-line"><span class="line-num">28</span><span class="line-content">            <span class="tok-keyword">break</span>;</span></span>
+<span class="code-line"><span class="line-num">29</span><span class="line-content">        }</span></span>
+<span class="code-line"><span class="line-num">30</span><span class="line-content">    }</span></span>
+<span class="code-line"><span class="line-num">31</span><span class="line-content">    <span class="tok-keyword">return</span> $zeroBits &gt;= ($payload[<span class="tok-string">&quot;diff&quot;</span>] ?? <span class="tok-number">16</span>);</span></span>
+<span class="code-line"><span class="line-num">32</span><span class="line-content">}</span></span></code></pre>
         </div>
 
         <!-- Shell -->
         <div class="code-panel-sm" id="code-sh">
           <div class="code-head-sm">
-            <span>pow.sh</span>
+            <span>pow.sh (POSIX Solver)</span>
             <button type="button" class="copy-btn" onclick="copySnippet(document.getElementById('src-sh'), this)">
               <svg class="icon icon-copy"><use href="#copy"></use></svg>
               <svg class="icon icon-check"><use href="#check"></use></svg>
@@ -1126,21 +1229,22 @@
             </button>
           </div>
           <pre class="code-pre-sm"><code id="src-sh"><span class="code-line"><span class="line-num">1</span><span class="line-content"><span class="tok-comment">#!/bin/sh</span></span></span>
-<span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-comment"># POSIX-compliant PoW solver</span></span></span>
+<span class="code-line"><span class="line-num">2</span><span class="line-content"><span class="tok-comment"># POSIX-compliant PoW solver &amp; verification test</span></span></span>
 <span class="code-line"><span class="line-num">3</span><span class="line-content">SALT=<span class="tok-string">&quot;a1b2c3d4e5f67890&quot;</span></span></span>
 <span class="code-line"><span class="line-num">4</span><span class="line-content">CTX=<span class="tok-string">&quot;job_context_fingerprint&quot;</span></span></span>
-<span class="code-line"><span class="line-num">5</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">6</span><span class="line-content">nonce=<span class="tok-number">0</span></span></span>
-<span class="code-line"><span class="line-num">7</span><span class="line-content"><span class="tok-keyword">while</span> :; <span class="tok-keyword">do</span></span></span>
-<span class="code-line"><span class="line-num">8</span><span class="line-content">    hash=$(printf <span class="tok-string">&quot;%s:%s:%s&quot;</span> <span class="tok-string">&quot;$SALT&quot;</span> <span class="tok-string">&quot;$nonce&quot;</span> <span class="tok-string">&quot;$CTX&quot;</span> | sha256sum | awk <span class="tok-string">&quot;{print \$1}&quot;</span>)</span></span>
-<span class="code-line"><span class="line-num">9</span><span class="line-content">    case <span class="tok-string">&quot;$hash&quot;</span> in</span></span>
-<span class="code-line"><span class="line-num">10</span><span class="line-content">        <span class="tok-number">0000</span>*)</span></span>
-<span class="code-line"><span class="line-num">11</span><span class="line-content">            printf <span class="tok-string">&quot;Solved! Nonce: %s Hash: %s\n&quot;</span> <span class="tok-string">&quot;$nonce&quot;</span> <span class="tok-string">&quot;$hash&quot;</span></span></span>
-<span class="code-line"><span class="line-num">12</span><span class="line-content">            break</span></span>
-<span class="code-line"><span class="line-num">13</span><span class="line-content">            ;;</span></span>
-<span class="code-line"><span class="line-num">14</span><span class="line-content">    esac</span></span>
-<span class="code-line"><span class="line-num">15</span><span class="line-content">    nonce=$((nonce + <span class="tok-number">1</span>))</span></span>
-<span class="code-line"><span class="line-num">16</span><span class="line-content"><span class="tok-keyword">done</span></span></span></code></pre>
+<span class="code-line"><span class="line-num">5</span><span class="line-content">TARGET_DIFF=<span class="tok-number">16</span> <span class="tok-comment"># 16 zero bits = 4 hex zeros</span></span></span>
+<span class="code-line"><span class="line-num">6</span><span class="line-content"></span></span>
+<span class="code-line"><span class="line-num">7</span><span class="line-content">nonce=<span class="tok-number">0</span></span></span>
+<span class="code-line"><span class="line-num">8</span><span class="line-content"><span class="tok-keyword">while</span> :; <span class="tok-keyword">do</span></span></span>
+<span class="code-line"><span class="line-num">9</span><span class="line-content">    hash=$(printf <span class="tok-string">&quot;%s:%s:%s&quot;</span> <span class="tok-string">&quot;$SALT&quot;</span> <span class="tok-string">&quot;$nonce&quot;</span> <span class="tok-string">&quot;$CTX&quot;</span> | sha256sum | awk '{print $1}')</span></span>
+<span class="code-line"><span class="line-num">10</span><span class="line-content">    <span class="tok-keyword">case</span> <span class="tok-string">&quot;$hash&quot;</span> <span class="tok-keyword">in</span></span></span>
+<span class="code-line"><span class="line-num">11</span><span class="line-content">        <span class="tok-number">0000</span>*)</span></span>
+<span class="code-line"><span class="line-num">12</span><span class="line-content">            printf <span class="tok-string">&quot;Solved! Nonce: %s Hash: %s\n&quot;</span> <span class="tok-string">&quot;$nonce&quot;</span> <span class="tok-string">&quot;$hash&quot;</span></span></span>
+<span class="code-line"><span class="line-num">13</span><span class="line-content">            <span class="tok-keyword">break</span></span></span>
+<span class="code-line"><span class="line-num">14</span><span class="line-content">            ;;</span></span>
+<span class="code-line"><span class="line-num">15</span><span class="line-content">    <span class="tok-keyword">esac</span></span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content">    nonce=$((nonce + <span class="tok-number">1</span>))</span></span>
+<span class="code-line"><span class="line-num">17</span><span class="line-content"><span class="tok-keyword">done</span></span></span></code></pre>
         </div>
 
         </div><!-- /implementation-code-section -->
