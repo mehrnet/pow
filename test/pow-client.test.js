@@ -170,3 +170,60 @@ test('MehrPoW.protect invokes callApi and attaches submit handlers', async () =>
   delete globalThis.document;
 });
 
+test('MehrPoW automatically injects embedded styles and complete widget DOM', () => {
+  const headChildren = [];
+  const formChildren = [];
+  const attrs = {};
+
+  const mockHead = {
+    appendChild: (el) => headChildren.push(el)
+  };
+
+  const mockForm = {
+    tagName: 'FORM',
+    querySelector: (sel) => null,
+    appendChild: (el) => formChildren.push(el),
+    getAttribute: () => null,
+    addEventListener: () => {},
+    removeEventListener: () => {}
+  };
+
+  globalThis.document = {
+    head: mockHead,
+    getElementById: (id) => headChildren.find(c => c.id === id) || null,
+    createElement: (tag) => {
+      const el = {
+        tagName: tag.toUpperCase(),
+        className: '',
+        id: '',
+        textContent: '',
+        innerHTML: '',
+        setAttribute: (k, v) => { attrs[k] = v; },
+        querySelector: () => null
+      };
+      return el;
+    }
+  };
+
+  const handle = MehrPoW.protect(mockForm, {
+    mode: 'manual',
+    theme: 'dark'
+  });
+
+  assert.ok(handle, 'handle should exist');
+  const styleEl = headChildren.find(c => c.id === 'mehr-pow-client-styles');
+  assert.ok(styleEl, 'style tag should be injected into head');
+  assert.ok(styleEl.textContent.includes('.pow-gate'), 'injected style should contain .pow-gate rules');
+
+  const injectedGate = formChildren.find(c => c.className && c.className.includes('pow-gate'));
+  assert.ok(injectedGate, 'pow-gate should be injected into form');
+  assert.strictEqual(attrs['data-pow-theme'], 'dark', 'theme should be set');
+  assert.ok(injectedGate.innerHTML.includes('pow-bar-track'), 'gate should include progress track');
+  assert.ok(injectedGate.innerHTML.includes('pow-cancel-btn'), 'gate should include cancel button');
+  assert.ok(injectedGate.innerHTML.includes('pow-gate-foot'), 'gate should include footer badge');
+
+  handle.destroy();
+  delete globalThis.document;
+});
+
+

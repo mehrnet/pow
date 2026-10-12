@@ -105,6 +105,247 @@
     '};'
   ].join('\n');
 
+  var STYLE_ID = 'mehr-pow-client-styles';
+
+  var CLIENT_CSS = [
+    ':root {',
+    '  --pow-bg: #12151c;',
+    '  --pow-border: rgba(255, 255, 255, 0.1);',
+    '  --pow-text: #f1f5f9;',
+    '  --pow-text-muted: #94a3b8;',
+    '  --pow-accent: #ff8a2a;',
+    '  --pow-accent-end: #ff9a3d;',
+    '  --pow-success: #10b981;',
+    '  --pow-track: rgba(255, 255, 255, 0.06);',
+    '  --pow-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;',
+    '  --pow-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;',
+    '}',
+    '@media (prefers-color-scheme: light) {',
+    '  :root {',
+    '    --pow-bg: #ffffff;',
+    '    --pow-border: rgba(0, 0, 0, 0.12);',
+    '    --pow-text: #0f172a;',
+    '    --pow-text-muted: #64748b;',
+    '    --pow-track: rgba(0, 0, 0, 0.06);',
+    '  }',
+    '}',
+    '[data-theme="light"] .pow-gate,',
+    '.pow-gate[data-pow-theme="light"] {',
+    '  --pow-bg: #ffffff;',
+    '  --pow-border: rgba(0, 0, 0, 0.12);',
+    '  --pow-text: #0f172a;',
+    '  --pow-text-muted: #64748b;',
+    '  --pow-track: rgba(0, 0, 0, 0.06);',
+    '}',
+    '[data-theme="dark"] .pow-gate,',
+    '[data-theme="black"] .pow-gate,',
+    '.pow-gate[data-pow-theme="dark"] {',
+    '  --pow-bg: #12151c;',
+    '  --pow-border: rgba(255, 255, 255, 0.1);',
+    '  --pow-text: #f1f5f9;',
+    '  --pow-text-muted: #94a3b8;',
+    '  --pow-track: rgba(255, 255, 255, 0.06);',
+    '}',
+    '.pow-gate {',
+    '  box-sizing: border-box;',
+    '  font-family: var(--pow-font);',
+    '  background: var(--code-bg, var(--pow-bg));',
+    '  border: 0.0625rem solid var(--code-border, var(--pow-border));',
+    '  border-radius: var(--radius-lg, 0.5rem);',
+    '  padding: var(--space-4, 0.85rem 1rem);',
+    '  display: flex;',
+    '  flex-direction: column;',
+    '  gap: 0.55rem;',
+    '  transition: border-color 0.2s ease, box-shadow 0.2s ease;',
+    '  min-width: 0;',
+    '  width: 100%;',
+    '  max-width: 100%;',
+    '  color: var(--pow-text);',
+    '  line-height: 1.4;',
+    '  text-align: start;',
+    '}',
+    '.pow-gate *, .pow-gate *::before, .pow-gate *::after {',
+    '  box-sizing: border-box;',
+    '}',
+    '.pow-gate.state-ready {',
+    '  border-color: rgba(16, 185, 129, 0.4);',
+    '}',
+    '.pow-gate-head {',
+    '  display: flex;',
+    '  align-items: center;',
+    '  justify-content: space-between;',
+    '  font-size: var(--text-xs, 0.8125rem);',
+    '  gap: 0.5rem;',
+    '}',
+    '.pow-gate-status {',
+    '  display: inline-flex;',
+    '  align-items: center;',
+    '  gap: 0.45rem;',
+    '  font-weight: 600;',
+    '  color: var(--pow-text);',
+    '  min-width: 0;',
+    '  overflow: hidden;',
+    '  text-overflow: ellipsis;',
+    '  white-space: nowrap;',
+    '}',
+    '.pow-gate-icon {',
+    '  width: 1.125rem;',
+    '  height: 1.125rem;',
+    '  flex-shrink: 0;',
+    '  color: var(--pow-accent);',
+    '  transition: transform 0.3s ease, color 0.3s ease;',
+    '}',
+    '.pow-gate.state-solving .pow-gate-icon,',
+    '.pow-gate.state-catchup .pow-gate-icon {',
+    '  animation: pow-spin 1.8s linear infinite;',
+    '}',
+    '@keyframes pow-spin {',
+    '  from { transform: rotate(0deg); }',
+    '  to { transform: rotate(360deg); }',
+    '}',
+    '.pow-gate.state-ready .pow-gate-icon {',
+    '  color: var(--pow-success);',
+    '  transform: none;',
+    '  animation: none;',
+    '}',
+    '.pow-gate-head-actions {',
+    '  display: inline-flex;',
+    '  align-items: center;',
+    '  gap: 0.5rem;',
+    '  flex-shrink: 0;',
+    '}',
+    '.pow-cancel-btn {',
+    '  display: none;',
+    '  align-items: center;',
+    '  gap: 0.25rem;',
+    '  padding: 0.18rem 0.55rem;',
+    '  font-size: 0.7rem;',
+    '  font-weight: 600;',
+    '  color: #ef4444;',
+    '  background: rgba(239, 68, 68, 0.08);',
+    '  border: 0.0625rem solid rgba(239, 68, 68, 0.3);',
+    '  border-radius: var(--radius-full, 9999rem);',
+    '  cursor: pointer;',
+    '  transition: all 0.15s ease;',
+    '  line-height: 1.2;',
+    '}',
+    '.pow-cancel-btn:hover {',
+    '  background: #ef4444;',
+    '  color: #ffffff;',
+    '  border-color: #ef4444;',
+    '}',
+    '.pow-cancel-icon {',
+    '  width: 0.75rem;',
+    '  height: 0.75rem;',
+    '  flex-shrink: 0;',
+    '}',
+    '.pow-gate.state-solving .pow-cancel-btn,',
+    '.pow-gate.state-catchup .pow-cancel-btn {',
+    '  display: inline-flex;',
+    '}',
+    '.pow-gate-pill {',
+    '  font-family: var(--font-mono, var(--pow-mono));',
+    '  font-size: 0.72rem;',
+    '  font-weight: 600;',
+    '  color: var(--text-dim, var(--pow-text-muted));',
+    '  flex-shrink: 0;',
+    '}',
+    '.pow-bar-track {',
+    '  width: 100%;',
+    '  height: 0.3rem;',
+    '  background: var(--bg-tertiary, var(--pow-track));',
+    '  border-radius: 0.1rem;',
+    '  overflow: hidden;',
+    '  position: relative;',
+    '  box-shadow: inset 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2);',
+    '}',
+    '.pow-bar-svg {',
+    '  width: 100%;',
+    '  height: 100%;',
+    '  display: block;',
+    '  overflow: hidden;',
+    '  border-radius: 0.1rem;',
+    '}',
+    '.pow-bar-bg {',
+    '  fill: transparent;',
+    '  rx: 2;',
+    '  ry: 2;',
+    '}',
+    '.pow-bar-fill {',
+    '  fill: #ff8a2a;',
+    '  fill: url(#powGrad);',
+    '  fill: url(#powGradAuto);',
+    '  rx: 2;',
+    '  ry: 2;',
+    '  transition: width 150ms ease-out;',
+    '}',
+    '.pow-gate.state-ready .pow-bar-fill {',
+    '  fill: var(--success, var(--pow-success)) !important;',
+    '  transition: width 200ms ease-out, fill 250ms ease-out;',
+    '}',
+    '.pow-gate-foot {',
+    '  display: flex;',
+    '  align-items: center;',
+    '  justify-content: flex-end;',
+    '  font-size: 0.65rem;',
+    '  color: var(--text-dim, var(--pow-text-muted));',
+    '  gap: 0.35rem;',
+    '  margin-top: -0.15rem;',
+    '  user-select: none;',
+    '}',
+    '.pow-foot-icon {',
+    '  width: 0.6875rem;',
+    '  height: 0.6875rem;',
+    '  color: var(--pow-accent);',
+    '  opacity: 0.85;',
+    '}',
+    '.pow-gate-foot a {',
+    '  color: inherit;',
+    '  text-decoration: none;',
+    '  opacity: 0.75;',
+    '  transition: opacity 0.15s ease;',
+    '}',
+    '.pow-gate-foot a:hover {',
+    '  opacity: 1;',
+    '  text-decoration: underline;',
+    '}',
+    '.pow-foot-dot {',
+    '  opacity: 0.5;',
+    '}',
+    '[dir="rtl"] .pow-gate,',
+    '.pow-gate[dir="rtl"] {',
+    '  direction: rtl;',
+    '  text-align: right;',
+    '}',
+    '[dir="rtl"] .pow-gate-foot,',
+    '.pow-gate[dir="rtl"] .pow-gate-foot {',
+    '  justify-content: flex-start;',
+    '}'
+  ].join('\n');
+
+  function injectStyles() {
+    if (typeof document === 'undefined' || !document.head || typeof document.getElementById !== 'function') {
+      return;
+    }
+    if (document.getElementById(STYLE_ID)) return;
+    try {
+      var style = document.createElement('style');
+      style.id = STYLE_ID;
+      style.textContent = CLIENT_CSS;
+      document.head.appendChild(style);
+    } catch (e) {
+      // Ignore in non-browser environments
+    }
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.head) {
+      injectStyles();
+    } else if (typeof document.addEventListener === 'function') {
+      document.addEventListener('DOMContentLoaded', injectStyles);
+    }
+  }
+
   /**
    * Resolves target URL by combining optional base domain with endpoint path.
    */
@@ -260,6 +501,10 @@
       return null;
     }
 
+    if (options.style !== false && options.css !== false) {
+      injectStyles();
+    }
+
     var endpoint = options.endpoint || form.getAttribute('data-pow-endpoint') || '/pow/challenge';
     var domain = options.domain || form.getAttribute('data-pow-domain') || '';
     var action = options.action || form.getAttribute('data-pow-action') || 'form.submit';
@@ -270,25 +515,59 @@
       gateEl = document.createElement('div');
       gateEl.className = 'pow-gate state-idle';
       gateEl.setAttribute('data-pow-gate', '');
+      if (options.theme) {
+        gateEl.setAttribute('data-pow-theme', options.theme);
+      }
+
+      var showBadge = options.badge !== false;
+      var cancelText = (options.strings && options.strings.cancel) || 'Cancel';
+      var idleText = (options.strings && options.strings.idle) || 'Ready to verify...';
+
+      var badgeHtml = showBadge ? [
+        '<div class="pow-gate-foot">',
+        '  <svg class="pow-foot-icon" viewBox="6.05 4.85 41.36 41.36" fill="none" aria-hidden="true">',
+        '    <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="currentColor"/>',
+        '    <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="currentColor"/>',
+        '  </svg>',
+        '  <span>Proof of Work</span>',
+        '  <span class="pow-foot-dot">·</span>',
+        '  <a href="https://pow.mehrnet.com" target="_blank" rel="noopener noreferrer">mehrnet</a>',
+        '</div>'
+      ].join('') : '';
+
       gateEl.innerHTML = [
         '<div class="pow-gate-head">',
         '  <span class="pow-gate-status">',
-        '    <svg class="icon icon-base icon-accent" viewBox="6.05 4.85 41.36 41.36" fill="none" aria-hidden="true">',
+        '    <svg class="pow-gate-icon" viewBox="6.05 4.85 41.36 41.36" fill="none" aria-hidden="true">',
         '      <path d="M27.315 7.261a19.45 19.45 0 0 0-13.518 4.917l1.23-6.743-3.193-.582-2.162 11.836 11.84 2.16.582-3.193-6.08-1.11a16.173 16.173 0 1 1-4.982 8.064l-3.142-.824A19.478 19.478 0 1 0 27.315 7.261z" fill="currentColor"/>',
         '      <path fill-rule="evenodd" clip-rule="evenodd" d="M38.847 21.919 35.928 19 24.477 30.452 19.923 25.9 17 28.822l7.483 7.484 2.923-2.923-.011-.012L38.847 21.92z" fill="currentColor"/>',
         '    </svg>',
-        '    <span data-pow-status>Ready to verify...</span>',
+        '    <span data-pow-status>' + idleText + '</span>',
         '  </span>',
         '  <div class="pow-gate-head-actions">',
+        '    <button type="button" class="pow-cancel-btn" data-pow-cancel title="Cancel verification">',
+        '      <svg class="pow-cancel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+        '        <line x1="18" y1="6" x2="6" y2="18"></line>',
+        '        <line x1="6" y1="6" x2="18" y2="18"></line>',
+        '      </svg>',
+        '      <span>' + cancelText + '</span>',
+        '    </button>',
         '    <span class="pow-gate-pill" data-pow-percent>0%</span>',
         '  </div>',
         '</div>',
         '<div class="pow-bar-track">',
         '  <svg class="pow-bar-svg" aria-hidden="true">',
+        '    <defs>',
+        '      <linearGradient id="powGradAuto" x1="0" y1="0" x2="1" y2="0">',
+        '        <stop offset="0%" stop-color="#ff9a3d" />',
+        '        <stop offset="100%" stop-color="#ff8a2a" />',
+        '      </linearGradient>',
+        '    </defs>',
         '    <rect class="pow-bar-bg" x="0" y="0" width="100%" height="100%" rx="2" ry="2" />',
-        '    <rect class="pow-bar-fill" data-pow-bar x="0" y="0" width="0%" height="100%" rx="2" ry="2" />',
+        '    <rect class="pow-bar-fill" data-pow-bar x="0" y="0" width="0%" height="100%" rx="2" ry="2" fill="url(#powGradAuto)" />',
         '  </svg>',
-        '</div>'
+        '</div>',
+        badgeHtml
       ].join('');
 
       var submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
@@ -565,8 +844,10 @@
           activeWorker.terminate();
           activeWorker = null;
         }
-        form.removeEventListener('submit', handleSubmit);
-        if (cancelBtn) {
+        if (typeof form.removeEventListener === 'function') {
+          form.removeEventListener('submit', handleSubmit);
+        }
+        if (cancelBtn && typeof cancelBtn.removeEventListener === 'function') {
           cancelBtn.removeEventListener('click', handleCancel);
         }
       }
