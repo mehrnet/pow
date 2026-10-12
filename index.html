@@ -977,35 +977,44 @@
 <span class="code-line"><span class="line-num">8</span><span class="line-content">&lt;/<span class="tok-keyword">form</span>&gt;</span></span>
 <span class="code-line"><span class="line-num">9</span><span class="line-content"> </span></span>
 <span class="code-line"><span class="line-num">10</span><span class="line-content">&lt;<span class="tok-keyword">script</span>&gt;</span></span>
-<span class="code-line"><span class="line-num">11</span><span class="line-content">  <span class="tok-comment">// Auto-mounts widget and solves in background Web Worker</span></span></span>
-<span class="code-line"><span class="line-num">12</span><span class="line-content">  <span class="tok-type">MehrPoW</span>.protect(<span class="tok-string">&#39;#signup-form&#39;</span>, {</span></span>
+<span class="code-line"><span class="line-num">11</span><span class="line-content">  <span class="tok-comment">// Auto-mounts widget, manages submit button states, and solves in background</span></span></span>
+<span class="code-line"><span class="line-num">12</span><span class="line-content">  <span class="tok-keyword">const</span> controller = <span class="tok-type">MehrPoW</span>.protect(<span class="tok-string">&#39;#signup-form&#39;</span>, {</span></span>
 <span class="code-line"><span class="line-num">13</span><span class="line-content">    domain: <span class="tok-string">&#39;https://api.example.com&#39;</span>,</span></span>
 <span class="code-line"><span class="line-num">14</span><span class="line-content">    endpoint: <span class="tok-string">&#39;/api/pow/challenge&#39;</span>,</span></span>
 <span class="code-line"><span class="line-num">15</span><span class="line-content">    action: <span class="tok-string">&#39;account.register&#39;</span>,</span></span>
-<span class="code-line"><span class="line-num">16</span><span class="line-content">    mode: <span class="tok-string">&#39;background&#39;</span></span></span>
-<span class="code-line"><span class="line-num">17</span><span class="line-content">  });</span></span>
-<span class="code-line"><span class="line-num">18</span><span class="line-content">&lt;/<span class="tok-keyword">script</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">16</span><span class="line-content">    mode: <span class="tok-string">&#39;background&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">17</span><span class="line-content">    onCancel: () =&gt; console.log(<span class="tok-string">&#39;Challenge cancelled by user&#39;</span>)</span></span>
+<span class="code-line"><span class="line-num">18</span><span class="line-content">  });</span></span>
 <span class="code-line"><span class="line-num">19</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">20</span><span class="line-content"><span class="tok-comment">&lt;!-- Pattern B: Single Page Apps (fetch / axios) --&gt;</span></span></span>
-<span class="code-line"><span class="line-num">21</span><span class="line-content">&lt;<span class="tok-keyword">script</span>&gt;</span></span>
-<span class="code-line"><span class="line-num">22</span><span class="line-content">  <span class="tok-keyword">async</span> <span class="tok-keyword">function</span> onCheckout() {</span></span>
-<span class="code-line"><span class="line-num">23</span><span class="line-content">    <span class="tok-comment">// 1. Compute proof-of-work challenge</span></span></span>
-<span class="code-line"><span class="line-num">24</span><span class="line-content">    <span class="tok-keyword">const</span> solution = <span class="tok-keyword">await</span> <span class="tok-type">MehrPoW</span>.solve({</span></span>
-<span class="code-line"><span class="line-num">25</span><span class="line-content">      domain: <span class="tok-string">&#39;https://api.example.com&#39;</span>,</span></span>
-<span class="code-line"><span class="line-num">26</span><span class="line-content">      action: <span class="tok-string">&#39;payment.checkout&#39;</span></span></span>
-<span class="code-line"><span class="line-num">27</span><span class="line-content">    });</span></span>
-<span class="code-line"><span class="line-num">28</span><span class="line-content"> </span></span>
-<span class="code-line"><span class="line-num">29</span><span class="line-content">    <span class="tok-comment">// 2. Attach X-Mehr-PoW-* cryptographic headers</span></span></span>
-<span class="code-line"><span class="line-num">30</span><span class="line-content">    <span class="tok-keyword">const</span> res = <span class="tok-keyword">await</span> fetch(<span class="tok-string">&#39;https://api.example.com/checkout&#39;</span>, {</span></span>
-<span class="code-line"><span class="line-num">31</span><span class="line-content">      method: <span class="tok-string">&#39;POST&#39;</span>,</span></span>
-<span class="code-line"><span class="line-num">32</span><span class="line-content">      headers: {</span></span>
-<span class="code-line"><span class="line-num">33</span><span class="line-content">        <span class="tok-string">&#39;Content-Type&#39;</span>: <span class="tok-string">&#39;application/json&#39;</span>,</span></span>
-<span class="code-line"><span class="line-num">34</span><span class="line-content">        ...<span class="tok-type">MehrPoW</span>.getHeaders(solution)</span></span>
-<span class="code-line"><span class="line-num">35</span><span class="line-content">      },</span></span>
-<span class="code-line"><span class="line-num">36</span><span class="line-content">      body: JSON.stringify({ amount: <span class="tok-number">1500</span> })</span></span>
-<span class="code-line"><span class="line-num">37</span><span class="line-content">    });</span></span>
-<span class="code-line"><span class="line-num">38</span><span class="line-content">  }</span></span>
-<span class="code-line"><span class="line-num">39</span><span class="line-content">&lt;/<span class="tok-keyword">script</span>&gt;</span></span></code></pre>
+<span class="code-line"><span class="line-num">20</span><span class="line-content">  <span class="tok-comment">// Or listen to the DOM event (submit button is auto-released on cancel)</span></span></span>
+<span class="code-line"><span class="line-num">21</span><span class="line-content">  document.querySelector(<span class="tok-string">&#39;#signup-form&#39;</span>).addEventListener(<span class="tok-string">&#39;pow:cancel&#39;</span>, () =&gt; {</span></span>
+<span class="code-line"><span class="line-num">22</span><span class="line-content">    console.log(<span class="tok-string">&#39;Verification cancelled; submit button auto-released&#39;</span>);</span></span>
+<span class="code-line"><span class="line-num">23</span><span class="line-content">  });</span></span>
+<span class="code-line"><span class="line-num">24</span><span class="line-content">&lt;/<span class="tok-keyword">script</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">25</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">26</span><span class="line-content"><span class="tok-comment">&lt;!-- Pattern B: Single Page Apps (fetch / axios) --&gt;</span></span></span>
+<span class="code-line"><span class="line-num">27</span><span class="line-content">&lt;<span class="tok-keyword">script</span>&gt;</span></span>
+<span class="code-line"><span class="line-num">28</span><span class="line-content">  <span class="tok-keyword">async</span> <span class="tok-keyword">function</span> onCheckout() {</span></span>
+<span class="code-line"><span class="line-num">29</span><span class="line-content">    <span class="tok-keyword">const</span> abortController = <span class="tok-keyword">new</span> AbortController();</span></span>
+<span class="code-line"><span class="line-num">30</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">31</span><span class="line-content">    <span class="tok-comment">// 1. Compute challenge (supports AbortSignal for user cancellation)</span></span></span>
+<span class="code-line"><span class="line-num">32</span><span class="line-content">    <span class="tok-keyword">const</span> solution = <span class="tok-keyword">await</span> <span class="tok-type">MehrPoW</span>.solve({</span></span>
+<span class="code-line"><span class="line-num">33</span><span class="line-content">      domain: <span class="tok-string">&#39;https://api.example.com&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">34</span><span class="line-content">      action: <span class="tok-string">&#39;payment.checkout&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">35</span><span class="line-content">      signal: abortController.signal</span></span>
+<span class="code-line"><span class="line-num">36</span><span class="line-content">    });</span></span>
+<span class="code-line"><span class="line-num">37</span><span class="line-content"> </span></span>
+<span class="code-line"><span class="line-num">38</span><span class="line-content">    <span class="tok-comment">// 2. Attach X-Mehr-PoW-* cryptographic headers</span></span></span>
+<span class="code-line"><span class="line-num">39</span><span class="line-content">    <span class="tok-keyword">const</span> res = <span class="tok-keyword">await</span> fetch(<span class="tok-string">&#39;https://api.example.com/checkout&#39;</span>, {</span></span>
+<span class="code-line"><span class="line-num">40</span><span class="line-content">      method: <span class="tok-string">&#39;POST&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">41</span><span class="line-content">      headers: {</span></span>
+<span class="code-line"><span class="line-num">42</span><span class="line-content">        <span class="tok-string">&#39;Content-Type&#39;</span>: <span class="tok-string">&#39;application/json&#39;</span>,</span></span>
+<span class="code-line"><span class="line-num">43</span><span class="line-content">        ...<span class="tok-type">MehrPoW</span>.getHeaders(solution)</span></span>
+<span class="code-line"><span class="line-num">44</span><span class="line-content">      },</span></span>
+<span class="code-line"><span class="line-num">45</span><span class="line-content">      body: JSON.stringify({ amount: <span class="tok-number">1500</span> })</span></span>
+<span class="code-line"><span class="line-num">46</span><span class="line-content">    });</span></span>
+<span class="code-line"><span class="line-num">47</span><span class="line-content">  }</span></span>
+<span class="code-line"><span class="line-num">48</span><span class="line-content">&lt;/<span class="tok-keyword">script</span>&gt;</span></span></code></pre>
         </div>
 
         <!-- Go -->

@@ -76,12 +76,18 @@ Add zero-delay anti-bot protection to any HTML form or SPA:
     domain: 'https://api.example.com',
     endpoint: '/api/pow/challenge',
     action: 'account.register',
-    mode: 'background' // Solves non-blockingly while user enters credentials
+    mode: 'background', // 'background' (default) | 'onclick'
+    onCancel: () => console.log('Challenge cancelled by user')
   });
 </script>
 ```
 
-Supports cross-origin APIs via the optional `domain` parameter, automatic Web Worker spawning via inline blobs (zero external worker files), hidden input injection (`pow_token`, `pow_nonce`), and programmatic solving (`MehrPoW.solve(...)`).
+### Client Features & Lifecycle
+* **Cross-Origin & Same-Domain Backends:** Configured via `domain` and `endpoint`.
+* **Zero External Dependencies:** Web Worker engine compiled via inline Blob URL with zero external worker files.
+* **Smart Submit Lifecycle:** Automatically manages form submit buttons during catch-up solving, and automatically releases and restores them upon user cancellation (`Cancel` button), reset, or error.
+* **Cancellation & Abort Signals:** Dispatches standard `pow:cancel` DOM events on the `<form>`, calls `onCancel()`, and supports standard `AbortSignal` in programmatic calls: `MehrPoW.solve({ action: '...', signal: controller.signal })`.
+* **Form Auto-Injection:** Automatically injects hidden input fields (`pow_token`, `pow_nonce`) and responsive widget styles.
 
 ---
 
