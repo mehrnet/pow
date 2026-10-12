@@ -514,6 +514,12 @@
     var context = opts.context || '';
     var onProgress = typeof opts.onProgress === 'function' ? opts.onProgress : null;
 
+    if (opts.signal && opts.signal.aborted) {
+      var earlyAbort = new Error('PoW solving aborted');
+      earlyAbort.name = 'AbortError';
+      return Promise.reject(earlyAbort);
+    }
+
     var challengePromise;
     if (typeof opts.callApi === 'function') {
       challengePromise = Promise.resolve(opts.callApi({
@@ -550,6 +556,31 @@
             return;
           }
 
+          var cleanupSignal = null;
+          if (opts.signal) {
+            if (opts.signal.aborted) {
+              worker.terminate();
+              var abortedErr = new Error('PoW solving aborted');
+              abortedErr.name = 'AbortError';
+              reject(abortedErr);
+              return;
+            }
+            var onAbort = function () {
+              worker.terminate();
+              var err = new Error('PoW solving aborted');
+              err.name = 'AbortError';
+              reject(err);
+            };
+            if (typeof opts.signal.addEventListener === 'function') {
+              opts.signal.addEventListener('abort', onAbort, { once: true });
+              cleanupSignal = function () {
+                if (opts.signal && typeof opts.signal.removeEventListener === 'function') {
+                  opts.signal.removeEventListener('abort', onAbort);
+                }
+              };
+            }
+          }
+
           worker.onmessage = function (e) {
             var msg = e.data;
             if (!msg) return;
@@ -557,6 +588,7 @@
             if (msg.type === 'progress' && onProgress) {
               onProgress(msg);
             } else if (msg.type === 'solved') {
+              if (cleanupSignal) cleanupSignal();
               worker.terminate();
               resolve({
                 token: challenge.token,
@@ -570,6 +602,7 @@
           };
 
           worker.onerror = function (err) {
+            if (cleanupSignal) cleanupSignal();
             worker.terminate();
             reject(err);
           };
@@ -713,6 +746,102 @@
     var isSubmitting = false;
     var isCatchupMode = false;
     var activeWorker = null;
+    var solvePromise = null;
+    var solveResolve = null;
+    var solveReject = null;
+
+    function getSubmitButtons() {
+      if (!form) return [];
+      if (typeof form.querySelectorAll === 'function') {
+        try {
+          return form.querySelectorAll('button[type="submit"], input[type="submit"]') || [];
+        } catch (e) {}
+      }
+      if (typeof form.querySelector === 'function') {
+        try {
+          var btn = form.querySelector('button[type="submit"], input[type="submit"]');
+          return btn ? [btn] : [];
+        } catch (e) {}
+      }
+      return [];
+    }
+
+    function setSubmitButtonsBusy(busy) {
+      if (options.autoBusy === false) return;
+      var btns = getSubmitButtons();
+      for (var i = 0; i < btns.length; i++) {
+        var btn = btns[i];
+        if (busy) {
+          if (typeof btn.hasAttribute === 'function' && !btn.hasAttribute('data-pow-orig-disabled')) {
+            btn.setAttribute('data-pow-orig-disabled', btn.disabled ? 'true' : 'false');
+          }
+          if (typeof btn.hasAttribute === 'function' && !btn.hasAttribute('data-pow-orig-text')) {
+            btn.setAttribute('data-pow-orig-text', btn.tagName === 'INPUT' ? btn.value : btn.textContent);
+          }
+          btn.disabled = true;
+          if (typeof btn.setAttribute === 'function') {
+            btn.setAttribute('aria-busy', 'true');
+          }
+          var busyText = options.solvingButtonText || (strings && strings.solving) || 'Solving challenge...';
+          if (btn.tagName === 'INPUT') btn.value = busyText;
+          else btn.textContent = busyText;
+        } else {
+          var wasDisabled = typeof btn.getAttribute === 'function' && btn.getAttribute('data-pow-orig-disabled') === 'true';
+          if (typeof btn.removeAttribute === 'function') {
+            btn.removeAttribute('data-pow-orig-disabled');
+            btn.removeAttribute('aria-busy');
+          }
+          btn.disabled = wasDisabled;
+          if (typeof btn.getAttribute === 'function' && btn.getAttribute('data-pow-orig-text')) {
+            var origText = btn.getAttribute('data-pow-orig-text');
+            if (btn.tagName === 'INPUT') btn.value = origText;
+            else btn.textContent = origText;
+            if (typeof btn.removeAttribute === 'function') {
+              btn.removeAttribute('data-pow-orig-text');
+            }
+          }
+        }
+      }
+    }
+
+    function releaseSubmitButtons() {
+      var btns = getSubmitButtons();
+      for (var i = 0; i < btns.length; i++) {
+        var btn = btns[i];
+        btn.disabled = false;
+        if (typeof btn.removeAttribute === 'function') {
+          btn.removeAttribute('aria-busy');
+          btn.removeAttribute('data-pow-orig-disabled');
+        }
+        if (typeof btn.getAttribute === 'function' && btn.getAttribute('data-pow-orig-text')) {
+          var origText = btn.getAttribute('data-pow-orig-text');
+          if (btn.tagName === 'INPUT') btn.value = origText;
+          else btn.textContent = origText;
+          if (typeof btn.removeAttribute === 'function') {
+            btn.removeAttribute('data-pow-orig-text');
+          }
+        }
+      }
+    }
+
+    function dispatchCancelEvent(reason) {
+      if (typeof form.dispatchEvent === 'function') {
+        try {
+          var evt;
+          if (typeof CustomEvent === 'function') {
+            evt = new CustomEvent('pow:cancel', {
+              bubbles: true,
+              cancelable: false,
+              detail: { reason: reason || 'cancelled', controller: controller }
+            });
+          } else if (typeof document !== 'undefined' && typeof document.createEvent === 'function') {
+            evt = document.createEvent('CustomEvent');
+            evt.initCustomEvent('pow:cancel', true, false, { reason: reason || 'cancelled', controller: controller });
+          }
+          if (evt) form.dispatchEvent(evt);
+        } catch (e) {}
+      }
+    }
 
     // Ensure hidden inputs exist
     function ensureHiddenInputs() {
@@ -764,6 +893,13 @@
       isSolving = true;
       isCatchupMode = !!isCatchup;
 
+      if (!solvePromise) {
+        solvePromise = new Promise(function (resolve, reject) {
+          solveResolve = resolve;
+          solveReject = reject;
+        });
+      }
+
       updateGate(isCatchupMode ? 'catchup' : 'solving', getSolvingText(isCatchupMode), 0);
 
       var challengeUrl = resolveUrl(endpoint, domain);
@@ -804,9 +940,12 @@
               updateGate(isCatchupMode ? 'catchup' : 'solving', null, msg.percent);
               if (options.onProgress) options.onProgress(msg);
             } else if (msg.type === 'solved') {
-              activeWorker.terminate();
-              activeWorker = null;
+              if (activeWorker) {
+                activeWorker.terminate();
+                activeWorker = null;
+              }
               isSolving = false;
+              setSubmitButtonsBusy(false);
 
               currentSolution = {
                 token: challenge.token,
@@ -828,6 +967,14 @@
               var inputs = ensureHiddenInputs();
               inputs.tokenInput.value = challenge.token;
               inputs.nonceInput.value = String(msg.nonce);
+
+              if (solveResolve) {
+                var resolveFn = solveResolve;
+                solveResolve = null;
+                solveReject = null;
+                solvePromise = null;
+                resolveFn(currentSolution);
+              }
 
               if (options.onReady) {
                 options.onReady(currentSolution);
@@ -857,7 +1004,15 @@
             if (activeWorker) activeWorker.terminate();
             activeWorker = null;
             isSolving = false;
+            releaseSubmitButtons();
             updateGate('idle', strings.error || 'Verification error', 0);
+            if (solveReject) {
+              var rejectFn = solveReject;
+              solveResolve = null;
+              solveReject = null;
+              solvePromise = null;
+              rejectFn(err);
+            }
             if (options.onError) options.onError(err);
           };
 
@@ -870,7 +1025,15 @@
         })
         .catch(function (err) {
           isSolving = false;
+          releaseSubmitButtons();
           updateGate('idle', strings.error || 'Challenge error', 0);
+          if (solveReject) {
+            var rejectFn = solveReject;
+            solveResolve = null;
+            solveReject = null;
+            solvePromise = null;
+            rejectFn(err);
+          }
           if (options.onError) options.onError(err);
         });
     }
@@ -891,6 +1054,7 @@
 
       e.preventDefault();
       isSubmitting = true;
+      setSubmitButtonsBusy(true);
 
       if (isSolving) {
         isCatchupMode = true;
@@ -905,10 +1069,10 @@
     // Bind optional cancel button inside gate
     var cancelBtn = gateEl ? gateEl.querySelector('[data-pow-cancel], .pow-cancel-btn, #btn-cancel-pow') : null;
     function handleCancel(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      controller.cancel();
-      if (options.onCancel) options.onCancel();
+      if (e && typeof e.preventDefault === 'function') e.preventDefault();
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      controller.cancel('Challenge cancelled');
+      if (typeof options.onCancel === 'function') options.onCancel(controller);
     }
     if (cancelBtn) {
       cancelBtn.addEventListener('click', handleCancel);
@@ -928,19 +1092,29 @@
           if (wantsCatchup) {
             isSubmitting = true;
             isCatchupMode = true;
+            setSubmitButtonsBusy(true);
             updateGate('catchup', getSolvingText(true), null);
           }
-          return;
+          return solvePromise || Promise.resolve(currentSolution);
         }
         if (currentSolution) {
           controller.reset();
         }
         if (wantsCatchup) {
           isSubmitting = true;
+          setSubmitButtonsBusy(true);
         }
         startSolving(wantsCatchup);
+        return solvePromise;
       },
-      cancel: function () {
+      waitForSolution: function () {
+        if (currentSolution) return Promise.resolve(currentSolution);
+        if (!isSolving) {
+          controller.solve(true);
+        }
+        return solvePromise;
+      },
+      cancel: function (reason) {
         if (activeWorker) {
           activeWorker.terminate();
           activeWorker = null;
@@ -949,9 +1123,24 @@
         isSubmitting = false;
         isCatchupMode = false;
         currentSolution = null;
+        releaseSubmitButtons();
         updateGate('idle', strings.cancelled || 'Verification cancelled', 0);
+        if (solveReject) {
+          var abortErr = new Error(reason || 'Verification cancelled');
+          abortErr.name = 'AbortError';
+          var rejectFn = solveReject;
+          solveResolve = null;
+          solveReject = null;
+          solvePromise = null;
+          rejectFn(abortErr);
+        } else {
+          solvePromise = null;
+          solveResolve = null;
+          solveReject = null;
+        }
+        dispatchCancelEvent(reason || 'cancelled');
       },
-      reset: function () {
+      reset: function (reason) {
         if (activeWorker) {
           activeWorker.terminate();
           activeWorker = null;
@@ -960,16 +1149,27 @@
         isSubmitting = false;
         isCatchupMode = false;
         currentSolution = null;
+        releaseSubmitButtons();
         updateGate('idle', strings.idle || 'Ready to verify...', 0);
+        if (solveReject) {
+          var abortErr = new Error(reason || 'Verification reset');
+          abortErr.name = 'AbortError';
+          var rejectFn = solveReject;
+          solveResolve = null;
+          solveReject = null;
+          solvePromise = null;
+          rejectFn(abortErr);
+        } else {
+          solvePromise = null;
+          solveResolve = null;
+          solveReject = null;
+        }
       },
       getSolution: function () { return currentSolution; },
       isSolving: function () { return isSolving; },
       isCatchup: function () { return isCatchupMode; },
       destroy: function () {
-        if (activeWorker) {
-          activeWorker.terminate();
-          activeWorker = null;
-        }
+        controller.reset('destroyed');
         if (typeof form.removeEventListener === 'function') {
           form.removeEventListener('submit', handleSubmit);
         }

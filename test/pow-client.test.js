@@ -226,4 +226,84 @@ test('MehrPoW automatically injects embedded styles and complete widget DOM', ()
   delete globalThis.document;
 });
 
+test('MehrPoW.solve rejects immediately when signal is already aborted', async () => {
+  const controller = new AbortController();
+  controller.abort();
+
+  await assert.rejects(
+    async () => {
+      await MehrPoW.solve({
+        endpoint: '/pow/challenge',
+        signal: controller.signal
+      });
+    },
+    (err) => {
+      assert.strictEqual(err.name, 'AbortError');
+      return true;
+    }
+  );
+});
+
+test('MehrPoW.protect releases submit button and dispatches pow:cancel event on cancel', () => {
+  const submitBtn = {
+    tagName: 'BUTTON',
+    type: 'submit',
+    disabled: true,
+    textContent: 'Original Submit',
+    attributes: {},
+    hasAttribute: (k) => Boolean(submitBtn.attributes[k]),
+    getAttribute: (k) => submitBtn.attributes[k] || null,
+    setAttribute: (k, v) => { submitBtn.attributes[k] = String(v); },
+    removeAttribute: (k) => { delete submitBtn.attributes[k]; }
+  };
+
+  let cancelDispatched = false;
+  const mockForm = {
+    tagName: 'FORM',
+    querySelector: (sel) => {
+      if (sel.includes('pow-gate')) return null;
+      if (sel.includes('submit')) return submitBtn;
+      return null;
+    },
+    querySelectorAll: (sel) => {
+      if (sel.includes('submit')) return [submitBtn];
+      return [];
+    },
+    appendChild: () => {},
+    getAttribute: () => null,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: (evt) => {
+      if (evt.type === 'pow:cancel') {
+        cancelDispatched = true;
+      }
+    }
+  };
+
+  globalThis.document = {
+    createElement: (tag) => ({
+      tagName: tag.toUpperCase(),
+      className: '',
+      setAttribute: () => {},
+      querySelector: () => null
+    })
+  };
+
+  let onCancelCalled = false;
+  const handle = MehrPoW.protect(mockForm, {
+    mode: 'manual',
+    onCancel: () => { onCancelCalled = true; }
+  });
+
+  // Verify that cancel re-enables button and fires events
+  assert.strictEqual(submitBtn.disabled, true);
+  handle.cancel('User aborted');
+
+  assert.strictEqual(submitBtn.disabled, false, 'submit button should be re-enabled');
+  assert.strictEqual(cancelDispatched, true, 'pow:cancel event should be dispatched');
+
+  handle.destroy();
+  delete globalThis.document;
+});
+
 
