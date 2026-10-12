@@ -306,6 +306,7 @@
     var currentSolution = null;
     var isSolving = false;
     var isSubmitting = false;
+    var isCatchupMode = false;
     var activeWorker = null;
 
     // Ensure hidden inputs exist
@@ -327,6 +328,17 @@
       return { tokenInput: tokenInput, nonceInput: nonceInput };
     }
 
+    var strings = options.strings || {};
+    var getSolvingText = function (isCatchup) {
+      if (isCatchup) return strings.solving || 'Solving Challenge...';
+      return strings.verifying || 'Verifying Browser...';
+    };
+    var getVerifiedText = function (sec, hps) {
+      if (typeof strings.verified === 'function') return strings.verified(sec, hps);
+      if (typeof strings.verified === 'string') return strings.verified;
+      return 'Browser Verified - took ' + sec + 's (' + hps + ' H/s)';
+    };
+
     function updateGate(state, text, percent) {
       if (gateEl) {
         gateEl.className = 'pow-gate state-' + state;
@@ -345,8 +357,9 @@
     function startSolving(isCatchup) {
       if (isSolving || currentSolution) return;
       isSolving = true;
+      isCatchupMode = !!isCatchup;
 
-      updateGate(isCatchup ? 'catchup' : 'solving', isCatchup ? 'Solving Challenge...' : 'Verifying Browser...', 0);
+      updateGate(isCatchupMode ? 'catchup' : 'solving', getSolvingText(isCatchupMode), 0);
 
       var challengeUrl = resolveUrl(endpoint, domain);
 
@@ -354,6 +367,7 @@
       if (typeof options.callApi === 'function') {
         challengePromise = Promise.resolve(options.callApi({
           action: action,
+          difficulty: options.difficulty,
           endpoint: endpoint,
           domain: domain,
           url: challengeUrl
@@ -382,7 +396,7 @@
             if (!msg) return;
 
             if (msg.type === 'progress') {
-              updateGate(isCatchup ? 'catchup' : 'solving', null, msg.percent);
+              updateGate(isCatchupMode ? 'catchup' : 'solving', null, msg.percent);
               if (options.onProgress) options.onProgress(msg);
             } else if (msg.type === 'solved') {
               activeWorker.terminate();
@@ -394,12 +408,17 @@
                 nonce: msg.nonce,
                 elapsedMs: msg.elapsedMs,
                 hashesPerSec: msg.hashesPerSec,
-                difficulty: challenge.difficulty
+                difficulty: challenge.difficulty,
+                hash: msg.hash,
+                iterations: msg.iterations,
+                context: challenge.context || '',
+                action: challenge.action || action,
+                isCatchup: !!isCatchupMode
               };
 
               var durationSec = (msg.elapsedMs / 1000).toFixed(2);
               var hps = Math.round(msg.hashesPerSec).toLocaleString();
-              updateGate('ready', 'Browser Verified - took ' + durationSec + 's (' + hps + ' H/s)', 100);
+              updateGate('ready', getVerifiedText(durationSec, hps), 100);
 
               var inputs = ensureHiddenInputs();
               inputs.tokenInput.value = challenge.token;
@@ -410,13 +429,21 @@
               }
 
               if (typeof options.verifyApi === 'function') {
-                Promise.resolve(options.verifyApi(currentSolution)).catch(function (e) {
-                  console.warn('[MehrPoW] verifyApi error:', e);
-                });
+                Promise.resolve(options.verifyApi(currentSolution))
+                  .then(function (res) {
+                    if (options.onVerified) options.onVerified(res, currentSolution);
+                  })
+                  .catch(function (e) {
+                    console.warn('[MehrPoW] verifyApi error:', e);
+                  });
               }
 
               if (isSubmitting) {
-                form.submit();
+                if (typeof options.onSubmit === 'function') {
+                  options.onSubmit(currentSolution);
+                } else {
+                  form.submit();
+                }
               }
             }
           };
@@ -425,7 +452,7 @@
             if (activeWorker) activeWorker.terminate();
             activeWorker = null;
             isSolving = false;
-            updateGate('idle', 'Verification error', 0);
+            updateGate('idle', strings.error || 'Verification error', 0);
             if (options.onError) options.onError(err);
           };
 
@@ -438,18 +465,22 @@
         })
         .catch(function (err) {
           isSolving = false;
-          updateGate('idle', 'Challenge error', 0);
+          updateGate('idle', strings.error || 'Challenge error', 0);
           if (options.onError) options.onError(err);
         });
     }
 
     // Bind submit event
-    form.addEventListener('submit', function (e) {
+    function handleSubmit(e) {
       if (currentSolution) {
-        // Solution already computed! Attach and allow instant submit.
+        // Solution already computed! Attach and allow submit.
         var inputs = ensureHiddenInputs();
         inputs.tokenInput.value = currentSolution.token;
         inputs.nonceInput.value = String(currentSolution.nonce);
+        if (typeof options.onSubmit === 'function') {
+          e.preventDefault();
+          options.onSubmit(currentSolution);
+        }
         return;
       }
 
@@ -457,21 +488,64 @@
       isSubmitting = true;
 
       if (isSolving) {
-        updateGate('catchup', 'Solving Challenge...', null);
+        isCatchupMode = true;
+        updateGate('catchup', getSolvingText(true), null);
       } else {
         startSolving(true);
       }
-    });
+    }
+
+    form.addEventListener('submit', handleSubmit);
+
+    // Bind optional cancel button inside gate
+    var cancelBtn = gateEl ? gateEl.querySelector('[data-pow-cancel], .pow-cancel-btn, #btn-cancel-pow') : null;
+    function handleCancel(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      controller.cancel();
+      if (options.onCancel) options.onCancel();
+    }
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', handleCancel);
+    }
 
     // Start verification strategy
     if (mode === 'background') {
       startSolving(false);
     } else {
-      updateGate('idle', 'Ready to verify...', 0);
+      updateGate('idle', strings.idle || 'Ready to verify...', 0);
     }
 
-    return {
-      solve: function () { startSolving(true); },
+    var controller = {
+      solve: function (catchup) {
+        var wantsCatchup = catchup !== false;
+        if (isSolving) {
+          if (wantsCatchup) {
+            isSubmitting = true;
+            isCatchupMode = true;
+            updateGate('catchup', getSolvingText(true), null);
+          }
+          return;
+        }
+        if (currentSolution) {
+          controller.reset();
+        }
+        if (wantsCatchup) {
+          isSubmitting = true;
+        }
+        startSolving(wantsCatchup);
+      },
+      cancel: function () {
+        if (activeWorker) {
+          activeWorker.terminate();
+          activeWorker = null;
+        }
+        isSolving = false;
+        isSubmitting = false;
+        isCatchupMode = false;
+        currentSolution = null;
+        updateGate('idle', strings.cancelled || 'Verification cancelled', 0);
+      },
       reset: function () {
         if (activeWorker) {
           activeWorker.terminate();
@@ -479,11 +553,26 @@
         }
         isSolving = false;
         isSubmitting = false;
+        isCatchupMode = false;
         currentSolution = null;
-        updateGate('idle', 'Ready to verify...', 0);
+        updateGate('idle', strings.idle || 'Ready to verify...', 0);
       },
-      getSolution: function () { return currentSolution; }
+      getSolution: function () { return currentSolution; },
+      isSolving: function () { return isSolving; },
+      isCatchup: function () { return isCatchupMode; },
+      destroy: function () {
+        if (activeWorker) {
+          activeWorker.terminate();
+          activeWorker = null;
+        }
+        form.removeEventListener('submit', handleSubmit);
+        if (cancelBtn) {
+          cancelBtn.removeEventListener('click', handleCancel);
+        }
+      }
     };
+
+    return controller;
   }
 
   return {

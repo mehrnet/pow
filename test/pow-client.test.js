@@ -107,7 +107,66 @@ test('MehrPoW.protect auto-injects pow-gate into form if absent', () => {
 
   const handle = MehrPoW.protect(mockForm, { mode: 'manual' });
   assert.ok(handle, 'protect should return handle');
+  assert.strictEqual(typeof handle.solve, 'function');
+  assert.strictEqual(typeof handle.cancel, 'function');
+  assert.strictEqual(typeof handle.reset, 'function');
+  assert.strictEqual(typeof handle.destroy, 'function');
   assert.ok(children.some(c => c.className && c.className.includes('pow-gate')), 'pow-gate should be injected');
 
   delete globalThis.document;
 });
+
+test('MehrPoW.protect invokes callApi and attaches submit handlers', async () => {
+  let callApiParams = null;
+  let submitCalled = false;
+  const listeners = {};
+
+  const mockForm = {
+    tagName: 'FORM',
+    querySelector: (sel) => null,
+    appendChild: () => {},
+    getAttribute: () => null,
+    addEventListener: (event, fn) => {
+      listeners[event] = fn;
+    },
+    removeEventListener: (event, fn) => {
+      delete listeners[event];
+    }
+  };
+
+  globalThis.document = {
+    createElement: (tag) => ({
+      tagName: tag.toUpperCase(),
+      className: '',
+      setAttribute: () => {},
+      querySelector: () => null
+    })
+  };
+
+  const handle = MehrPoW.protect(mockForm, {
+    mode: 'onclick',
+    difficulty: 18,
+    action: 'account.register',
+    callApi: async (req) => {
+      callApiParams = req;
+      return {
+        token: 'token.123',
+        salt: 'salt123',
+        difficulty: 18,
+        context: 'ctx'
+      };
+    },
+    onSubmit: (sol) => {
+      submitCalled = true;
+    }
+  });
+
+  assert.ok(handle, 'handle should exist');
+  assert.strictEqual(typeof listeners['submit'], 'function', 'submit listener should be attached');
+
+  handle.destroy();
+  assert.strictEqual(listeners['submit'], undefined, 'submit listener should be removed on destroy');
+
+  delete globalThis.document;
+});
+

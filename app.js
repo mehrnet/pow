@@ -102,13 +102,11 @@ const TRANSLATIONS = {
    PLAYGROUND CONTROLLER
    ============================================= */
 
-let currentWorker = null;
-let currentChallenge = null;
 let currentSolution = null;
 let isSolving = false;
-let isCatchupMode = false;
 let executionMode = 'background'; // 'background' | 'onclick'
 let updateDifficultyDisplayGlobal = null;
+let reinitPlaygroundGlobal = null;
 const DEMO_SECRET_KEY = 'mehr-pow-master-secret-demo-key';
 
 function getTimeEstimate(bits, isFa) {
@@ -127,11 +125,6 @@ function initPlaygroundController() {
   const diffVal = document.getElementById('diff-val');
   const diffTimeEst = document.getElementById('diff-time-est');
   const presetBtns = document.querySelectorAll('.diff-bar-segment[data-diff]');
-  const gateEl = document.getElementById('pow-gate');
-  const barFill = document.getElementById('pow-bar-fill');
-  const statusLabel = document.getElementById('gate-status-text');
-  const percentLabel = document.getElementById('gate-percent');
-  const btnCancel = document.getElementById('btn-cancel-pow');
   const btnSubmit = document.getElementById('demo-submit-btn');
   const btnSimFast = document.getElementById('btn-sim-fast');
   const btnReset = document.getElementById('btn-reset');
@@ -141,6 +134,8 @@ function initPlaygroundController() {
   const statElapsed = document.getElementById('stat-elapsed');
   const statNonce = document.getElementById('stat-nonce');
   const tokenInspectBox = document.getElementById('token-inspect-box');
+
+  let protectHandle = null;
 
   function updateDifficultyDisplay() {
     if (!diffSlider) return;
@@ -161,117 +156,6 @@ function initPlaygroundController() {
     });
   }
   updateDifficultyDisplayGlobal = updateDifficultyDisplay;
-
-  function resetStateOnly() {
-    if (currentWorker) {
-      currentWorker.terminate();
-      currentWorker = null;
-    }
-    isSolving = false;
-    isCatchupMode = false;
-    currentSolution = null;
-    currentChallenge = null;
-
-    const val = diffSlider ? parseInt(diffSlider.value, 10) : 18;
-    const isFa = document.documentElement.getAttribute('lang') === 'fa';
-    if (percentLabel) percentLabel.textContent = '0%';
-    if (barFill) barFill.setAttribute('width', '0%');
-    if (gateEl) gateEl.className = 'pow-gate state-idle';
-    if (statusLabel) {
-      statusLabel.textContent = isFa
-        ? `آماده برای تأیید (${val} بیت)...`
-        : `Ready to verify (${val} bits)...`;
-    }
-    if (btnSubmit) {
-      btnSubmit.className = 'pow-submit-btn';
-      btnSubmit.textContent = isFa ? 'شروع تأیید' : 'Start Verification';
-    }
-    if (tokenInspectBox) {
-      tokenInspectBox.textContent = isFa
-        ? 'در انتظار فراخوانی API تولید چالش...'
-        : 'Waiting for callApi() challenge generation...';
-    }
-    if (statHashrate) statHashrate.textContent = '--';
-    if (statIterations) statIterations.textContent = '--';
-    if (statElapsed) statElapsed.textContent = '--';
-    if (statNonce) statNonce.textContent = '--';
-  }
-
-  // Mode Switcher handlers
-  modeTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const targetMode = tab.getAttribute('data-mode');
-      if (targetMode === executionMode) return;
-      executionMode = targetMode;
-      modeTabs.forEach(t => {
-        const isActive = t.getAttribute('data-mode') === executionMode;
-        t.classList.toggle('active', isActive);
-        t.setAttribute('aria-checked', String(isActive));
-      });
-
-      if (executionMode === 'background') {
-        startChallengePreparation(false);
-      } else {
-        resetStateOnly();
-      }
-    });
-  });
-
-  if (diffSlider) {
-    diffSlider.addEventListener('input', () => {
-      updateDifficultyDisplay();
-      if (executionMode === 'background') {
-        startChallengePreparation(false);
-      } else {
-        resetStateOnly();
-      }
-    });
-  }
-
-  presetBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const val = parseInt(btn.getAttribute('data-diff'), 10);
-      if (diffSlider) {
-        diffSlider.value = String(val);
-        updateDifficultyDisplay();
-        if (executionMode === 'background') {
-          startChallengePreparation(false);
-        } else {
-          resetStateOnly();
-        }
-      }
-    });
-  });
-
-  // Cancel Button inside solving gate
-  if (btnCancel) {
-    btnCancel.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (currentWorker) {
-        currentWorker.terminate();
-        currentWorker = null;
-      }
-      isSolving = false;
-      isCatchupMode = false;
-      currentSolution = null;
-
-      const isFa = document.documentElement.getAttribute('lang') === 'fa';
-      if (gateEl) gateEl.className = 'pow-gate state-idle';
-      if (barFill) barFill.setAttribute('width', '0%');
-      if (percentLabel) percentLabel.textContent = '0%';
-      if (statusLabel) {
-        statusLabel.textContent = isFa ? 'تأیید لغو شد' : 'Verification cancelled';
-      }
-      if (btnSubmit) {
-        btnSubmit.className = 'pow-submit-btn';
-        btnSubmit.textContent = isFa ? 'شروع تأیید' : 'Start Verification';
-      }
-      if (statHashrate) statHashrate.textContent = '--';
-      if (statElapsed) statElapsed.textContent = '--';
-    });
-  }
-
-  let activeChallengeData = null;
 
   /**
    * In-Memory Compliant Server API Simulator.
@@ -335,119 +219,110 @@ function initPlaygroundController() {
     };
   }
 
-  async function startChallengePreparation(catchup) {
-    if (currentWorker) {
-      currentWorker.terminate();
-      currentWorker = null;
+  function setupProtectInstance() {
+    if (protectHandle) {
+      protectHandle.destroy();
+      protectHandle = null;
     }
-    isSolving = true;
-    isCatchupMode = catchup;
-    currentSolution = null;
 
-    const difficulty = diffSlider ? parseInt(diffSlider.value, 10) : 18;
-    const actionName = difficulty === 14 ? 'form.submit'
-      : (difficulty === 16 ? 'comment.create'
-      : (difficulty === 18 ? 'invoice.create'
-      : (difficulty === 21 ? 'account.register'
+    currentSolution = null;
+    isSolving = false;
+
+    const val = diffSlider ? parseInt(diffSlider.value, 10) : 18;
+    const act = val === 14 ? 'form.submit'
+      : (val === 16 ? 'comment.create'
+      : (val === 18 ? 'invoice.create'
+      : (val === 21 ? 'account.register'
       : 'security.barrier')));
 
-    if (gateEl) {
-      gateEl.className = catchup ? 'pow-gate state-catchup' : 'pow-gate state-solving';
-    }
     const isFa = document.documentElement.getAttribute('lang') === 'fa';
-    if (statusLabel) {
-      statusLabel.textContent = catchup
-        ? (isFa ? 'در حال حل چالش...' : 'Solving Challenge...')
-        : (isFa ? 'در حال تأیید مرورگر...' : 'Verifying Browser...');
-    }
-    if (percentLabel) percentLabel.textContent = '0%';
-    if (barFill) barFill.setAttribute('width', '0%');
+
+    if (statHashrate) statHashrate.textContent = '--';
+    if (statIterations) statIterations.textContent = '--';
+    if (statElapsed) statElapsed.textContent = '--';
+    if (statNonce) statNonce.textContent = '--';
 
     if (btnSubmit) {
-      if (catchup) {
-        btnSubmit.className = 'pow-submit-btn catchup';
-        btnSubmit.textContent = isFa ? 'در حال حل چالش...' : 'Solving Challenge...';
-      } else {
-        btnSubmit.className = 'pow-submit-btn';
-        btnSubmit.textContent = isFa ? 'در حال تأیید...' : 'Verifying Browser...';
-      }
+      btnSubmit.className = 'pow-submit-btn';
+      btnSubmit.textContent = isFa ? 'شروع تأیید' : 'Start Verification';
     }
 
     if (tokenInspectBox) {
-      tokenInspectBox.textContent = `[API CALL] POST /api/pow/challenge\nPayload: { action: "${actionName}", difficulty: ${difficulty} }\nServer evaluating IP reputation & TLS fingerprint...`;
+      tokenInspectBox.textContent = executionMode === 'background'
+        ? (isFa ? 'در حال آماده‌سازی و اتصال به کتابخانه رسمی pow-client.js...' : 'Connecting official pow-client.js to local challenge API...')
+        : (isFa ? 'در انتظار فراخوانی API تولید چالش...' : 'Waiting for callApi() challenge generation...');
     }
 
-    // Call fake in-memory server API
-    const challengeRes = await fakeServerApi({
-      action: actionName,
-      difficulty
-    });
-
-    activeChallengeData = challengeRes;
-    currentChallenge = challengeRes.token;
-
-    if (tokenInspectBox) {
-      tokenInspectBox.textContent = `[API 200 OK] Challenge Received (${challengeRes.latencyMs}ms)\nToken: ${currentChallenge}\nAction: ${challengeRes.action} | Target: ${challengeRes.difficulty} bits\nContext: ${challengeRes.context}`;
+    const pow = window.MehrPoW;
+    if (!pow || typeof pow.protect !== 'function') {
+      console.warn('[MehrPoW] Official drop-in client library not loaded');
+      return;
     }
 
-    // Launch worker with challenge parameters from API response
-    currentWorker = new Worker('worker.js');
-    currentWorker.postMessage({
-      type: 'solve',
-      salt: challengeRes.salt,
-      context: challengeRes.context,
-      difficulty: challengeRes.difficulty,
-      startNonce: 0
-    });
-
-    currentWorker.onmessage = async (e) => {
-      const msg = e.data;
-      if (msg.type === 'progress') {
+    protectHandle = pow.protect('#playground-form', {
+      mode: executionMode,
+      difficulty: val,
+      action: act,
+      strings: {
+        idle: isFa ? `آماده برای تأیید (${val} بیت)...` : `Ready to verify (${val} bits)...`,
+        verifying: isFa ? 'در حال تأیید مرورگر...' : 'Verifying Browser...',
+        solving: isFa ? 'در حال حل چالش...' : 'Solving Challenge...',
+        verified: (sec, hps) => isFa
+          ? `مرورگر تأیید شد — در ${sec} ثانیه (${hps} هش/ثانیه)`
+          : `Browser Verified - took ${sec}s (${hps} H/s)`,
+        cancelled: isFa ? 'تأیید لغو شد' : 'Verification cancelled',
+        error: isFa ? 'خطا در اعتبارسنجی' : 'Verification error'
+      },
+      callApi: async (req) => {
+        isSolving = true;
+        if (tokenInspectBox) {
+          tokenInspectBox.textContent = `[API CALL] POST /api/pow/challenge\nPayload: { action: "${act}", difficulty: ${val} }\nServer evaluating IP reputation & TLS fingerprint...`;
+        }
+        const challengeRes = await fakeServerApi({
+          action: act,
+          difficulty: val
+        });
+        if (tokenInspectBox) {
+          tokenInspectBox.textContent = `[API 200 OK] Challenge Received (${challengeRes.latencyMs}ms)\nToken: ${challengeRes.token}\nAction: ${challengeRes.action} | Target: ${challengeRes.difficulty} bits\nContext: ${challengeRes.context}`;
+        }
+        return challengeRes;
+      },
+      verifyApi: async (solution) => {
+        return await fakeServerVerifyApi(solution);
+      },
+      onProgress: (msg) => {
+        isSolving = true;
         const durSec = (msg.elapsedMs / 1000).toFixed(2);
         if (statHashrate) statHashrate.textContent = `${msg.hashesPerSec.toLocaleString()} H/s`;
         if (statIterations) statIterations.textContent = msg.iterations.toLocaleString();
         if (statElapsed) statElapsed.textContent = `${durSec}s (${Math.round(msg.elapsedMs)} ms)`;
-        if (percentLabel) percentLabel.textContent = `${msg.percent}%`;
-        if (barFill) barFill.setAttribute('width', `${msg.percent}%`);
 
         if (btnSubmit) {
-          btnSubmit.textContent = isFa
-            ? `در حال تأیید (${msg.percent}%)...`
-            : `Verifying (${msg.percent}%)...`;
+          const isCurrentFa = document.documentElement.getAttribute('lang') === 'fa';
+          const catchup = protectHandle && protectHandle.isCatchup && protectHandle.isCatchup();
+          if (catchup) {
+            btnSubmit.className = 'pow-submit-btn catchup';
+            btnSubmit.textContent = isCurrentFa ? 'در حال حل چالش...' : 'Solving Challenge...';
+          } else {
+            btnSubmit.className = 'pow-submit-btn';
+            btnSubmit.textContent = isCurrentFa
+              ? `در حال تأیید (${msg.percent}%)...`
+              : `Verifying (${msg.percent}%)...`;
+          }
         }
-      } else if (msg.type === 'solved') {
+      },
+      onReady: (solution) => {
         isSolving = false;
-        currentSolution = msg;
+        currentSolution = solution;
 
-        const durationSec = (msg.elapsedMs / 1000).toFixed(2);
-        const hps = Math.round(msg.hashesPerSec).toLocaleString('en-US');
+        const durationSec = (solution.elapsedMs / 1000).toFixed(2);
+        const hps = Math.round(solution.hashesPerSec).toLocaleString('en-US');
         const isCurrentFa = document.documentElement.getAttribute('lang') === 'fa';
 
         if (statHashrate) statHashrate.textContent = `${hps} H/s`;
-        if (statIterations) statIterations.textContent = msg.iterations.toLocaleString();
-        if (statElapsed) statElapsed.textContent = `${durationSec}s (${Math.round(msg.elapsedMs)} ms)`;
-        if (statNonce) statNonce.textContent = `0x${msg.nonce.toString(16)}`;
-
-        if (percentLabel) percentLabel.textContent = '100%';
-        if (barFill) barFill.setAttribute('width', '100%');
-        if (gateEl) gateEl.className = 'pow-gate state-ready';
-        if (statusLabel) {
-          statusLabel.textContent = isCurrentFa
-            ? `مرورگر تأیید شد — در ${durationSec} ثانیه (${hps} هش/ثانیه)`
-            : `Browser Verified - took ${durationSec}s (${hps} H/s)`;
-        }
-
-        // Server-side instant verification check via fake local verify API
-        const serverVerify = await fakeServerVerifyApi({
-          token: currentChallenge,
-          nonce: msg.nonce,
-          context: activeChallengeData ? activeChallengeData.context : '',
-          action: activeChallengeData ? activeChallengeData.action : actionName
-        });
-
-        if (tokenInspectBox) {
-          tokenInspectBox.textContent = `[API 200 OK] Challenge Received\nToken: ${currentChallenge}\nNonce: 0x${msg.nonce.toString(16)} (${msg.nonce})\n[SERVER VERIFY] ${serverVerify.valid ? `VALID (${serverVerify.serverLatencyMs}ms) · 0 DB Reads` : 'FAILED'}\nHash: ${msg.hash}\nElapsed: ${durationSec}s (${Math.round(msg.elapsedMs)}ms)`;
-        }
+        if (statIterations) statIterations.textContent = (solution.iterations || 0).toLocaleString();
+        if (statElapsed) statElapsed.textContent = `${durationSec}s (${Math.round(solution.elapsedMs)} ms)`;
+        if (statNonce) statNonce.textContent = `0x${solution.nonce.toString(16)}`;
 
         if (btnSubmit) {
           btnSubmit.className = 'pow-submit-btn ready';
@@ -462,62 +337,125 @@ function initPlaygroundController() {
           }
         }
 
-        if (isCatchupMode) {
+        if (solution.isCatchup) {
           showToast(isCurrentFa
             ? `اثبات در ${durationSec} ثانیه تأیید شد! درخواست فوراً پردازش گردید.`
             : `Proof verified in ${durationSec}s! Request processed with zero delay.`
           );
         }
-      }
-    };
-  }
+      },
+      onVerified: (serverVerify, solution) => {
+        const durSec = (solution.elapsedMs / 1000).toFixed(2);
+        if (tokenInspectBox) {
+          tokenInspectBox.textContent = `[API 200 OK] Challenge Received\nToken: ${solution.token}\nNonce: 0x${solution.nonce.toString(16)} (${solution.nonce})\n[SERVER VERIFY] ${serverVerify.valid ? `VALID (${serverVerify.serverLatencyMs}ms) · 0 DB Reads` : 'FAILED'}\nHash: ${solution.hash}\nElapsed: ${durSec}s (${Math.round(solution.elapsedMs)}ms)`;
+        }
+      },
+      onSubmit: async (solution) => {
+        const isCurrentFa = document.documentElement.getAttribute('lang') === 'fa';
+        const serverVerify = await fakeServerVerifyApi(solution);
 
-  if (btnSubmit) {
-    btnSubmit.addEventListener('click', async () => {
-      if (currentSolution) {
-        const isFa = document.documentElement.getAttribute('lang') === 'fa';
-        // Execute server verification check via fake local API
-        const serverVerify = await fakeServerVerifyApi({
-          token: currentChallenge,
-          nonce: currentSolution.nonce,
-          context: activeChallengeData ? activeChallengeData.context : '',
-          action: activeChallengeData ? activeChallengeData.action : ''
-        });
-
-        showToast(isFa
+        showToast(isCurrentFa
           ? `پاسخ سرور: ۲۰۰ OK (${serverVerify.serverLatencyMs} میلی‌ثانیه)! نانس تأیید شد.`
           : `Server Response: 200 OK (${serverVerify.serverLatencyMs}ms)! Nonce validated.`
         );
 
         if (executionMode !== 'background') {
-          startChallengePreparation(false);
+          setTimeout(() => {
+            setupProtectInstance();
+          }, 300);
         }
-      } else if (isSolving) {
-        startChallengePreparation(true);
-      } else {
-        startChallengePreparation(false);
+      },
+      onCancel: () => {
+        isSolving = false;
+        currentSolution = null;
+        const isCurrentFa = document.documentElement.getAttribute('lang') === 'fa';
+        if (btnSubmit) {
+          btnSubmit.className = 'pow-submit-btn';
+          btnSubmit.textContent = isCurrentFa ? 'شروع تأیید' : 'Start Verification';
+        }
+        if (statHashrate) statHashrate.textContent = '--';
+        if (statElapsed) statElapsed.textContent = '--';
+        if (tokenInspectBox) {
+          tokenInspectBox.textContent = isCurrentFa
+            ? 'پردازش متوقف و تأیید لغو شد.'
+            : 'Solving terminated and verification cancelled.';
+        }
+      },
+      onError: (err) => {
+        isSolving = false;
+        console.error('[MehrPoW Playground Error]', err);
       }
     });
   }
+  reinitPlaygroundGlobal = setupProtectInstance;
+
+  // Mode Switcher handlers
+  modeTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetMode = tab.getAttribute('data-mode');
+      if (targetMode === executionMode) return;
+      executionMode = targetMode;
+      modeTabs.forEach(t => {
+        const isActive = t.getAttribute('data-mode') === executionMode;
+        t.classList.toggle('active', isActive);
+        t.setAttribute('aria-checked', String(isActive));
+      });
+      setupProtectInstance();
+    });
+  });
+
+  if (diffSlider) {
+    diffSlider.addEventListener('input', () => {
+      updateDifficultyDisplay();
+      setupProtectInstance();
+    });
+  }
+
+  presetBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = parseInt(btn.getAttribute('data-diff'), 10);
+      if (diffSlider) {
+        diffSlider.value = String(val);
+        updateDifficultyDisplay();
+        setupProtectInstance();
+      }
+    });
+  });
 
   if (btnSimFast) {
     btnSimFast.addEventListener('click', () => {
-      startChallengePreparation(true);
+      if (protectHandle) {
+        protectHandle.solve(true);
+      }
     });
   }
 
   if (btnReset) {
     btnReset.addEventListener('click', () => {
-      resetStateOnly();
+      if (protectHandle) {
+        protectHandle.reset();
+      }
+      currentSolution = null;
+      isSolving = false;
+      if (statHashrate) statHashrate.textContent = '--';
+      if (statIterations) statIterations.textContent = '--';
+      if (statElapsed) statElapsed.textContent = '--';
+      if (statNonce) statNonce.textContent = '--';
+      const isFa = document.documentElement.getAttribute('lang') === 'fa';
+      if (tokenInspectBox) {
+        tokenInspectBox.textContent = isFa
+          ? 'در انتظار فراخوانی API تولید چالش...'
+          : 'Waiting for callApi() challenge generation...';
+      }
+      if (btnSubmit) {
+        btnSubmit.className = 'pow-submit-btn';
+        btnSubmit.textContent = isFa ? 'شروع تأیید' : 'Start Verification';
+      }
     });
   }
 
   updateDifficultyDisplay();
-
-  // If initial mode is background, start solver warm-up
-  if (executionMode === 'background') {
-    startChallengePreparation(false);
-  }
+  setupProtectInstance();
 }
 
 /* =============================================
@@ -622,6 +560,9 @@ function setLocale(lang, save = true) {
       : `Ready to verify (${val} bits)...`;
     if (btnSubmit && !btnSubmit.classList.contains('ready')) {
       btnSubmit.textContent = lang === 'fa' ? 'شروع تأیید' : 'Start Verification';
+    }
+    if (typeof reinitPlaygroundGlobal === 'function') {
+      reinitPlaygroundGlobal();
     }
   }
 }

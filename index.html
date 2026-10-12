@@ -251,8 +251,8 @@
         <div class="pow-demo-card">
           <div class="pow-demo-grid">
 
-            <!-- Interactive PoW Benchmark Controller -->
-            <div class="pow-controller-panel">
+            <!-- Interactive PoW Benchmark Controller (Powered by official pow-client.js) -->
+            <form class="pow-controller-panel" id="playground-form" onsubmit="return false;">
               <!-- Mode Selection (Background Auto vs On-Click) -->
               <div class="pow-mode-switch-box">
                 <span class="mode-switch-label" data-i18n="mode.label">Execution Strategy:</span>
@@ -343,7 +343,7 @@
 
               <!-- Primary Action Controls -->
               <div class="pow-action-row">
-                <button type="button" id="demo-submit-btn" class="pow-submit-btn" data-i18n="btn.start">
+                <button type="submit" id="demo-submit-btn" class="pow-submit-btn" data-i18n="btn.start">
                   Start Verification
                 </button>
                 <div class="lang-bar-compact">
@@ -357,7 +357,7 @@
                   </button>
                 </div>
               </div>
-            </div>
+            </form>
 
             <!-- Live Telemetry & Inspector -->
             <div class="telemetry-card">
@@ -1178,6 +1178,7 @@
     <span class="toast-msg">Copied!</span>
   </div>
 
+  <script src="pow-client.js"></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>
